@@ -16,7 +16,7 @@ from pathlib import Path
 
 from . import tabular
 from .content import cause_label
-from .model import Model
+from .model import LINE_LABEL, LINES, Model
 
 
 def build_golden(
@@ -25,6 +25,7 @@ def build_golden(
     decl_doc_for_policy: dict | None = None,
     settlement_doc_for_claim: dict | None = None,
     tabular_doc_ids: dict | None = None,
+    kb_doc_ids: dict | None = None,
 ) -> list[dict]:
     """Build golden items.
 
@@ -35,6 +36,7 @@ def build_golden(
     decl_doc_for_policy = decl_doc_for_policy or {}
     settlement_doc_for_claim = settlement_doc_for_claim or {}
     tabular_doc_ids = tabular_doc_ids or {}
+    kb_doc_ids = kb_doc_ids or {}
     items: list[dict] = []
     for claim in model.claims:
         doc_id = fnol_doc_for_claim.get(claim.id)
@@ -110,6 +112,18 @@ def build_golden(
                 "relevant_doc_ids": [tabular_doc_ids["loss_run"]],
                 "query_class": "aggregation",
                 "provenance": {"entity_id": "CORPUS", "field": "count(claims) where status=open"},
+            }
+        )
+    # Knowledge-base semantic question (answer is a model-grounded fact stated in the KB).
+    if kb_doc_ids.get("underwriting_guidelines"):
+        items.append(
+            {
+                "id": "Q-KB-lines",
+                "question": "Which lines of business does Meridian Mutual underwrite?",
+                "answer": ", ".join(LINE_LABEL[ln] for ln in LINES),
+                "relevant_doc_ids": [kb_doc_ids["underwriting_guidelines"]],
+                "query_class": "semantic",
+                "provenance": {"entity_id": "CORPUS", "field": "lines_of_business"},
             }
         )
     items.sort(key=lambda x: x["id"])

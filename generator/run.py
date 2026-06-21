@@ -30,7 +30,7 @@ from .content import (
     schedule_document,
     settlement_letter_document,
 )
-from . import tabular
+from . import knowledge, tabular
 from .golden import build_golden, write_golden
 from .manifest import write_manifest
 from .model import ANCHOR_EPOCH, build_model, index, write_model
@@ -75,6 +75,7 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
     decl_doc_for_policy: dict[str, str] = {}
     settlement_doc_for_claim: dict[str, str] = {}
     tabular_doc_ids: dict[str, str] = {}
+    kb_doc_ids: dict[str, str] = {}
 
     if render:
         from .render.docx import write_contract_docx  # lazy imports
@@ -254,12 +255,34 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
                 )
             )
 
+        # Knowledge base (corpus-level reference docs): markdown + docx
+        from .render.docx import write_sections_docx
+        from .render.markdown import write_markdown
+
+        kb_specs = [
+            ("DOC-KB-UW", "underwriting_guidelines", "md", "docs/kb/underwriting-guidelines.md",
+             lambda p: write_markdown(knowledge.underwriting_guidelines(), p)),
+            ("DOC-KB-CLAIMS", "claims_manual", "docx", "docs/kb/claims-handling-manual.docx",
+             lambda p: write_sections_docx(knowledge.claims_manual(), p)),
+            ("DOC-KB-FAQ", "customer_faq", "md", "docs/kb/customer-faq.md",
+             lambda p: write_markdown(knowledge.customer_faq(), p)),
+        ]
+        for doc_id, doc_type, fmt, rel, writer in kb_specs:
+            writer(out / rel)
+            kb_doc_ids[doc_type] = doc_id
+            records.append(
+                DocRecord(
+                    doc_id=doc_id, doc_type=doc_type, format=fmt, path=rel,
+                    entity_ids=[], asserts=[], sha256=sha256_file(out / rel),
+                )
+            )
+
     # 4. manifest
     write_manifest(out, model.meta, records)
 
     # 5. golden
     golden = build_golden(
-        model, fnol_doc_for_claim, decl_doc_for_policy, settlement_doc_for_claim, tabular_doc_ids
+        model, fnol_doc_for_claim, decl_doc_for_policy, settlement_doc_for_claim, tabular_doc_ids, kb_doc_ids
     )
     write_golden(out, golden)
 
