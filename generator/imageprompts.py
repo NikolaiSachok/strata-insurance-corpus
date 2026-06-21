@@ -41,7 +41,11 @@ _SCENES = {
 }
 _KIND = {"personal_auto": "vehicle_damage", "homeowners": "property_damage", "bop": "commercial_damage"}
 
-_NEGATIVE = "no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark"
+_NEGATIVE = (
+    "no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, "
+    "appliances, signage); every visible object is generic and unbranded; no readable number "
+    "plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark"
+)
 
 
 def _image_seed(doc_id: str, corpus_seed: int) -> int:
@@ -56,8 +60,8 @@ def evidence_spec(claim: Claim, policy: Policy, holder: Policyholder, corpus_see
     doc_id = f"DOC-{claim.id}-EVIDENCE"
     prompt = (
         f"A candid amateur smartphone photo submitted as insurance claim evidence in {country_name}: "
-        f"{scene}. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and "
-        f"true-to-life. {_NEGATIVE}."
+        f"{scene}. Close framing on the damage with a plain, uncluttered background. Natural daylight, "
+        f"slightly imperfect amateur phone-camera framing, realistic and true-to-life. {_NEGATIVE}."
     )
     return {
         "doc_id": doc_id,

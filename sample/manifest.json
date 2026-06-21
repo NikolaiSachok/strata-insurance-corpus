@@ -112,18 +112,18 @@
         "kind": "property_damage",
         "line": "homeowners",
         "model": "gemini-3.1-flash-image",
-        "negative_prompt": "no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark",
+        "negative_prompt": "no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark",
         "params": {
           "aspect_ratio": "4:3",
           "resolution": "1K",
           "seed": 4201986
         },
         "path": "evidence/C-1000-evidence.jpg",
-        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Ireland: fire and smoke damage in a domestic kitchen \u2014 charred cabinets and soot. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark."
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Ireland: fire and smoke damage in a domestic kitchen \u2014 charred cabinets and soot. Close framing on the damage with a plain, uncluttered background. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark."
       },
       "provenance": [],
       "rendered": true,
-      "sha256": "93485717da7877c5c7cde038f9a6a6bc75b4c0e3f96766bb852b75dc76fd6546",
+      "sha256": "eee85b527ecb796bfc24962132a10a83eb2b14ad922bc8ddbe3898e36efb3de6",
       "synthetic": true
     },
     {
@@ -292,18 +292,18 @@
         "kind": "property_damage",
         "line": "homeowners",
         "model": "gemini-3.1-flash-image",
-        "negative_prompt": "no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark",
+        "negative_prompt": "no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark",
         "params": {
           "aspect_ratio": "4:3",
           "resolution": "1K",
           "seed": 4201987
         },
         "path": "evidence/C-1001-evidence.jpg",
-        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Ireland: a forced-open residential door with a damaged lock after a burglary. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark."
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Ireland: a forced-open residential door with a damaged lock after a burglary. Close framing on the damage with a plain, uncluttered background. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark."
       },
       "provenance": [],
       "rendered": true,
-      "sha256": "66bb620e4af5439846ea7fc95aee7013b0cbb05d41979839f9951dcc68861e9e",
+      "sha256": "a970e08bd41e4dd307b0ca1d474de325ed42985e865e0bd1f7bdcf7d47d5f179",
       "synthetic": true
     },
     {
@@ -445,18 +445,18 @@
         "kind": "commercial_damage",
         "line": "bop",
         "model": "gemini-3.1-flash-image",
-        "negative_prompt": "no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark",
+        "negative_prompt": "no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark",
         "params": {
           "aspect_ratio": "4:3",
           "resolution": "1K",
           "seed": 4201988
         },
         "path": "evidence/C-1002-evidence.jpg",
-        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Spain: a broken-down industrial machine in a workshop with a visible fault. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark."
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Spain: a broken-down industrial machine in a workshop with a visible fault. Close framing on the damage with a plain, uncluttered background. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark."
       },
       "provenance": [],
       "rendered": true,
-      "sha256": "dc5ee635a526146071a61b52b1e1d7a0988516a05ab2acc9f3ab47c772fde041",
+      "sha256": "01e15baa47b09f561cc247867bba9ce57522b46c1144ab300b7c3ef9291a26e0",
       "synthetic": true
     },
     {
@@ -581,18 +581,18 @@
         "kind": "commercial_damage",
         "line": "bop",
         "model": "gemini-3.1-flash-image",
-        "negative_prompt": "no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark",
+        "negative_prompt": "no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark",
         "params": {
           "aspect_ratio": "4:3",
           "resolution": "1K",
           "seed": 4201989
         },
         "path": "evidence/C-1003-evidence.jpg",
-        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Spain: a wet floor in a shop entrance marked with a hazard cone. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark."
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Spain: a wet floor in a shop entrance marked with a hazard cone. Close framing on the damage with a plain, uncluttered background. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark."
       },
       "provenance": [],
       "rendered": true,
-      "sha256": "f13842ea9991b64951dae6ceadfad6e85a175aa1eb00a8e4bb7d7c528e89d34a",
+      "sha256": "3ba1b2c59f9311ddba5353f2fa165a477db4f3ebc234c50f8a355237c9478566",
       "synthetic": true
     },
     {
@@ -761,18 +761,18 @@
         "kind": "property_damage",
         "line": "homeowners",
         "model": "gemini-3.1-flash-image",
-        "negative_prompt": "no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark",
+        "negative_prompt": "no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark",
         "params": {
           "aspect_ratio": "4:3",
           "resolution": "1K",
           "seed": 4201990
         },
         "path": "evidence/C-1004-evidence.jpg",
-        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Ireland: a forced-open residential door with a damaged lock after a burglary. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark."
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Ireland: a forced-open residential door with a damaged lock after a burglary. Close framing on the damage with a plain, uncluttered background. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark."
       },
       "provenance": [],
       "rendered": true,
-      "sha256": "fd174d722809ec71647ddb8037e2c1d5c191f22995924c908d6953b50e685450",
+      "sha256": "7702e15ae2374008c0ef1aa56a5d33564f1f63f4b0be32c9254a70ee16f51938",
       "synthetic": true
     },
     {
