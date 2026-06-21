@@ -6,6 +6,8 @@ the model is referentially consistent and the roster covers every entity.
 
 from __future__ import annotations
 
+import pytest
+
 from generator.model import (
     PROFILES,
     build_model,
@@ -87,6 +89,30 @@ def test_contract_docx_byte_stable(tmp_path):
     import zipfile
 
     assert "word/document.xml" in zipfile.ZipFile(a).namelist()
+
+
+def test_declarations_pdf_byte_stable(tmp_path):
+    """The PDF render path must be byte-reproducible too (SOURCE_DATE_EPOCH pinned,
+    no wall-clock /CreationDate or /ID leaking into WeasyPrint output)."""
+    from generator.content import declarations_document
+    from generator.model import ANCHOR_EPOCH
+    from generator.render.pdf import write_pdf
+
+    m = build_model(42, "slice")
+    idx = index(m)
+    policy = m.policies[0]
+    holder = idx["policyholders"][policy.holder_id]
+    agent = idx["agents"][policy.agent_id]
+    ctx = declarations_document(m.meta, policy, holder, agent)
+
+    a = tmp_path / "a.pdf"
+    b = tmp_path / "b.pdf"
+    try:
+        write_pdf("declarations.html.j2", ctx, a, ANCHOR_EPOCH)
+    except OSError as e:  # WeasyPrint native libs (cairo/pango) unavailable
+        pytest.skip(f"WeasyPrint native libraries unavailable: {e}")
+    write_pdf("declarations.html.j2", ctx, b, ANCHOR_EPOCH)
+    assert a.read_bytes() == b.read_bytes()
 
 
 def test_synthetic_markers_present():
