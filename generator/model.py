@@ -202,9 +202,11 @@ def _premium(rng: random.Random, line: str) -> float:
 
 
 def _plate(rng: random.Random) -> str:
-    """A generic, synthetic European-style registration (not a real assignment)."""
+    """A synthetic registration, format-shaped but deliberately INVALID — a 2-letter / 4-digit /
+    2-letter pattern is not a live plate format in any corpus country (DE/FR/ES/IT/NL/IE), so it
+    cannot match a real registration (same principle as the national IDs in identity.py)."""
     letters = lambda k: "".join(rng.choice(string.ascii_uppercase) for _ in range(k))  # noqa: E731
-    return f"{letters(2)}-{rng.randint(100, 999)}-{letters(2)}"
+    return f"{letters(2)}-{rng.randint(1000, 9999)}-{letters(2)}"
 
 
 def _vehicle(rng: random.Random) -> dict:

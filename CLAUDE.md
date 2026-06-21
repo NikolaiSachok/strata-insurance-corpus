@@ -31,8 +31,14 @@ document-RAG. Usable standalone with any RAG stack, or as a plug-in corpus for
   It reports a PASS/BLOCK verdict; it does not fix or push. See `.claude/commands/review-board.md`.
 
 ## Hard rules (non-negotiable)
-- **Synthetic only, clearly labeled.** No real persons/companies/policies; no scraping real documents. Mark
-  documents synthetic in metadata and, where visible, on the page.
+- **Synthetic only, clearly labeled.** No real persons/companies/policies *as fabricated entities or
+  parties* — don't invent a record about a real person, or name a real company as an insured/claim party,
+  or scrape a real document. **Incidental real references that are factual claim data are fine** (a vehicle's
+  make/model, a generic product brand in a photo). The corpus *should* contain realistic synthetic PII
+  (names, addresses, national IDs, plates, synthetic faces) — that's the redaction-test material; **PII
+  filtering is the consuming RAG layer's job, not the source corpus.** The one hard line is synthetic ≠ real:
+  no real identifiable individual, no real registered plate/ID, no real company as a party. Mark documents
+  synthetic in metadata and, where visible, on the page.
 - **Generator, not dump.** The heavy full corpus is **gitignored** (`/corpus/`) and published to HuggingFace;
   commit the **generator + `sample/` + `golden/`**, not the full output.
 - **Public-repo hygiene.** No real local filesystem paths, no references to unrelated private projects. Keep it
