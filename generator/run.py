@@ -15,6 +15,7 @@ Everything is deterministic: same (seed, profile) -> byte-stable corpus.
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 from .content import (
@@ -30,7 +31,7 @@ from .content import (
     schedule_document,
     settlement_letter_document,
 )
-from . import CURRENCY_SYMBOL, knowledge, tabular
+from . import CURRENCY_SYMBOL, imageprompts, knowledge, tabular
 from .golden import build_golden, write_golden
 from .manifest import write_manifest
 from .model import ANCHOR_EPOCH, build_model, index, write_model
@@ -43,9 +44,11 @@ def _money(x: float) -> str:
     return f"{CURRENCY_SYMBOL}{x:,.2f}"
 
 
-# Generated artifacts removed before each run so regeneration leaves no orphans.
-# Anything else in the out dir (notably a committed README.md) is preserved.
-_GENERATED = ("docs", "schema", "model.json", "roster.tsv", "manifest.json", "golden.jsonl")
+# Generated artifacts removed before each run so regeneration leaves no orphans. The
+# `evidence/` dir (non-deterministic AI image pixels) is intentionally NOT listed — it is
+# preserved across runs and picked up if present. Anything else (e.g. a committed README.md)
+# is preserved too.
+_GENERATED = ("docs", "schema", "model.json", "roster.tsv", "manifest.json", "golden.jsonl", "image-prompts.jsonl")
 
 
 def _clean_generated(out: Path) -> None:
@@ -76,6 +79,7 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
     settlement_doc_for_claim: dict[str, str] = {}
     tabular_doc_ids: dict[str, str] = {}
     kb_doc_ids: dict[str, str] = {}
+    evidence_specs: list[dict] = []
 
     if render:
         from .render.docx import write_contract_docx  # lazy imports
@@ -194,6 +198,7 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
             holder = idx["policyholders"][claim.holder_id]
             adjuster = idx["adjusters"][claim.adjuster_id]
             claim_ids = [claim.id, claim.policy_id, claim.holder_id, claim.adjuster_id]
+            evidence_specs.append(imageprompts.evidence_spec(claim, policy, holder, seed))
 
             # FNOL
             fnol_id = f"DOC-{claim.id}-FNOL"
@@ -297,6 +302,33 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
                 DocRecord(
                     doc_id=doc_id, doc_type=doc_type, format=fmt, path=rel,
                     entity_ids=[], asserts=[], sha256=sha256_file(out / rel),
+                )
+            )
+
+        # Evidence images (#11): commit the deterministic prompt-spec for every claim;
+        # the pixels are a separate non-deterministic tier (rendered for sample/, on-demand
+        # for the HF release). A manifest record always exists; rendered=True only if the
+        # pixel file is already present in evidence/.
+        evidence_specs.sort(key=lambda s: s["doc_id"])
+        (out / "image-prompts.jsonl").write_bytes(
+            ("\n".join(json.dumps(s, sort_keys=True, ensure_ascii=False) for s in evidence_specs) + "\n").encode("utf-8")
+            if evidence_specs
+            else b""
+        )
+        for spec in evidence_specs:
+            pixel = out / spec["path"]
+            rendered = pixel.exists()
+            records.append(
+                DocRecord(
+                    doc_id=spec["doc_id"],
+                    doc_type="evidence_photo",
+                    format="jpg",
+                    path=spec["path"],
+                    entity_ids=[spec["claim_id"]],
+                    is_generated=True,
+                    rendered=rendered,
+                    sha256=sha256_file(pixel) if rendered else "",
+                    prompt_spec=spec,
                 )
             )
 

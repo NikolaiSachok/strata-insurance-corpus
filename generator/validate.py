@@ -72,6 +72,12 @@ def validate(out: Path) -> tuple[bool, list[str]]:
     doc_ids = set()
     for d in manifest["documents"]:
         doc_ids.add(d["doc_id"])
+        # Generated images whose pixels aren't rendered in this corpus (only the prompt-spec
+        # is committed) have no file to check — they must still carry a prompt_spec, though.
+        if d.get("is_generated") and not d.get("rendered", True):
+            if not d.get("prompt_spec"):
+                errors.append(f"document {d['doc_id']}: unrendered generated image has no prompt_spec")
+            continue
         fpath = out / d["path"]
         if not fpath.exists():
             errors.append(f"document {d['doc_id']}: file missing at {d['path']}")

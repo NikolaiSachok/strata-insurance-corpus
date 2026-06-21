@@ -16,15 +16,17 @@ scheduled (M3–M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and the **[iss
 
 ```bash
 make sample     # -> committed sample/ slice + golden/golden.jsonl  (deterministic)
-make generate   # -> full corpus/ : 305 entities, 902 documents (642 PDF + 121 Word + 4 sheets + 2 MD + 133 scanned JPG), 246 golden Qs  (gitignored)
+make generate   # -> full corpus/ : 305 entities, 982 documents (902 born-digital+scanned + 80 AI evidence images as committed prompt-specs), 246 golden Qs  (gitignored)
 make validate   # integrity + golden-support checks
 make stats      # corpus composition (documents by format/type, golden by class)
 make test       # determinism + referential-integrity suite
 ```
 
 Full-corpus composition (`make stats OUT=corpus`): 642 PDF · 121 Word · 3 xlsx · 1 csv · 2 Markdown ·
-133 scanned JPG; golden = 243 semantic + 3 aggregation. The committed `sample/` slice contains at least
-one of every built doc type (enforced by a test), so the repo is fully exercisable without a full run.
+133 scanned JPG · 80 AI evidence images (committed as seeded **prompt-specs** in `image-prompts.jsonl`;
+pixels rendered for the `sample/` slice, on-demand for the HF release); golden = 243 semantic + 3 aggregation.
+The committed `sample/` slice contains at least one of every built doc type (enforced by a test), so the
+repo is fully exercisable without a full run.
 
 Built: deterministic entity model + roster ([docs/data-model.md](docs/data-model.md)); the **policy** family
 — declarations / endorsements / coverage-schedule (born-digital PDF, WeasyPrint) + full **contract in Word

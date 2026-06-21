@@ -16,7 +16,7 @@ documents render.
 |---|---|---|---|---|---|
 | **Policy** | policy contract, declarations page, endorsements, coverage schedule | PDF (born-digital), docx | semantic + structured extraction | M1 / M2 | ✅ declarations / endorsements / coverage-schedule (PDF) + full contract (**docx**) — all built (#5) |
 | **Claim** | FNOL form, adjuster report, damage/repair estimate, settlement letter, denial letter | PDF + **scanned variant** | OCR, layout-aware chunking | M1 / M2 / M3 | ✅ FNOL (M1) + adjuster report / estimate / settlement & denial letters (PDF, #6); **scanned variants** of FNOL + letters (JPG, #10) |
-| **Evidence** | vehicle/property damage photos, ID/license scans, police report (scanned) | JPG / PNG (`/generate-image`) | vision caption / multimodal; PII on IDs | M3 | ⏳ planned |
+| **Evidence** | vehicle/property/commercial damage photos, ID scans, accident statement | JPG / PNG (`/generate-image`) | vision caption / multimodal | M3 | ✅ damage photos — committed **prompt-spec** (`image-prompts.jsonl`) per claim + rendered **sample** pixels; full set on-demand for HF (#11). ID scans / accident statement planned |
 | **Tabular** | loss run, reserve register, premium register, agent commission summary | XLSX / CSV | aggregation / metadata queries | M2 | ✅ loss run / reserve register / premium register (**xlsx**) + commission summary (**csv**) — built (#7) |
 | **Knowledge** | underwriting guidelines, claims handling manual, customer FAQ/KB | Markdown, docx | semantic KB retrieval | M2 | ✅ underwriting guidelines + customer FAQ (**Markdown**) + claims handling manual (**docx**) — built (#8) |
 | **Correspondence** | customer letters/emails, status notices | docx / txt / eml | retrieval over informal text | — (unscheduled) | ⏳ planned |
@@ -46,24 +46,27 @@ describes only what is built plus what is explicitly scheduled.
   byte-deterministic**, so the committed, reproducible artifact is the **prompt spec**, not the image
   (see below).
 
-### Reproducibility of non-deterministic assets (images)
+### Reproducibility of non-deterministic assets (images) — built in #11
 
 AI-generated image bytes cannot be byte-stable the way PDFs/docx/xlsx are. We keep the corpus
-*reproducible by construction* anyway by committing the **deterministic recipe** instead of the pixels:
+*reproducible by construction* anyway by committing the **deterministic recipe** instead of the pixels
+([`generator/imageprompts.py`](../generator/imageprompts.py)):
 
-- A seeded, offline **prompt-spec generator** derives, per evidence document, a complete generation recipe
-  from the entity model — written to `image-prompts.jsonl` (committed, byte-stable):
+- A seeded, offline **prompt-spec generator** derives, per claim, a complete generation recipe from the
+  entity model (cause × line × country) — written to `image-prompts.jsonl` (committed, byte-stable):
 
   ```json
-  {"doc_id": "DOC-C-1042-DAMAGE-01", "entity_ids": ["C-1042"], "kind": "vehicle_damage",
-   "prompt": "front-end collision damage to a sedan, daylight, insurance evidence photo, ...",
-   "negative_prompt": "...", "model": "nano-banana-pro", "params": {"aspect_ratio": "4:3", "seed": 104201},
-   "caption": "Front-end damage consistent with a rear-end collision."}
+  {"doc_id": "DOC-C-1000-EVIDENCE", "claim_id": "C-1000", "line": "homeowners", "cause": "kitchen_fire",
+   "country": "IE", "kind": "property_damage", "path": "evidence/C-1000-evidence.jpg",
+   "model": "gemini-3.1-flash-image", "params": {"aspect_ratio": "4:3", "resolution": "1K", "seed": 4201347},
+   "prompt": "A candid amateur smartphone photo ... fire and smoke damage in a domestic kitchen ...",
+   "negative_prompt": "no readable number plates ...", "caption": "... — Household claim C-1000 (Ireland)."}
   ```
 
-- The **prompt, model id, and settings (including a per-image seed derived from the corpus seed)** are the
-  committed source of truth. Anyone can re-run the same recipe to get a *closely* reproducible image; the
-  manifest entry for the rendered image references its prompt-spec `doc_id`.
+- The **prompt, model id, and settings (incl. a per-image seed derived from the corpus seed)** are the
+  committed source of truth. Each evidence image also gets a **manifest record** carrying the prompt-spec
+  plus a `rendered` flag: `rendered: true` (+ sha256) for the committed `sample/` pixels, `rendered: false`
+  for the full corpus (where only the recipe is committed; pixels are produced on-demand for the HF release).
 - The rendered pixels live in the gitignored `corpus/` and the HuggingFace release (like all heavy output);
   only the prompt spec + captions are committed. This mirrors how LLM prose is cached by `(seed, doc_id)`:
   the *instructions* are reproducible even where the *output* is not bit-exact.

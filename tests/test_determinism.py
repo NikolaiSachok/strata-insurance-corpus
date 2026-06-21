@@ -200,6 +200,7 @@ BUILT_DOC_TYPES = {
     "fnol_scanned", "settlement_letter_scanned", "denial_letter_scanned",
     "loss_run", "reserve_register", "premium_register", "commission_summary",
     "underwriting_guidelines", "claims_manual", "customer_faq",
+    "evidence_photo",
 }
 
 
@@ -234,6 +235,24 @@ def test_scan_byte_stable(tmp_path):
         pytest.skip(f"scan renderer unavailable: {e}")
     scan_pdf(src, b, s)
     assert a.read_bytes() == b.read_bytes()
+
+
+def test_evidence_spec_deterministic_and_grounded():
+    """Evidence image prompt-specs are deterministic and tie to the claim."""
+    from generator.imageprompts import evidence_spec
+
+    m = build_model(42, "sample")
+    idx = index(m)
+    claim = m.claims[0]
+    policy = idx["policies"][claim.policy_id]
+    holder = idx["policyholders"][claim.holder_id]
+    a = evidence_spec(claim, policy, holder, 42)
+    b = evidence_spec(claim, policy, holder, 42)
+    assert a == b
+    assert a["doc_id"] == f"DOC-{claim.id}-EVIDENCE"
+    assert a["path"] == f"evidence/{claim.id}-evidence.jpg"
+    assert a["claim_id"] == claim.id and a["country"] == holder.country
+    assert a["prompt"] and a["caption"] and a["model"]
 
 
 def test_synthetic_markers_present():

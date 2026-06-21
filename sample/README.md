@@ -7,7 +7,7 @@ full generation. Regenerated deterministically via `make sample` (seed 42, `samp
 ## Contents
 
 Generated from 21 entities (6 policyholders, 3 agents, 2 adjusters, 5 policies, 5 claims) →
-52 documents, 16 golden questions:
+57 documents, 16 golden questions:
 
 ```
 model.json                          canonical entity model (the spine)
@@ -30,9 +30,14 @@ docs/tabular/commission-summary.csv per-agent commission (CSV)
 docs/kb/underwriting-guidelines.md  underwriting guidelines (Markdown)
 docs/kb/claims-handling-manual.docx claims handling manual (Word)
 docs/kb/customer-faq.md             customer FAQ (Markdown)
+evidence/*-evidence.jpg             AI damage/property photos — one per claim (rendered sample pixels)
+image-prompts.jsonl                 seeded prompt-spec recipe for every evidence image (the reproducible artifact)
 manifest.json                       every document + provenance + sha256
 golden.jsonl                        golden eval questions (semantic + aggregation) — mirrored to ../golden/golden.jsonl
 ```
+
+The `evidence/` images are AI-generated (non-deterministic pixels); `image-prompts.jsonl` is their committed,
+reproducible recipe. The full corpus commits only the recipe — pixels are produced on-demand for the HF release.
 
 Validate it: `make validate OUT=sample`.
 

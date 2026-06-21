@@ -32,6 +32,9 @@ class DocRecord:
     synthetic: bool = True
     sha256: str = ""
     source_doc_id: str = ""  # for scanned variants: the clean doc this was rendered from
+    is_generated: bool = False  # AI-generated image (non-deterministic pixels)
+    rendered: bool = True  # for generated images: whether the pixel file exists in this corpus
+    prompt_spec: dict | None = None  # for generated images: the committed reproducible recipe
 
     def to_obj(self) -> dict:
         obj = {
@@ -47,6 +50,11 @@ class DocRecord:
         }
         if self.source_doc_id:
             obj["scanned_of"] = self.source_doc_id
+        if self.is_generated:
+            obj["is_generated"] = True
+            obj["rendered"] = self.rendered
+            if self.prompt_spec is not None:
+                obj["prompt_spec"] = self.prompt_spec
         return obj
 
 

@@ -38,7 +38,16 @@ uv run python -m generator.run --seed 42 --out /tmp/m --profile slice --no-rende
 | `validate.py` | ✅ M1 | referential integrity, file/sha checks, golden-support checks |
 | `stats.py` | ✅ #9 | corpus composition summary (`make stats`) |
 | `render/scan.py` | ✅ #10 | PDF → degraded "scanned" JPG (pypdfium2 + seeded Pillow effects), forces OCR |
-| `render/image.py` | ⏳ #11 | AI damage/property photos (prompt-spec) |
+| `imageprompts.py` | ✅ #11 | per-claim evidence-photo **prompt-specs** → `image-prompts.jsonl` (pixels via `/generate-image`, rendered for sample/) |
+| `render/image.py` | ✅ #11 | finalize a rendered evidence image: downscale + embed an EXIF synthetic marker |
+
+## Evidence images — done criteria
+
+AI-rendered evidence pixels are non-deterministic and the model does not guarantee the prompt's
+negatives, so before an image enters `sample/` it must be: (1) **visually verified** to contain NO
+recognizable faces, readable number plates, or real brand logos/badges; and (2) finalized through
+`render/image.py` so it carries the **EXIF synthetic marker**. The committed reproducible artifact is
+the prompt-spec in `image-prompts.jsonl`; the full-corpus pixels are produced on-demand for the HF release.
 
 ## Native dependency (PDF)
 
