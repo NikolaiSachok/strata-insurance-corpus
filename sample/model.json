@@ -34,73 +34,73 @@
   "claims": [
     {
       "adjuster_id": "AD-001",
-      "cause": "kitchen_fire",
-      "date_of_loss": "2023-12-26",
-      "holder_id": "PH-00002",
+      "cause": "burglary",
+      "date_of_loss": "2024-01-11",
+      "holder_id": "PH-00006",
       "id": "C-1000",
-      "line": "homeowners",
-      "narrative_seed": "kitchen fire affecting homeowners policy HH-0000001 on 2023-12-26",
-      "paid": 41050.0,
-      "policy_id": "HH-0000001",
-      "reported_date": "2024-01-05",
+      "line": "bop",
+      "narrative_seed": "burglary affecting bop policy COM-0000003 on 2024-01-11",
+      "paid": 23700.0,
+      "policy_id": "COM-0000003",
+      "reported_date": "2024-01-17",
       "reserve": 0.0,
       "status": "closed"
     },
     {
-      "adjuster_id": "AD-001",
+      "adjuster_id": "AD-002",
       "cause": "theft",
-      "date_of_loss": "2024-12-17",
+      "date_of_loss": "2024-06-21",
       "holder_id": "PH-00002",
       "id": "C-1001",
       "line": "homeowners",
-      "narrative_seed": "theft affecting homeowners policy HH-0000004 on 2024-12-17",
-      "paid": 10561.12,
-      "policy_id": "HH-0000004",
-      "reported_date": "2024-12-23",
-      "reserve": 49900.0,
+      "narrative_seed": "theft affecting homeowners policy HH-0000001 on 2024-06-21",
+      "paid": 4474.47,
+      "policy_id": "HH-0000001",
+      "reported_date": "2024-06-23",
+      "reserve": 12850.0,
       "status": "open"
     },
     {
       "adjuster_id": "AD-001",
-      "cause": "equipment_breakdown",
-      "date_of_loss": "2025-08-12",
-      "holder_id": "PH-00005",
+      "cause": "burglary",
+      "date_of_loss": "2023-10-31",
+      "holder_id": "PH-00006",
       "id": "C-1002",
       "line": "bop",
-      "narrative_seed": "equipment breakdown affecting bop policy COM-0000005 on 2025-08-12",
+      "narrative_seed": "burglary affecting bop policy COM-0000003 on 2023-10-31",
       "paid": 0.0,
-      "policy_id": "COM-0000005",
-      "reported_date": "2025-08-13",
+      "policy_id": "COM-0000003",
+      "reported_date": "2023-11-05",
       "reserve": 0.0,
       "status": "denied"
     },
     {
-      "adjuster_id": "AD-002",
-      "cause": "slip_and_fall",
-      "date_of_loss": "2025-07-23",
-      "holder_id": "PH-00005",
+      "adjuster_id": "AD-001",
+      "cause": "rear_end_collision",
+      "date_of_loss": "2025-10-07",
+      "holder_id": "PH-00006",
       "id": "C-1003",
-      "line": "bop",
-      "narrative_seed": "slip and fall affecting bop policy COM-0000005 on 2025-07-23",
-      "paid": 8550.0,
-      "policy_id": "COM-0000005",
-      "reported_date": "2025-07-28",
+      "line": "personal_auto",
+      "narrative_seed": "rear end collision affecting personal_auto policy MOT-0000005 on 2025-10-07",
+      "paid": 48050.0,
+      "policy_id": "MOT-0000005",
+      "reported_date": "2025-10-12",
       "reserve": 0.0,
       "status": "closed"
     },
     {
-      "adjuster_id": "AD-001",
-      "cause": "theft",
-      "date_of_loss": "2024-10-15",
-      "holder_id": "PH-00002",
+      "adjuster_id": "AD-002",
+      "cause": "business_interruption",
+      "date_of_loss": "2023-12-14",
+      "holder_id": "PH-00006",
       "id": "C-1004",
-      "line": "homeowners",
-      "narrative_seed": "theft affecting homeowners policy HH-0000004 on 2024-10-15",
-      "paid": 4474.47,
-      "policy_id": "HH-0000004",
-      "reported_date": "2024-10-23",
-      "reserve": 12850.0,
-      "status": "open"
+      "line": "bop",
+      "narrative_seed": "business interruption affecting bop policy COM-0000003 on 2023-12-14",
+      "paid": 48950.0,
+      "policy_id": "COM-0000003",
+      "reported_date": "2023-12-14",
+      "reserve": 0.0,
+      "status": "closed"
     }
   ],
   "meta": {
@@ -136,7 +136,8 @@
         "personal_liability": 500000,
         "personal_property": 175000
       },
-      "line": "homeowners"
+      "line": "homeowners",
+      "vehicle": null
     },
     {
       "agent_id": "AG-002",
@@ -155,63 +156,82 @@
         "bodily_injury_per_person": 250000,
         "property_damage": 100000
       },
-      "line": "personal_auto"
+      "line": "personal_auto",
+      "vehicle": {
+        "colour": "green",
+        "make": "Volvo",
+        "model": "V40",
+        "registration": "KM-5386-CG",
+        "year": 2009
+      }
     },
     {
       "agent_id": "AG-002",
-      "annual_premium": 1340.0,
+      "annual_premium": 3525.0,
       "deductible": 1000.0,
-      "effective_date": "2023-10-09",
-      "endorsements": [],
-      "expiry_date": "2024-10-08",
-      "holder_id": "PH-00003",
-      "id": "MOT-0000003",
+      "effective_date": "2023-08-13",
+      "endorsements": [
+        "CYBER",
+        "HIRED_NONOWNED_AUTO",
+        "SPOILAGE"
+      ],
+      "expiry_date": "2024-08-12",
+      "holder_id": "PH-00006",
+      "id": "COM-0000003",
       "limits": {
-        "bodily_injury_per_accident": 500000,
-        "bodily_injury_per_person": 250000,
-        "property_damage": 100000
+        "building": 2000000,
+        "business_personal_property": 150000,
+        "general_liability": 1000000
       },
-      "line": "personal_auto"
+      "line": "bop",
+      "vehicle": null
     },
     {
       "agent_id": "AG-003",
-      "annual_premium": 2545.0,
-      "deductible": 2500.0,
-      "effective_date": "2024-06-02",
-      "endorsements": [
-        "ID_THEFT",
-        "ORD_OR_LAW",
-        "SCHEDULED_PROP"
-      ],
-      "expiry_date": "2025-06-02",
-      "holder_id": "PH-00002",
-      "id": "HH-0000004",
-      "limits": {
-        "dwelling": 600000,
-        "personal_liability": 100000,
-        "personal_property": 300000
-      },
-      "line": "homeowners"
-    },
-    {
-      "agent_id": "AG-002",
-      "annual_premium": 4485.0,
+      "annual_premium": 2620.0,
       "deductible": 1000.0,
-      "effective_date": "2024-08-28",
+      "effective_date": "2024-02-20",
       "endorsements": [
         "EPLI",
-        "EQUIP_BREAKDOWN",
-        "SPOILAGE"
+        "EQUIP_BREAKDOWN"
       ],
-      "expiry_date": "2025-08-28",
-      "holder_id": "PH-00005",
-      "id": "COM-0000005",
+      "expiry_date": "2025-02-19",
+      "holder_id": "PH-00004",
+      "id": "COM-0000004",
       "limits": {
-        "building": 1750000,
-        "business_personal_property": 300000,
-        "general_liability": 500000
+        "building": 750000,
+        "business_personal_property": 450000,
+        "general_liability": 1000000
       },
-      "line": "bop"
+      "line": "bop",
+      "vehicle": null
+    },
+    {
+      "agent_id": "AG-001",
+      "annual_premium": 960.0,
+      "deductible": 500.0,
+      "effective_date": "2024-12-04",
+      "endorsements": [
+        "GAP",
+        "NEW_CAR_REPL",
+        "UM_UIM"
+      ],
+      "expiry_date": "2025-12-04",
+      "holder_id": "PH-00006",
+      "id": "MOT-0000005",
+      "limits": {
+        "bodily_injury_per_accident": 300000,
+        "bodily_injury_per_person": 100000,
+        "property_damage": 100000
+      },
+      "line": "personal_auto",
+      "vehicle": {
+        "colour": "red",
+        "make": "Opel",
+        "model": "Astra",
+        "registration": "XD-9797-YI",
+        "year": 2008
+      }
     }
   ],
   "policyholders": [

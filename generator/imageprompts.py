@@ -41,10 +41,13 @@ _SCENES = {
 }
 _KIND = {"personal_auto": "vehicle_damage", "homeowners": "property_damage", "bop": "commercial_damage"}
 
+# The corpus is synthetic-but-realistic: incidental product/vehicle branding, synthetic faces, and
+# (invented) plates are fine — they are the realistic PII a redaction system is benchmarked on, and
+# PII handling belongs in the consuming RAG layer, not the source documents. The only guardrails are
+# against depicting a REAL identifiable individual or naming a REAL company as the claim party.
 _NEGATIVE = (
-    "no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, "
-    "appliances, signage); every visible object is generic and unbranded; no readable number "
-    "plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark"
+    "no real, identifiable public figures or celebrities; any business or premises depicted is generic "
+    "and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks"
 )
 
 
@@ -60,8 +63,8 @@ def evidence_spec(claim: Claim, policy: Policy, holder: Policyholder, corpus_see
     doc_id = f"DOC-{claim.id}-EVIDENCE"
     prompt = (
         f"A candid amateur smartphone photo submitted as insurance claim evidence in {country_name}: "
-        f"{scene}. Close framing on the damage with a plain, uncluttered background. Natural daylight, "
-        f"slightly imperfect amateur phone-camera framing, realistic and true-to-life. {_NEGATIVE}."
+        f"{scene}. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and "
+        f"true-to-life. {_NEGATIVE}."
     )
     return {
         "doc_id": doc_id,

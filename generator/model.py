@@ -17,6 +17,7 @@ from __future__ import annotations
 import datetime as dt
 import json
 import random
+import string
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -24,6 +25,16 @@ from faker import Faker
 
 from . import COMPANY_NAME, SYNTHETIC_MARKER, __version__
 from .identity import COUNTRIES, national_id
+
+# Common European makes/models for the insured vehicle on a Motor policy. Make names are
+# real (a vehicle's make is legitimate claim data, not an impersonated party).
+MAKES_MODELS = (
+    ("Volkswagen", "Golf"), ("Renault", "Clio"), ("Peugeot", "208"), ("Ford", "Focus"),
+    ("Opel", "Astra"), ("Fiat", "500"), ("Toyota", "Yaris"), ("SEAT", "León"),
+    ("Škoda", "Octavia"), ("Citroën", "C3"), ("BMW", "3 Series"), ("Audi", "A3"),
+    ("Mercedes-Benz", "A-Class"), ("Volvo", "V40"), ("Nissan", "Qashqai"),
+)
+VEHICLE_COLOURS = ("white", "black", "silver", "grey", "blue", "red", "green")
 
 # --- fixed temporal anchor (the corpus "now"); a coherent ~2-year window -----
 ANCHOR = dt.date(2024, 7, 1)
@@ -106,6 +117,7 @@ class Policy:
     limits: dict
     deductible: float
     endorsements: list
+    vehicle: dict | None  # insured vehicle (Motor line only); None otherwise
 
 
 @dataclass(frozen=True)
@@ -187,6 +199,25 @@ def _deductible(rng: random.Random, line: str) -> float:
 def _premium(rng: random.Random, line: str) -> float:
     base = {"personal_auto": (800, 2200), "homeowners": (900, 2600), "bop": (1500, 6000)}[line]
     return _dollars(rng, base[0], base[1], step=5)
+
+
+def _plate(rng: random.Random) -> str:
+    """A synthetic registration, format-shaped but deliberately INVALID — a 2-letter / 4-digit /
+    2-letter pattern is not a live plate format in any corpus country (DE/FR/ES/IT/NL/IE), so it
+    cannot match a real registration (same principle as the national IDs in identity.py)."""
+    letters = lambda k: "".join(rng.choice(string.ascii_uppercase) for _ in range(k))  # noqa: E731
+    return f"{letters(2)}-{rng.randint(1000, 9999)}-{letters(2)}"
+
+
+def _vehicle(rng: random.Random) -> dict:
+    make, model = rng.choice(MAKES_MODELS)
+    return {
+        "make": make,
+        "model": model,
+        "year": rng.randint(2008, 2023),
+        "colour": rng.choice(VEHICLE_COLOURS),
+        "registration": _plate(rng),
+    }
 
 
 def build_model(seed: int, profile: str = "full") -> Model:
@@ -272,6 +303,7 @@ def build_model(seed: int, profile: str = "full") -> Model:
                 limits=_limits(rng, line),
                 deductible=_deductible(rng, line),
                 endorsements=sorted(rng.sample(endo, n_endo)),
+                vehicle=_vehicle(rng) if line == "personal_auto" else None,
             )
         )
 

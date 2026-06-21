@@ -17,6 +17,7 @@
     <tr><td class="k">Date reported</td><td class="v">{{ reported_date }}</td></tr>
     <tr><td class="k">Cause of loss</td><td class="v">{{ cause_label }}</td></tr>
     <tr><td class="k">Claim status</td><td class="v"><span class="status {{ status }}">{{ status }}</span></td></tr>
+    {% if vehicle %}<tr><td class="k">Insured vehicle</td><td class="v">{{ vehicle }}</td></tr>{% endif %}
     <tr><td class="k">Current reserve</td><td class="v">{{ reserve }}</td></tr>
   </table>
 

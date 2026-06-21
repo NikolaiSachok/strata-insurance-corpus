@@ -7,7 +7,7 @@ full generation. Regenerated deterministically via `make sample` (seed 42, `samp
 ## Contents
 
 Generated from 21 entities (6 policyholders, 3 agents, 2 adjusters, 5 policies, 5 claims) →
-57 documents, 16 golden questions:
+59 documents, 19 golden questions:
 
 ```
 model.json                          canonical entity model (the spine)
