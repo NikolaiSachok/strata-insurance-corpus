@@ -18,12 +18,17 @@ import argparse
 from pathlib import Path
 
 from .content import (
+    adjuster_report_document,
     cause_label,
     contract_document,
     declarations_document,
+    denial_letter_document,
     endorsements_document,
+    estimate_base,
+    estimate_document,
     fnol_document,
     schedule_document,
+    settlement_letter_document,
 )
 from .golden import build_golden, write_golden
 from .manifest import write_manifest
@@ -67,10 +72,25 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
     records: list[DocRecord] = []
     fnol_doc_for_claim: dict[str, str] = {}
     decl_doc_for_policy: dict[str, str] = {}
+    settlement_doc_for_claim: dict[str, str] = {}
 
     if render:
         from .render.docx import write_contract_docx  # lazy imports
         from .render.pdf import write_pdf
+
+        def emit_pdf(doc_id, doc_type, template, ctx, rel, entity_ids, asserts):
+            write_pdf(template, ctx, out / rel, ANCHOR_EPOCH)
+            records.append(
+                DocRecord(
+                    doc_id=doc_id,
+                    doc_type=doc_type,
+                    format="pdf",
+                    path=rel,
+                    entity_ids=entity_ids,
+                    asserts=asserts,
+                    sha256=sha256_file(out / rel),
+                )
+            )
 
         # 2+3. policy family: declarations (PDF), contract (docx), endorsements (PDF), schedule (PDF)
         for policy in model.policies:
@@ -145,37 +165,75 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
                 )
             )
 
-        # FNOL per claim
+        # Claim family: FNOL (all) + adjuster report (all) + estimate (open/closed)
+        # + settlement letter (closed) | denial letter (denied)
         for claim in model.claims:
             policy = idx["policies"][claim.policy_id]
             holder = idx["policyholders"][claim.holder_id]
             adjuster = idx["adjusters"][claim.adjuster_id]
-            ctx = fnol_document(model.meta, claim, policy, holder, adjuster)
-            doc_id = f"DOC-{claim.id}-FNOL"
-            rel = f"docs/claim/{claim.id}-fnol.pdf"
-            write_pdf("fnol.html.j2", ctx, out / rel, ANCHOR_EPOCH)
-            fnol_doc_for_claim[claim.id] = doc_id
-            records.append(
-                DocRecord(
-                    doc_id=doc_id,
-                    doc_type="fnol",
-                    format="pdf",
-                    path=rel,
-                    entity_ids=[claim.id, claim.policy_id, claim.holder_id, claim.adjuster_id],
-                    asserts=[
-                        Assertion(claim.id, "cause", cause_label(claim.cause)),
-                        Assertion(claim.id, "date_of_loss", claim.date_of_loss),
+            claim_ids = [claim.id, claim.policy_id, claim.holder_id, claim.adjuster_id]
+
+            # FNOL
+            fnol_id = f"DOC-{claim.id}-FNOL"
+            fnol_doc_for_claim[claim.id] = fnol_id
+            emit_pdf(
+                fnol_id, "fnol", "fnol.html.j2",
+                fnol_document(model.meta, claim, policy, holder, adjuster),
+                f"docs/claim/{claim.id}-fnol.pdf", claim_ids,
+                [
+                    Assertion(claim.id, "cause", cause_label(claim.cause)),
+                    Assertion(claim.id, "date_of_loss", claim.date_of_loss),
+                    Assertion(claim.id, "status", claim.status),
+                ],
+            )
+
+            # Adjuster report
+            emit_pdf(
+                f"DOC-{claim.id}-ADJ", "adjuster_report", "adjuster_report.html.j2",
+                adjuster_report_document(model.meta, claim, policy, holder, adjuster),
+                f"docs/claim/{claim.id}-adjuster-report.pdf", claim_ids,
+                [
+                    Assertion(claim.id, "cause", cause_label(claim.cause)),
+                    Assertion(claim.id, "status", claim.status),
+                    Assertion(claim.id, "adjuster_id", claim.adjuster_id),
+                ],
+            )
+
+            # Repair/damage estimate (claims with a payable amount)
+            if claim.status in ("open", "closed"):
+                emit_pdf(
+                    f"DOC-{claim.id}-ESTIMATE", "estimate", "estimate.html.j2",
+                    estimate_document(model.meta, claim, policy, holder),
+                    f"docs/claim/{claim.id}-estimate.pdf", claim_ids,
+                    [Assertion(claim.id, "estimate_net_payable", _money(estimate_base(claim)))],
+                )
+
+            # Settlement (closed) | denial (denied)
+            if claim.status == "closed":
+                settle_id = f"DOC-{claim.id}-SETTLEMENT"
+                settlement_doc_for_claim[claim.id] = settle_id
+                emit_pdf(
+                    settle_id, "settlement_letter", "settlement_letter.html.j2",
+                    settlement_letter_document(model.meta, claim, policy, holder, adjuster),
+                    f"docs/claim/{claim.id}-settlement-letter.pdf", claim_ids,
+                    [
+                        Assertion(claim.id, "paid", _money(claim.paid)),
                         Assertion(claim.id, "status", claim.status),
                     ],
-                    sha256=sha256_file(out / rel),
                 )
-            )
+            elif claim.status == "denied":
+                emit_pdf(
+                    f"DOC-{claim.id}-DENIAL", "denial_letter", "denial_letter.html.j2",
+                    denial_letter_document(model.meta, claim, policy, holder, adjuster),
+                    f"docs/claim/{claim.id}-denial-letter.pdf", claim_ids,
+                    [Assertion(claim.id, "status", "denied")],
+                )
 
     # 4. manifest
     write_manifest(out, model.meta, records)
 
     # 5. golden
-    golden = build_golden(model, fnol_doc_for_claim, decl_doc_for_policy)
+    golden = build_golden(model, fnol_doc_for_claim, decl_doc_for_policy, settlement_doc_for_claim)
     write_golden(out, golden)
 
     return {

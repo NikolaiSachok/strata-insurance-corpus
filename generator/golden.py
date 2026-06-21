@@ -18,13 +18,20 @@ from .content import cause_label
 from .model import Model
 
 
-def build_golden(model: Model, fnol_doc_for_claim: dict, decl_doc_for_policy: dict | None = None) -> list[dict]:
+def build_golden(
+    model: Model,
+    fnol_doc_for_claim: dict,
+    decl_doc_for_policy: dict | None = None,
+    settlement_doc_for_claim: dict | None = None,
+) -> list[dict]:
     """Build golden items (semantic class).
 
     ``fnol_doc_for_claim`` maps claim_id -> FNOL doc_id (cause questions);
-    ``decl_doc_for_policy`` maps policy_id -> declarations doc_id (premium questions).
+    ``decl_doc_for_policy`` maps policy_id -> declarations doc_id (premium questions);
+    ``settlement_doc_for_claim`` maps claim_id -> settlement-letter doc_id (paid-amount questions).
     """
     decl_doc_for_policy = decl_doc_for_policy or {}
+    settlement_doc_for_claim = settlement_doc_for_claim or {}
     items: list[dict] = []
     for claim in model.claims:
         doc_id = fnol_doc_for_claim.get(claim.id)
@@ -52,6 +59,20 @@ def build_golden(model: Model, fnol_doc_for_claim: dict, decl_doc_for_policy: di
                 "relevant_doc_ids": [doc_id],
                 "query_class": "semantic",
                 "provenance": {"entity_id": policy.id, "field": "annual_premium"},
+            }
+        )
+    for claim in model.claims:
+        doc_id = settlement_doc_for_claim.get(claim.id)
+        if not doc_id:
+            continue
+        items.append(
+            {
+                "id": f"Q-{claim.id}-settlement",
+                "question": f"What amount did Meridian Mutual pay to settle claim {claim.id}?",
+                "answer": f"${claim.paid:,.2f}",
+                "relevant_doc_ids": [doc_id],
+                "query_class": "semantic",
+                "provenance": {"entity_id": claim.id, "field": "paid"},
             }
         )
     items.sort(key=lambda x: x["id"])

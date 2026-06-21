@@ -49,3 +49,13 @@ table.grid th { background: #eef2f7; }
 .status.closed { color: #2f855a; }
 .status.denied { color: #c0392b; }
 .meta-foot { margin-top: 18px; font-size: 7.5pt; color: #999; }
+
+/* letters (settlement / denial) */
+.letter-date { margin: 14px 0 10px; color: #555; }
+.addressee { margin-bottom: 12px; }
+.letter-body p { margin: 8px 0; text-align: justify; }
+.signature { margin-top: 18px; }
+.signature .name { font-weight: 600; }
+.amount-callout { font-size: 12pt; font-weight: 700; color: #1f3a5f; }
+table.grid td.num, table.grid th.num { text-align: right; }
+tr.total td { font-weight: 700; background: #eef2f7; }

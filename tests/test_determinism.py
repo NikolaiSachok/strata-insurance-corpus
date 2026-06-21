@@ -115,6 +115,32 @@ def test_declarations_pdf_byte_stable(tmp_path):
     assert a.read_bytes() == b.read_bytes()
 
 
+def test_estimate_settlement_amounts_consistent():
+    """Estimate net payable == settlement payout == model paid; line items sum to gross."""
+    from generator.content import estimate_document, settlement_letter_document
+
+    def _money(s):
+        return float(s.replace("$", "").replace(",", ""))
+
+    m = build_model(42, "sample")
+    idx = index(m)
+    closed = [c for c in m.claims if c.status == "closed"]
+    assert closed  # the sample must contain at least one closed claim to exercise this
+    for claim in closed:
+        policy = idx["policies"][claim.policy_id]
+        holder = idx["policyholders"][claim.holder_id]
+        adjuster = idx["adjusters"][claim.adjuster_id]
+        est = estimate_document(m.meta, claim, policy, holder)
+        settle = settlement_letter_document(m.meta, claim, policy, holder, adjuster)
+
+        expected_net = f"${claim.paid:,.2f}"
+        assert est["net_payable"] == expected_net
+        assert settle["paid"] == expected_net
+        gross = round(claim.paid + policy.deductible, 2)
+        assert est["gross_total"] == f"${gross:,.2f}"
+        assert round(sum(_money(a) for _, a in est["rows"]), 2) == gross
+
+
 def test_synthetic_markers_present():
     m = build_model(5, "slice")
     assert m.meta["synthetic"] is True
