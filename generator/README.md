@@ -37,7 +37,8 @@ uv run python -m generator.run --seed 42 --out /tmp/m --profile slice --no-rende
 | `run.py` | ✅ M1 | pipeline orchestrator + CLI |
 | `validate.py` | ✅ M1 | referential integrity, file/sha checks, golden-support checks |
 | `stats.py` | ✅ #9 | corpus composition summary (`make stats`) |
-| `render/{scan,image}.py` | ⏳ M3 | scan-effect / image renderers |
+| `render/scan.py` | ✅ #10 | PDF → degraded "scanned" JPG (pypdfium2 + seeded Pillow effects), forces OCR |
+| `render/image.py` | ⏳ #11 | AI damage/property photos (prompt-spec) |
 
 ## Native dependency (PDF)
 

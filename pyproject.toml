@@ -15,6 +15,7 @@ dependencies = [
   "python-docx>=1",     # .docx rendering (M2)
   "openpyxl>=3",        # .xlsx tabular rendering (M2)
   "pillow>=10",         # image handling + scan-effect compositing (M3)
+  "pypdfium2>=4",       # PDF -> raster (PDFium; permissive BSD/Apache) for scan variants (M3)
   "pyyaml>=6",
 ]
 

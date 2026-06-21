@@ -15,7 +15,7 @@ documents render.
 | Family | Items | Format(s) | RAG capability targeted | Milestone | Status |
 |---|---|---|---|---|---|
 | **Policy** | policy contract, declarations page, endorsements, coverage schedule | PDF (born-digital), docx | semantic + structured extraction | M1 / M2 | ✅ declarations / endorsements / coverage-schedule (PDF) + full contract (**docx**) — all built (#5) |
-| **Claim** | FNOL form, adjuster report, damage/repair estimate, settlement letter, denial letter | PDF + **scanned variant** | OCR, layout-aware chunking | M1 / M2 / M3 | ✅ FNOL (M1) + adjuster report / estimate / settlement & denial letters (PDF, #6); scanned variants planned (M3) |
+| **Claim** | FNOL form, adjuster report, damage/repair estimate, settlement letter, denial letter | PDF + **scanned variant** | OCR, layout-aware chunking | M1 / M2 / M3 | ✅ FNOL (M1) + adjuster report / estimate / settlement & denial letters (PDF, #6); **scanned variants** of FNOL + letters (JPG, #10) |
 | **Evidence** | vehicle/property damage photos, ID/license scans, police report (scanned) | JPG / PNG (`/generate-image`) | vision caption / multimodal; PII on IDs | M3 | ⏳ planned |
 | **Tabular** | loss run, reserve register, premium register, agent commission summary | XLSX / CSV | aggregation / metadata queries | M2 | ✅ loss run / reserve register / premium register (**xlsx**) + commission summary (**csv**) — built (#7) |
 | **Knowledge** | underwriting guidelines, claims handling manual, customer FAQ/KB | Markdown, docx | semantic KB retrieval | M2 | ✅ underwriting guidelines + customer FAQ (**Markdown**) + claims handling manual (**docx**) — built (#8) |
@@ -30,9 +30,11 @@ describes only what is built plus what is explicitly scheduled.
   **WeasyPrint**. Reproducibility is pinned via `SOURCE_DATE_EPOCH` (derived from the model
   anchor date) so the same content yields byte-identical PDFs. Chosen over LaTeX/ReportLab
   for templating ergonomics and CSS paged-media support.
-- **Scanned variant (M3)** — a clean PDF/PNG is re-rendered through scan effects (skew, blur,
-  JPEG noise, grayscale, stamps) to *force real OCR* downstream. Both the clean ground-truth
-  text and the degraded image are kept and cross-linked in the manifest.
+- **Scanned variant** (#10) — a born-digital PDF is rasterized (pypdfium2) and re-rendered through seeded
+  scan effects (grayscale, blur, skew, paper noise, lossy JPEG) to *force real OCR* downstream. Both the
+  clean ground-truth document and the degraded JPG are kept; the scanned record carries `is_scanned: true`
+  and `scanned_of: <clean doc_id>`, so OCR output can be scored against the known text. Effects are seeded,
+  so the scan is byte-reproducible.
 - **docx** — `python-docx` (policy contract, #5). Reproducibility: core-property dates are pinned and the
   package zip is re-packed with normalized member timestamps, so the same content yields a byte-identical
   `.docx`. **xlsx** — `openpyxl` (#7); reproducible via the same normalized-zip path, plus a pin of the

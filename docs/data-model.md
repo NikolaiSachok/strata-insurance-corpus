@@ -76,8 +76,9 @@ Generation scale is selected by `--profile`:
 ## Determinism contract
 
 Same `(seed, profile)` → byte-identical `model.json` and `roster.tsv` **across environments**.
-Rendered PDFs/`.docx` are byte-identical too (PDF via `SOURCE_DATE_EPOCH`, docx via pinned dates +
-normalized zip), but only with the **same render toolchain** — WeasyPrint + cairo/pango and
-python-docx; the committed `sample/` artifacts were rendered with the versions pinned in
+Rendered PDFs/`.docx`/`.xlsx` and **scanned `.jpg`** variants are byte-identical too (PDF via
+`SOURCE_DATE_EPOCH`, docx/xlsx via pinned dates + normalized zip, scans via a per-document seed), but
+only with the **same render toolchain** — WeasyPrint + cairo/pango, python-docx, openpyxl, and for scans
+pypdfium2 + Pillow (libjpeg); the committed `sample/` artifacts were rendered with the versions pinned in
 [`uv.lock`](../uv.lock). Enforced by [`tests/test_determinism.py`](../tests/test_determinism.py)
 (structured-output byte-stability, plus PDF and docx render-path byte-stability).
