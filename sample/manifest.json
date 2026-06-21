@@ -3,6 +3,31 @@
   "counts": {
     "adjusters": 2,
     "agents": 3,
+    "by_doc_type": {
+      "adjuster_report": 5,
+      "claims_manual": 1,
+      "commission_summary": 1,
+      "customer_faq": 1,
+      "denial_letter": 1,
+      "estimate": 4,
+      "fnol": 5,
+      "loss_run": 1,
+      "policy_contract": 5,
+      "policy_declarations": 5,
+      "policy_endorsements": 5,
+      "policy_schedule": 5,
+      "premium_register": 1,
+      "reserve_register": 1,
+      "settlement_letter": 2,
+      "underwriting_guidelines": 1
+    },
+    "by_format": {
+      "csv": 1,
+      "docx": 6,
+      "md": 2,
+      "pdf": 32,
+      "xlsx": 3
+    },
     "claims": 5,
     "documents": 44,
     "policies": 5,

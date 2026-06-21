@@ -8,6 +8,7 @@ Written with sorted keys for a stable diff.
 from __future__ import annotations
 
 import json
+from collections import Counter
 from pathlib import Path
 
 
@@ -15,6 +16,8 @@ def write_manifest(outdir: Path, model_meta: dict, records: list) -> Path:
     outdir = Path(outdir)
     docs = [r.to_obj() for r in records]
     docs.sort(key=lambda d: d["doc_id"])
+    by_format = dict(sorted(Counter(d["format"] for d in docs).items()))
+    by_doc_type = dict(sorted(Counter(d["doc_type"] for d in docs).items()))
     manifest = {
         "company": model_meta.get("company"),
         "marker": model_meta.get("marker"),
@@ -25,6 +28,8 @@ def write_manifest(outdir: Path, model_meta: dict, records: list) -> Path:
         "counts": {
             **model_meta.get("counts", {}),
             "documents": len(docs),
+            "by_format": by_format,
+            "by_doc_type": by_doc_type,
         },
         "documents": docs,
     }

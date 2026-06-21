@@ -29,9 +29,15 @@ uv run python -m generator.run --seed 42 --out /tmp/m --profile slice --no-rende
 | `provenance.py` | ✅ M1 | per-doc `{entity_id, field, value}` assertions + content hashes |
 | `manifest.py` | ✅ M1 | emit `manifest.json` listing every document + provenance |
 | `golden.py` | ✅ M1 | golden eval (semantic class) → `golden.jsonl` |
+| `tabular.py` | ✅ #7 | model → loss run / reserve / premium / commission tables + aggregates |
+| `knowledge.py` | ✅ #8 | underwriting guidelines / claims manual / customer FAQ content |
+| `render/sheets.py` | ✅ #7 | tables → reproducible xlsx + csv |
+| `render/markdown.py` | ✅ #8 | KB docs → Markdown |
+| `render/_repro.py` | ✅ #7 | shared deterministic zip packaging (docx + xlsx) |
 | `run.py` | ✅ M1 | pipeline orchestrator + CLI |
 | `validate.py` | ✅ M1 | referential integrity, file/sha checks, golden-support checks |
-| `render/{xlsx,scan,image}.py` | ⏳ M2–M3 | xlsx/scan-effect/image renderers |
+| `stats.py` | ✅ #9 | corpus composition summary (`make stats`) |
+| `render/{scan,image}.py` | ⏳ M3 | scan-effect / image renderers |
 
 ## Native dependency (PDF)
 
