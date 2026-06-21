@@ -4,7 +4,7 @@
     "adjusters": 2,
     "agents": 3,
     "claims": 5,
-    "documents": 41,
+    "documents": 44,
     "policies": 5,
     "policyholders": 6
   },
@@ -510,7 +510,7 @@
           "value": "homeowners"
         }
       ],
-      "sha256": "84495b40aef64145ce314f68aa38fde048e45e99cca60e45bb2d61c9174eea36",
+      "sha256": "c050e712561f189f175a35329fca36bd47a3593c14aacdd92e5b21480afaeccd",
       "synthetic": true
     },
     {
@@ -606,7 +606,7 @@
           "value": "homeowners"
         }
       ],
-      "sha256": "fcdeb42a76d05687cb02d92197ecb0092708b7a2b2f0260a94e8693612097b39",
+      "sha256": "4c54aa024a1bf1c6e54bd575baae7a9d2847f532978e47fda3cce34bfa96cb44",
       "synthetic": true
     },
     {
@@ -686,6 +686,39 @@
       "synthetic": true
     },
     {
+      "doc_id": "DOC-KB-CLAIMS",
+      "doc_type": "claims_manual",
+      "entity_ids": [],
+      "format": "docx",
+      "is_scanned": false,
+      "path": "docs/kb/claims-handling-manual.docx",
+      "provenance": [],
+      "sha256": "6de8cb93c06a4b28a52148034c1779b537758eefdcb53e3b7ba8cda0b836250b",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-KB-FAQ",
+      "doc_type": "customer_faq",
+      "entity_ids": [],
+      "format": "md",
+      "is_scanned": false,
+      "path": "docs/kb/customer-faq.md",
+      "provenance": [],
+      "sha256": "f2366a4aaa2c8f2a067f52d188dfbfb026bb9cc14d3570b9a8ed7e8ff9da4025",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-KB-UW",
+      "doc_type": "underwriting_guidelines",
+      "entity_ids": [],
+      "format": "md",
+      "is_scanned": false,
+      "path": "docs/kb/underwriting-guidelines.md",
+      "provenance": [],
+      "sha256": "6190d0c42308e7fe0ac914a9a2933043d8050662e4448dc466bd7f1623a41704",
+      "synthetic": true
+    },
+    {
       "doc_id": "DOC-PA-0000002-CONTRACT",
       "doc_type": "policy_contract",
       "entity_ids": [
@@ -702,7 +735,7 @@
           "value": "personal_auto"
         }
       ],
-      "sha256": "ddd83e9d745e8cde46192fa80deb623b5c07161b66e07159f32944d2c78eae3c",
+      "sha256": "9409d83e8d3c41161c67d6eae7980230505d735fd1473602a190e62c4a2f5ac8",
       "synthetic": true
     },
     {
@@ -798,7 +831,7 @@
           "value": "personal_auto"
         }
       ],
-      "sha256": "5df21ef9677dc5bfb1ce77c8cf9a5d5897361aed6e87014ae6026b05f83f7974",
+      "sha256": "0a7a8a729df5af2424f59e2eb5bbfb4847b1ac010a3fe66921a7fab8ce13aa16",
       "synthetic": true
     },
     {
@@ -894,7 +927,7 @@
           "value": "personal_auto"
         }
       ],
-      "sha256": "742fd11d39399173e477d0cf1a9f08d78e582bf5b806d684730385eb7629c282",
+      "sha256": "37047a08d5ee39b216aea19dd4e63f152a6db27dfb2f47aef04904aa4cd74b4e",
       "synthetic": true
     },
     {

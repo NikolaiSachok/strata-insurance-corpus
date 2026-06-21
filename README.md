@@ -16,7 +16,7 @@ the **[issues](../../issues)**.
 
 ```bash
 make sample     # -> committed sample/ slice + golden/golden.jsonl  (deterministic)
-make generate   # -> full corpus/ : 305 entities, 775 documents (651 PDF + 120 Word + 4 sheets), 254 golden Qs  (gitignored)
+make generate   # -> full corpus/ : 305 entities, 778 documents (651 PDF + 121 Word + 4 sheets + 2 Markdown), 255 golden Qs  (gitignored)
 make validate   # integrity + golden-support checks
 make test       # determinism + referential-integrity suite
 ```
@@ -24,12 +24,13 @@ make test       # determinism + referential-integrity suite
 Built: deterministic entity model + roster ([docs/data-model.md](docs/data-model.md)); the **policy** family
 — declarations / endorsements / coverage-schedule (born-digital PDF, WeasyPrint) + full **contract in Word
 `.docx`** (python-docx); the **claim** family — FNOL, adjuster report, damage/repair estimate, and settlement & denial letters
-(PDF), conditioned on claim status; and the **tabular** family — loss run, reserve & premium registers
-(xlsx) and an agent commission summary (csv). All renderers byte-reproducible (`SOURCE_DATE_EPOCH` /
-pinned docx & xlsx packaging); `manifest.json` with per-doc provenance + sha256; **semantic**
-(cause-of-loss, premium, settlement amount) **and aggregation** (total open reserve, total premium, open-claim
-count) golden-question classes. The doc-type × format build-out is tracked in
-[docs/format-matrix.md](docs/format-matrix.md).
+(PDF), conditioned on claim status; the **tabular** family — loss run, reserve & premium registers
+(xlsx) and an agent commission summary (csv); and the **knowledge** family — underwriting guidelines &
+customer FAQ (Markdown) and a claims-handling manual (docx). All renderers byte-reproducible
+(`SOURCE_DATE_EPOCH` / pinned docx & xlsx packaging); `manifest.json` with per-doc provenance + sha256;
+**semantic** (cause-of-loss, premium, settlement amount, lines-of-business) **and aggregation** (total open
+reserve, total premium, open-claim count) golden-question classes. The doc-type × format build-out is
+tracked in [docs/format-matrix.md](docs/format-matrix.md).
 
 ---
 

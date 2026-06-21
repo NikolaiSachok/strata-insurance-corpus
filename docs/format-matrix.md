@@ -18,7 +18,7 @@ documents render.
 | **Claim** | FNOL form, adjuster report, damage/repair estimate, settlement letter, denial letter | PDF + **scanned variant** | OCR, layout-aware chunking | M1 / M2 / M3 | ✅ FNOL (M1) + adjuster report / estimate / settlement & denial letters (PDF, #6); scanned variants planned (M3) |
 | **Evidence** | vehicle/property damage photos, ID/license scans, police report (scanned) | JPG / PNG (`/generate-image`) | vision caption / multimodal; PII on IDs | M3 | ⏳ planned |
 | **Tabular** | loss run, reserve register, premium register, agent commission summary | XLSX / CSV | aggregation / metadata queries | M2 | ✅ loss run / reserve register / premium register (**xlsx**) + commission summary (**csv**) — built (#7) |
-| **Knowledge** | underwriting guidelines, claims handling manual, customer FAQ/KB | Markdown, docx | semantic KB retrieval | M2 | ⏳ planned |
+| **Knowledge** | underwriting guidelines, claims handling manual, customer FAQ/KB | Markdown, docx | semantic KB retrieval | M2 | ✅ underwriting guidelines + customer FAQ (**Markdown**) + claims handling manual (**docx**) — built (#8) |
 | **Correspondence** | customer letters/emails, status notices | docx / txt / eml | retrieval over informal text | M2 | ⏳ planned |
 
 Legend: ✅ implemented · ⏳ planned (issue open). This table is kept honest — it
@@ -36,7 +36,9 @@ describes only what is built plus what is explicitly scheduled.
 - **docx** — `python-docx` (policy contract, #5). Reproducibility: core-property dates are pinned and the
   package zip is re-packed with normalized member timestamps, so the same content yields a byte-identical
   `.docx`. **xlsx** — `openpyxl` (#7); reproducible via the same normalized-zip path, plus a pin of the
-  `dcterms:modified` timestamp openpyxl stamps at save. **csv** — UTF-8 text (inherently deterministic).
+  `dcterms:modified` timestamp openpyxl stamps at save. **csv / Markdown** — UTF-8 text (inherently
+  deterministic); the knowledge base (#8) renders to Markdown and one `.docx` from a shared
+  `{title, intro, sections}` structure.
 - **Images (M3)** — generated via the `/generate-image` skill (Nano Banana) for damage/property
   photos and ID/form scans, each captioned and recorded in the manifest. Image **pixels are not
   byte-deterministic**, so the committed, reproducible artifact is the **prompt spec**, not the image

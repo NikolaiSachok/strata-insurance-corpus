@@ -177,6 +177,20 @@ def test_aggregation_golden_matches_model():
     assert agg["Q-AGG-open-claims"] == str(tabular.open_claim_count(m))
 
 
+def test_knowledge_markdown_deterministic_and_grounded():
+    """KB markdown is deterministic, carries the marker, and contains the KB golden answer."""
+    from generator import knowledge
+    from generator.model import LINE_LABEL, LINES
+    from generator.render.markdown import render_markdown
+
+    a = render_markdown(knowledge.underwriting_guidelines())
+    b = render_markdown(knowledge.underwriting_guidelines())
+    assert a == b
+    assert "SYNTHETIC" in a
+    # the KB golden answer ("Which lines...") must actually appear in the guidelines text
+    assert ", ".join(LINE_LABEL[ln] for ln in LINES) in a
+
+
 def test_synthetic_markers_present():
     m = build_model(5, "slice")
     assert m.meta["synthetic"] is True

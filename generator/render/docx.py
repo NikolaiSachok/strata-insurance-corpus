@@ -65,14 +65,41 @@ def write_contract_docx(ctx: dict, out_path: Path) -> Path:
         "no real person, business, or policy is described."
     ).italic = True
 
-    # Pin core-property dates, then re-pack deterministically.
+    return _finalize(doc, out_path, f"{ctx['policy_id']} — {ctx['doc_title']}")
+
+
+def _finalize(doc, out_path: Path, title: str) -> Path:
+    """Pin core-property dates + synthetic subject, then re-pack deterministically."""
     cp = doc.core_properties
     cp.author = COMPANY_NAME
     cp.created = _FIXED_DT
     cp.modified = _FIXED_DT
-    cp.title = f"{ctx['policy_id']} — {ctx['doc_title']}"
+    cp.subject = SYNTHETIC_MARKER
+    cp.title = title
 
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
     bio = io.BytesIO()
     doc.save(bio)
     out_path.write_bytes(_normalize_docx(bio.getvalue()))
     return out_path
+
+
+def write_sections_docx(kbdoc: dict, out_path: Path) -> Path:
+    """Render a generic ``{title, intro, sections}`` document to a reproducible .docx.
+
+    Used by the knowledge base; sections are ``{heading, paragraphs[], bullets[]?}``.
+    """
+    doc = _new_document()
+    doc.add_heading(kbdoc["title"], level=0)
+    subtitle = doc.add_paragraph()
+    subtitle.add_run(COMPANY_NAME).italic = True
+    if kbdoc.get("intro"):
+        doc.add_paragraph(kbdoc["intro"])
+    for section in kbdoc["sections"]:
+        doc.add_heading(section["heading"], level=1)
+        for para in section.get("paragraphs", []):
+            doc.add_paragraph(para)
+        for bullet in section.get("bullets", []):
+            doc.add_paragraph(bullet, style="List Bullet")
+    return _finalize(doc, out_path, kbdoc["title"])
