@@ -7,7 +7,7 @@ full generation. Regenerated deterministically via `make sample` (seed 42, `samp
 ## Contents
 
 Generated from 21 entities (6 policyholders, 3 agents, 2 adjusters, 5 policies, 5 claims) →
-59 documents, 19 golden questions:
+61 documents, 19 golden questions:
 
 ```
 model.json                          canonical entity model (the spine)
@@ -22,7 +22,8 @@ docs/claim/*-adjuster-report.pdf    adjuster findings + disposition (one per cla
 docs/claim/*-estimate.pdf           damage/repair estimate (open & closed claims)
 docs/claim/*-settlement-letter.pdf  settlement letter (closed claims)
 docs/claim/*-denial-letter.pdf      denial letter (denied claims)
-docs/claim/*-scanned.jpg            scanned (OCR-target) variants of FNOL + letters
+docs/claim/*-accident-statement.pdf Motor accident statement (own EAS-inspired form; Motor claims)
+docs/claim/*-scanned.jpg            scanned (OCR-target) variants of FNOL + letters + accident statement
 docs/tabular/loss-run.xlsx          loss run — every claim (Excel)
 docs/tabular/reserve-register.xlsx  open-claim reserves (Excel)
 docs/tabular/premium-register.xlsx  policy premiums (Excel)

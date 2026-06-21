@@ -56,3 +56,14 @@ the full-corpus pixels are produced on-demand for the HF release.
 WeasyPrint needs cairo / pango / gdk-pixbuf. On macOS these come from Homebrew
 (`brew install cairo pango gdk-pixbuf libffi`); `render/pdf.py` points the dynamic loader at the
 Homebrew prefix automatically. On Debian/Ubuntu: `apt-get install libpango-1.0-0 libpangocairo-1.0-0`.
+
+## Known issues / notes
+
+- **Full-corpus render reliability:** rendering ~700 PDFs in one long-lived process can intermittently
+  hit a WeasyPrint/fontconfig native crash mid-run (a platform issue, not a logic bug). `make generate`
+  usually succeeds; **if it fails, re-run it** — the output is deterministic, so a successful run is
+  byte-identical regardless. Hardening this (subprocess-isolated rendering) is tracked as a follow-up
+  issue. `make sample` (~60 docs) is reliable.
+- **Determinism + programmatic use:** byte-stability requires `PYTHONHASHSEED=0` (some Faker locale
+  providers sort from sets). `make …` exports it and `python -m generator.run` re-execs with it. If you
+  call `generator.generate()` / `build_model()` **programmatically**, set `PYTHONHASHSEED=0` in the env first.

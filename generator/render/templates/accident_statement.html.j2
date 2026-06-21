@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>{{ claim_id }} — Accident Statement</title>
+<style>
+@font-face { font-family: "HandFill"; src: url("fonts/PatrickHand-Regular.ttf"); }
+.title { background: #1f3a5f; color: #fff; font-weight: 700; font-size: 12pt; padding: 5px 8px; text-align: center; }
+.frow { display: flex; gap: 8px; margin-top: 6px; }
+.fcell { border: 1px solid #888; padding: 3px 6px; flex: 1; }
+.flbl { font-size: 7.5pt; color: #555; text-transform: uppercase; }
+.hw { font-family: "HandFill"; color: #16335c; font-size: 13pt; line-height: 1.15; }
+.two { display: flex; gap: 8px; margin-top: 6px; }
+.veh { flex: 1; border: 1px solid #888; padding: 4px 7px; }
+.veh .vt { font-weight: 700; background: #eef2f7; margin: -4px -7px 5px; padding: 3px 7px; }
+table.circ { width: 100%; border-collapse: collapse; margin-top: 4px; }
+table.circ td, table.circ th { border: 1px solid #aaa; padding: 2px 6px; font-size: 8.5pt; }
+table.circ th { background: #eef2f7; }
+.col { width: 26px; text-align: center; }
+.chk { font-family: "HandFill"; color: #16335c; font-size: 14pt; }
+.sketchbox { border: 1px solid #888; height: 200px; margin-top: 6px; position: relative; }
+.sketchbox .flbl { position: absolute; top: 3px; left: 5px; }
+.sig { margin-top: 10px; display: flex; gap: 30px; }
+.sig .line { flex: 1; border-top: 1px solid #333; padding-top: 2px; font-size: 7.5pt; color: #555; }
+</style></head>
+<body>
+  <div class="synthetic-banner">{{ marker }}</div>
+  <div class="masthead">
+    <div class="company">{{ company }}</div>
+    <div class="doc-title">{{ doc_title }}</div>
+  </div>
+  <div class="title">MOTOR ACCIDENT STATEMENT — Claim {{ claim_id }}</div>
+
+  <div class="frow">
+    <div class="fcell"><div class="flbl">Date of accident</div><div class="hw">{{ accident_date }}</div></div>
+    <div class="fcell"><div class="flbl">Cause</div><div class="hw">{{ cause_label }}</div></div>
+    <div class="fcell" style="flex:2"><div class="flbl">Location</div><div class="hw">{{ location }}</div></div>
+    <div class="fcell"><div class="flbl">Policy</div><div class="hw">{{ policy_id }}</div></div>
+  </div>
+
+  <div class="two">
+    <div class="veh">
+      <div class="vt">Vehicle A — insured</div>
+      <div class="flbl">Driver</div><div class="hw">{{ vehicle_a.driver }}</div>
+      <div class="flbl">Policy</div><div class="hw">{{ vehicle_a.policy }}</div>
+      <div class="flbl">Vehicle</div><div class="hw">{{ vehicle_a.vehicle }}</div>
+    </div>
+    <div class="veh">
+      <div class="vt">Vehicle B — other party</div>
+      {% if vehicle_b %}
+      <div class="flbl">Driver</div><div class="hw">{{ vehicle_b.driver }}</div>
+      <div class="flbl">Registration</div><div class="hw">{{ vehicle_b.plate }}</div>
+      <div class="flbl">Vehicle</div><div class="hw">{{ vehicle_b.vehicle }}</div>
+      {% else %}
+      <div class="hw" style="margin-top:14px">No third party involved.</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <table class="circ">
+    <thead><tr><th class="col">A</th><th class="col">B</th><th>Circumstance</th></tr></thead>
+    <tbody>
+    {% for c in circumstances %}
+      <tr><td class="col chk">{% if c.a %}✓{% endif %}</td><td class="col chk">{% if c.b %}✓{% endif %}</td><td>{{ c.label }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="sketchbox">
+    <div class="flbl">Sketch of the accident</div>
+    <svg viewBox="0 0 600 200" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <line x1="300" y1="10" x2="300" y2="190" stroke="#16335c" stroke-width="2" stroke-dasharray="10 8"/>
+      {% if sketch_collision %}
+      <rect x="330" y="55" width="70" height="40" rx="6" fill="none" stroke="#16335c" stroke-width="2.5"/>
+      <text x="365" y="80" font-size="11" fill="#16335c" text-anchor="middle">A</text>
+      <rect x="330" y="110" width="70" height="40" rx="6" fill="none" stroke="#16335c" stroke-width="2.5"/>
+      <text x="365" y="135" font-size="11" fill="#16335c" text-anchor="middle">B</text>
+      <path d="M365 110 l-7 -10 m7 10 l7 -10" stroke="#c0392b" stroke-width="2" fill="none"/>
+      <path d="M365 45 l0 -22 m-6 8 l6 -8 l6 8" stroke="#16335c" stroke-width="2" fill="none"/>
+      {% else %}
+      <rect x="330" y="80" width="70" height="40" rx="6" fill="none" stroke="#16335c" stroke-width="2.5"/>
+      <text x="365" y="105" font-size="11" fill="#16335c" text-anchor="middle">A</text>
+      <path d="M365 70 l0 -22 m-6 8 l6 -8 l6 8" stroke="#16335c" stroke-width="2" fill="none"/>
+      {% endif %}
+    </svg>
+  </div>
+
+  <div class="sig">
+    <div class="line">Signature — Vehicle A &nbsp; <span class="hw">{{ sig_a }}</span></div>
+    <div class="line">Signature — Vehicle B &nbsp; <span class="hw">{{ sig_b }}</span></div>
+  </div>
+
+  <p class="meta-foot">This document is synthetic and generated for retrieval/benchmark testing.
+  No real person, business, or policy is described.</p>
+</body>
+</html>

@@ -6,6 +6,11 @@ SEED  ?= 42
 RUN   ?= uv run
 OUT   ?= corpus
 
+# Pin the hash seed: some Faker locale providers (e.g. it_IT city) select from sets whose
+# iteration order is PYTHONHASHSEED-dependent, which would otherwise vary model.json across
+# processes. run.py re-execs with this too, so direct invocation is covered.
+export PYTHONHASHSEED := 0
+
 .PHONY: help generate sample validate stats test clean
 
 help:

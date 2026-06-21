@@ -25,6 +25,32 @@ def test_model_json_byte_stable():
         assert a == b, f"model.json not byte-stable for profile={profile}"
 
 
+def test_model_byte_stable_across_processes(tmp_path):
+    """model.json must be byte-identical across SEPARATE processes, not just within one.
+
+    Some Faker locale providers (it_IT city) select from sets whose order is PYTHONHASHSEED-
+    dependent; run.py re-execs with PYTHONHASHSEED=0 to pin it. This runs the CLI twice with a
+    non-zero parent hash seed to prove the re-exec forces reproducibility.
+    """
+    import os
+    import pathlib
+    import subprocess
+    import sys
+
+    repo = pathlib.Path(__file__).resolve().parents[1]
+    env = dict(os.environ)
+    env["PYTHONHASHSEED"] = "1"  # non-zero: run.py must re-exec to 0
+    digests = []
+    for i in range(2):
+        out = tmp_path / f"r{i}"
+        subprocess.run(
+            [sys.executable, "-m", "generator.run", "--seed", "42", "--out", str(out), "--profile", "full", "--no-render"],
+            check=True, cwd=repo, env=env, stdout=subprocess.DEVNULL,
+        )
+        digests.append((out / "model.json").read_bytes())
+    assert digests[0] == digests[1], "model.json differs across processes (PYTHONHASHSEED not pinned)"
+
+
 def test_roster_byte_stable():
     a = to_roster_bytes(build_model(7, "sample"))
     b = to_roster_bytes(build_model(7, "sample"))
@@ -198,6 +224,7 @@ BUILT_DOC_TYPES = {
     "policy_declarations", "policy_contract", "policy_endorsements", "policy_schedule",
     "fnol", "adjuster_report", "estimate", "settlement_letter", "denial_letter",
     "fnol_scanned", "settlement_letter_scanned", "denial_letter_scanned",
+    "accident_statement", "accident_statement_scanned",
     "loss_run", "reserve_register", "premium_register", "commission_summary",
     "underwriting_guidelines", "claims_manual", "customer_faq",
     "evidence_photo",
