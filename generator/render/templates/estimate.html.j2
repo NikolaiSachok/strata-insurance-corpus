@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>{{ claim_id }} — Estimate</title></head>
+<body>
+  <div class="synthetic-banner">{{ marker }}</div>
+  <div class="masthead">
+    <div class="company">{{ company }}</div>
+    <div class="doc-title">{{ doc_title }}</div>
+  </div>
+
+  <h2>Estimate — Claim {{ claim_id }}</h2>
+  <table class="kv">
+    <tr><td class="k">Policy number</td><td class="v">{{ policy_id }}</td></tr>
+    <tr><td class="k">Line of business</td><td class="v">{{ line_label }}</td></tr>
+    <tr><td class="k">Insured</td><td class="v">{{ holder_name }}</td></tr>
+    <tr><td class="k">Date of loss</td><td class="v">{{ date_of_loss }}</td></tr>
+    <tr><td class="k">Cause of loss</td><td class="v">{{ cause_label }}</td></tr>
+  </table>
+
+  <h2>Line Items</h2>
+  <table class="grid">
+    <thead><tr><th>Item</th><th class="num">Amount</th></tr></thead>
+    <tbody>
+    {% for label, amount in rows %}
+      <tr><td>{{ label }}</td><td class="num">{{ amount }}</td></tr>
+    {% endfor %}
+      <tr class="total"><td>Gross repair estimate</td><td class="num">{{ gross_total }}</td></tr>
+      <tr><td>Less policy deductible</td><td class="num">({{ deductible }})</td></tr>
+      <tr class="total"><td>Net claim payable</td><td class="num">{{ net_payable }}</td></tr>
+    </tbody>
+  </table>
+
+  <p class="meta-foot">This document is synthetic and generated for retrieval/benchmark testing.
+  No real person, business, or policy is described.</p>
+</body>
+</html>

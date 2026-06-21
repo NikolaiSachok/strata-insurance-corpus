@@ -4,11 +4,65 @@
     "adjusters": 2,
     "agents": 3,
     "claims": 5,
-    "documents": 25,
+    "documents": 37,
     "policies": 5,
     "policyholders": 6
   },
   "documents": [
+    {
+      "doc_id": "DOC-C-1000-ADJ",
+      "doc_type": "adjuster_report",
+      "entity_ids": [
+        "C-1000",
+        "HO-0000001",
+        "PH-00003",
+        "AD-002"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/claim/C-1000-adjuster-report.pdf",
+      "provenance": [
+        {
+          "entity_id": "C-1000",
+          "field": "cause",
+          "value": "theft"
+        },
+        {
+          "entity_id": "C-1000",
+          "field": "status",
+          "value": "closed"
+        },
+        {
+          "entity_id": "C-1000",
+          "field": "adjuster_id",
+          "value": "AD-002"
+        }
+      ],
+      "sha256": "e7b5304f0398ae60df86294103d106adadfa794fa77c1549e763e2396b882071",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1000-ESTIMATE",
+      "doc_type": "estimate",
+      "entity_ids": [
+        "C-1000",
+        "HO-0000001",
+        "PH-00003",
+        "AD-002"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/claim/C-1000-estimate.pdf",
+      "provenance": [
+        {
+          "entity_id": "C-1000",
+          "field": "estimate_net_payable",
+          "value": "$45,350.00"
+        }
+      ],
+      "sha256": "875d772abcc4c749e5881fde2d8da51e0af423fd9892cce83a1c9b57f37bc9a7",
+      "synthetic": true
+    },
     {
       "doc_id": "DOC-C-1000-FNOL",
       "doc_type": "fnol",
@@ -39,6 +93,87 @@
         }
       ],
       "sha256": "30c7c46a75e92d3619b0cc150d11f4b1c4849b07aa8bc845463ece966bb64c00",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1000-SETTLEMENT",
+      "doc_type": "settlement_letter",
+      "entity_ids": [
+        "C-1000",
+        "HO-0000001",
+        "PH-00003",
+        "AD-002"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/claim/C-1000-settlement-letter.pdf",
+      "provenance": [
+        {
+          "entity_id": "C-1000",
+          "field": "paid",
+          "value": "$45,350.00"
+        },
+        {
+          "entity_id": "C-1000",
+          "field": "status",
+          "value": "closed"
+        }
+      ],
+      "sha256": "c5177857bb034f6a372b44e5b057d56c44d5102a04a0809a0776e2bb6d7061ed",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1001-ADJ",
+      "doc_type": "adjuster_report",
+      "entity_ids": [
+        "C-1001",
+        "HO-0000003",
+        "PH-00001",
+        "AD-001"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/claim/C-1001-adjuster-report.pdf",
+      "provenance": [
+        {
+          "entity_id": "C-1001",
+          "field": "cause",
+          "value": "slip-and-fall liability"
+        },
+        {
+          "entity_id": "C-1001",
+          "field": "status",
+          "value": "closed"
+        },
+        {
+          "entity_id": "C-1001",
+          "field": "adjuster_id",
+          "value": "AD-001"
+        }
+      ],
+      "sha256": "8d683ea7f2f91663127e2ebb09ea6dd03e84abf5b910a487b548aad65ba533f9",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1001-ESTIMATE",
+      "doc_type": "estimate",
+      "entity_ids": [
+        "C-1001",
+        "HO-0000003",
+        "PH-00001",
+        "AD-001"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/claim/C-1001-estimate.pdf",
+      "provenance": [
+        {
+          "entity_id": "C-1001",
+          "field": "estimate_net_payable",
+          "value": "$23,950.00"
+        }
+      ],
+      "sha256": "539523927fa959fadac3d52d05e15be7b10e77f1721ab7dd914f67f3bf579bb6",
       "synthetic": true
     },
     {
@@ -74,6 +209,87 @@
       "synthetic": true
     },
     {
+      "doc_id": "DOC-C-1001-SETTLEMENT",
+      "doc_type": "settlement_letter",
+      "entity_ids": [
+        "C-1001",
+        "HO-0000003",
+        "PH-00001",
+        "AD-001"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/claim/C-1001-settlement-letter.pdf",
+      "provenance": [
+        {
+          "entity_id": "C-1001",
+          "field": "paid",
+          "value": "$23,950.00"
+        },
+        {
+          "entity_id": "C-1001",
+          "field": "status",
+          "value": "closed"
+        }
+      ],
+      "sha256": "b3b22cfe46dfaae98e5787292fbf782b23c9132a2b9e025650caf7d2bad62daa",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1002-ADJ",
+      "doc_type": "adjuster_report",
+      "entity_ids": [
+        "C-1002",
+        "PA-0000002",
+        "PH-00005",
+        "AD-002"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/claim/C-1002-adjuster-report.pdf",
+      "provenance": [
+        {
+          "entity_id": "C-1002",
+          "field": "cause",
+          "value": "vandalism"
+        },
+        {
+          "entity_id": "C-1002",
+          "field": "status",
+          "value": "open"
+        },
+        {
+          "entity_id": "C-1002",
+          "field": "adjuster_id",
+          "value": "AD-002"
+        }
+      ],
+      "sha256": "70b3150fe3e8134430e5c653827ca885dce7fed7227cf2ddf4a20c77612c44b8",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1002-ESTIMATE",
+      "doc_type": "estimate",
+      "entity_ids": [
+        "C-1002",
+        "PA-0000002",
+        "PH-00005",
+        "AD-002"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/claim/C-1002-estimate.pdf",
+      "provenance": [
+        {
+          "entity_id": "C-1002",
+          "field": "estimate_net_payable",
+          "value": "$28,900.00"
+        }
+      ],
+      "sha256": "3910b5b06d8aa1c02611002de0180663bb34d8e7491c0c3a1cedfc03cc2ea33e",
+      "synthetic": true
+    },
+    {
       "doc_id": "DOC-C-1002-FNOL",
       "doc_type": "fnol",
       "entity_ids": [
@@ -106,6 +322,60 @@
       "synthetic": true
     },
     {
+      "doc_id": "DOC-C-1003-ADJ",
+      "doc_type": "adjuster_report",
+      "entity_ids": [
+        "C-1003",
+        "PA-0000004",
+        "PH-00006",
+        "AD-002"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/claim/C-1003-adjuster-report.pdf",
+      "provenance": [
+        {
+          "entity_id": "C-1003",
+          "field": "cause",
+          "value": "single-vehicle accident"
+        },
+        {
+          "entity_id": "C-1003",
+          "field": "status",
+          "value": "denied"
+        },
+        {
+          "entity_id": "C-1003",
+          "field": "adjuster_id",
+          "value": "AD-002"
+        }
+      ],
+      "sha256": "a17ff76e098149eadf3fa5954ca82bfa41bba5ee610ce1cf9f1e469234500b1a",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1003-DENIAL",
+      "doc_type": "denial_letter",
+      "entity_ids": [
+        "C-1003",
+        "PA-0000004",
+        "PH-00006",
+        "AD-002"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/claim/C-1003-denial-letter.pdf",
+      "provenance": [
+        {
+          "entity_id": "C-1003",
+          "field": "status",
+          "value": "denied"
+        }
+      ],
+      "sha256": "d73bca37aba29b9a578080984b1f7506f2c7a6c330435a7bc691430e260af947",
+      "synthetic": true
+    },
+    {
       "doc_id": "DOC-C-1003-FNOL",
       "doc_type": "fnol",
       "entity_ids": [
@@ -135,6 +405,60 @@
         }
       ],
       "sha256": "afa85dd02cf4758de240883a36861f903b19bf4ae8cece32616e8d70cc4e8440",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1004-ADJ",
+      "doc_type": "adjuster_report",
+      "entity_ids": [
+        "C-1004",
+        "PA-0000005",
+        "PH-00002",
+        "AD-002"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/claim/C-1004-adjuster-report.pdf",
+      "provenance": [
+        {
+          "entity_id": "C-1004",
+          "field": "cause",
+          "value": "single-vehicle accident"
+        },
+        {
+          "entity_id": "C-1004",
+          "field": "status",
+          "value": "open"
+        },
+        {
+          "entity_id": "C-1004",
+          "field": "adjuster_id",
+          "value": "AD-002"
+        }
+      ],
+      "sha256": "552d32ffc9934782d2ba9f70028be3cf5039d382353d8f0bba6ce51a41216f99",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1004-ESTIMATE",
+      "doc_type": "estimate",
+      "entity_ids": [
+        "C-1004",
+        "PA-0000005",
+        "PH-00002",
+        "AD-002"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/claim/C-1004-estimate.pdf",
+      "provenance": [
+        {
+          "entity_id": "C-1004",
+          "field": "estimate_net_payable",
+          "value": "$18,350.00"
+        }
+      ],
+      "sha256": "5e3f186ebba02c669786582f37f104c039e8f20c1e86386ab3890bb67fc2f7d2",
       "synthetic": true
     },
     {

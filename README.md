@@ -16,17 +16,18 @@ the **[issues](../../issues)**.
 
 ```bash
 make sample     # -> committed sample/ slice + golden/golden.jsonl  (deterministic)
-make generate   # -> full corpus/ : 305 entities, 560 documents (440 PDF + 120 Word), 200 golden Qs  (gitignored)
+make generate   # -> full corpus/ : 305 entities, 771 documents (651 PDF + 120 Word), 251 golden Qs  (gitignored)
 make validate   # integrity + golden-support checks
 make test       # determinism + referential-integrity suite
 ```
 
 Built: deterministic entity model + roster ([docs/data-model.md](docs/data-model.md)); the **policy** family
 — declarations / endorsements / coverage-schedule (born-digital PDF, WeasyPrint) + full **contract in Word
-`.docx`** (python-docx) — and **FNOL** PDFs; all renderers byte-reproducible (`SOURCE_DATE_EPOCH` / pinned
-docx packaging); `manifest.json` with per-doc provenance + sha256; the **semantic** golden-question class
-(cause-of-loss + premium). The doc-type × format build-out is tracked in
-[docs/format-matrix.md](docs/format-matrix.md).
+`.docx`** (python-docx); and the **claim** family — FNOL, adjuster report, damage/repair estimate, and
+settlement & denial letters (PDF), conditioned on claim status. All renderers byte-reproducible
+(`SOURCE_DATE_EPOCH` / pinned docx packaging); `manifest.json` with per-doc provenance + sha256; the
+**semantic** golden-question class (cause-of-loss, premium, settlement amount). The doc-type × format
+build-out is tracked in [docs/format-matrix.md](docs/format-matrix.md).
 
 ---
 

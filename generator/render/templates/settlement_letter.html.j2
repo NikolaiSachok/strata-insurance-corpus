@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>{{ claim_id }} — Settlement Letter</title></head>
+<body>
+  <div class="synthetic-banner">{{ marker }}</div>
+  <div class="masthead">
+    <div class="company">{{ company }}</div>
+    <div class="doc-title">Claims Department</div>
+  </div>
+
+  <div class="letter-date">{{ letter_date }}</div>
+  <div class="addressee">
+    {{ holder_name }}<br>
+    {{ holder_address }}
+  </div>
+
+  <div class="letter-body">
+    <p>Re: Settlement of claim {{ claim_id }} under policy {{ policy_id }}</p>
+    <p>Dear {{ holder_name }},</p>
+    <p>We have completed our review of your {{ line_label }} claim for the {{ cause_label }} loss that
+    occurred on {{ date_of_loss }}. We are pleased to advise that your claim has been approved and resolved.</p>
+    <p>A settlement payment of <span class="amount-callout">{{ paid }}</span> has been issued to you, net of
+    your {{ deductible }} policy deductible. Please allow several business days for processing.</p>
+    <p>If you have questions regarding this settlement, please contact your adjuster.</p>
+    <div class="signature">
+      <div>Sincerely,</div>
+      <div class="name">{{ adjuster_name }}</div>
+      <div>Claims Adjuster, {{ company }}</div>
+    </div>
+  </div>
+
+  <p class="meta-foot">This document is synthetic and generated for retrieval/benchmark testing.
+  No real person, business, or policy is described.</p>
+</body>
+</html>

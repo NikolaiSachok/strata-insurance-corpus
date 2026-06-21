@@ -9,8 +9,15 @@ without changing callers.
 
 from __future__ import annotations
 
+import datetime as dt
+
 from . import COMPANY_NAME, SYNTHETIC_MARKER
 from .model import LINE_LABEL, Adjuster, Agent, Claim, Policy, Policyholder
+
+
+def _add_days(iso_date: str, n: int) -> str:
+    """Deterministic date arithmetic on an ISO date string (no wall-clock)."""
+    return (dt.date.fromisoformat(iso_date) + dt.timedelta(days=n)).isoformat()
 
 # Human-readable cause labels (also the golden-answer surface form).
 CAUSE_LABEL = {
@@ -250,4 +257,156 @@ def fnol_document(
         "adjuster_specialty": adjuster.specialty,
         "reserve": _money(claim.reserve),
         "narrative": narrative_for_claim(claim, holder, policy),
+    }
+
+
+# --- claim handling documents (issue #6) ----------------------------------- #
+_ADJUSTER_FINDINGS = {
+    "personal_auto": "Inspection confirms damage to the insured vehicle consistent with the reported {cause}. Photographs and the repair estimate are on file.",
+    "homeowners": "Site inspection of the residence confirms damage consistent with the reported {cause}. The scope of repair is documented in the attached estimate.",
+    "bop": "Inspection of the business premises confirms a loss consistent with the reported {cause}. The impact on operations has been assessed and documented.",
+}
+
+
+def adjuster_report_document(model_meta: dict, claim: Claim, policy: Policy, holder: Policyholder, adjuster: Adjuster) -> dict:
+    """View-model for the adjuster's report (PDF) — generated for every claim."""
+    cause = cause_label(claim.cause)
+    if claim.status == "closed":
+        disposition = "Closed — paid"
+        recommendation = (
+            f"Coverage applies. Claim resolved; payment of {_money(claim.paid)} issued to the insured, "
+            f"net of the {_money(policy.deductible)} deductible."
+        )
+    elif claim.status == "open":
+        disposition = "Open — under review"
+        recommendation = (
+            f"Coverage appears to apply. A reserve of {_money(claim.reserve)} has been established pending "
+            "completion of repairs and final documentation."
+        )
+    else:  # denied
+        disposition = "Denied"
+        recommendation = (
+            "Based on the investigation, the loss is not covered under the policy terms; denial is "
+            "recommended. See the denial letter issued to the insured."
+        )
+    return {
+        "marker": SYNTHETIC_MARKER,
+        "company": COMPANY_NAME,
+        "doc_title": "Adjuster Report",
+        "claim_id": claim.id,
+        "policy_id": policy.id,
+        "line_label": LINE_LABEL[policy.line],
+        "holder_name": holder.name,
+        "adjuster_name": adjuster.name,
+        "adjuster_specialty": adjuster.specialty,
+        "date_of_loss": claim.date_of_loss,
+        "reported_date": claim.reported_date,
+        "cause_label": cause,
+        "status": claim.status,
+        "reserve": _money(claim.reserve),
+        "paid": _money(claim.paid),
+        "findings": _ADJUSTER_FINDINGS[policy.line].format(cause=cause),
+        "recommendation": recommendation,
+        "disposition": disposition,
+    }
+
+
+_ESTIMATE_ITEMS = {
+    "personal_auto": ["Replacement parts", "Body labor", "Paint & materials"],
+    "homeowners": ["Materials", "Labor", "Debris removal & cleanup"],
+    "bop": ["Property repair", "Equipment & fixtures", "Restoration labor"],
+}
+_ESTIMATE_FRACTIONS = (0.5, 0.35, 0.15)
+
+
+def estimate_base(claim: Claim) -> float:
+    """Net amount payable on a claim — the model figure a settlement pays out."""
+    return claim.paid if claim.status == "closed" else claim.reserve
+
+
+def estimate_document(model_meta: dict, claim: Claim, policy: Policy, holder: Policyholder) -> dict:
+    """View-model for the repair/damage estimate (PDF).
+
+    Gross repair cost = net payable + deductible, so the net (after deductible) equals the
+    model's payout figure and the settlement letter stays consistent. Only meaningful for
+    claims with a positive amount (open/closed); denied claims get no estimate.
+    """
+    base = estimate_base(claim)
+    gross = round(base + policy.deductible, 2)
+    labels = _ESTIMATE_ITEMS[policy.line]
+    amounts: list[float] = []
+    running = 0.0
+    for i, frac in enumerate(_ESTIMATE_FRACTIONS):
+        if i < len(_ESTIMATE_FRACTIONS) - 1:
+            amt = round(gross * frac, 2)
+            running += amt
+        else:
+            amt = round(gross - running, 2)  # last line absorbs rounding so the column sums exactly
+        amounts.append(amt)
+    return {
+        "marker": SYNTHETIC_MARKER,
+        "company": COMPANY_NAME,
+        "doc_title": "Damage / Repair Estimate",
+        "claim_id": claim.id,
+        "policy_id": policy.id,
+        "line_label": LINE_LABEL[policy.line],
+        "holder_name": holder.name,
+        "date_of_loss": claim.date_of_loss,
+        "cause_label": cause_label(claim.cause),
+        "rows": list(zip(labels, [_money(a) for a in amounts])),
+        "gross_total": _money(gross),
+        "deductible": _money(policy.deductible),
+        "net_payable": _money(base),
+    }
+
+
+def settlement_letter_document(model_meta: dict, claim: Claim, policy: Policy, holder: Policyholder, adjuster: Adjuster) -> dict:
+    """View-model for the settlement letter (PDF) — closed claims with a payout."""
+    return {
+        "marker": SYNTHETIC_MARKER,
+        "company": COMPANY_NAME,
+        "doc_title": "Claim Settlement",
+        "letter_date": _add_days(claim.reported_date, 30),
+        "claim_id": claim.id,
+        "policy_id": policy.id,
+        "line_label": LINE_LABEL[policy.line],
+        "holder_name": holder.name,
+        "holder_address": f"{holder.street}, {holder.city}, {holder.state} {holder.zip}",
+        "date_of_loss": claim.date_of_loss,
+        "cause_label": cause_label(claim.cause),
+        "paid": _money(claim.paid),
+        "deductible": _money(policy.deductible),
+        "adjuster_name": adjuster.name,
+    }
+
+
+# Deterministic denial rationales (the model has no per-claim reason; chosen by claim id).
+_DENIAL_REASONS = [
+    "the cause of loss falls within an exclusion stated in your policy",
+    "the loss occurred outside the effective period of coverage",
+    "the documentation submitted was insufficient to establish a covered loss",
+    "the damage claimed is attributable to wear and tear, which the policy does not cover",
+]
+
+
+def denial_reason(claim: Claim) -> str:
+    return _DENIAL_REASONS[sum(ord(c) for c in claim.id) % len(_DENIAL_REASONS)]
+
+
+def denial_letter_document(model_meta: dict, claim: Claim, policy: Policy, holder: Policyholder, adjuster: Adjuster) -> dict:
+    """View-model for the denial letter (PDF) — denied claims."""
+    return {
+        "marker": SYNTHETIC_MARKER,
+        "company": COMPANY_NAME,
+        "doc_title": "Claim Determination — Denial",
+        "letter_date": _add_days(claim.reported_date, 21),
+        "claim_id": claim.id,
+        "policy_id": policy.id,
+        "line_label": LINE_LABEL[policy.line],
+        "holder_name": holder.name,
+        "holder_address": f"{holder.street}, {holder.city}, {holder.state} {holder.zip}",
+        "date_of_loss": claim.date_of_loss,
+        "cause_label": cause_label(claim.cause),
+        "reason": denial_reason(claim),
+        "adjuster_name": adjuster.name,
     }

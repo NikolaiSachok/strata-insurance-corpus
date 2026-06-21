@@ -15,7 +15,7 @@ documents render.
 | Family | Items | Format(s) | RAG capability targeted | Milestone | Status |
 |---|---|---|---|---|---|
 | **Policy** | policy contract, declarations page, endorsements, coverage schedule | PDF (born-digital), docx | semantic + structured extraction | M1 / M2 | ✅ declarations / endorsements / coverage-schedule (PDF) + full contract (**docx**) — all built (#5) |
-| **Claim** | FNOL form, adjuster report, damage/repair estimate, settlement letter, denial letter | PDF + **scanned variant** | OCR, layout-aware chunking | M1 / M2 / M3 | ✅ FNOL PDF (M1); reports/estimates/letters planned (M2); scanned variants planned (M3) |
+| **Claim** | FNOL form, adjuster report, damage/repair estimate, settlement letter, denial letter | PDF + **scanned variant** | OCR, layout-aware chunking | M1 / M2 / M3 | ✅ FNOL (M1) + adjuster report / estimate / settlement & denial letters (PDF, #6); scanned variants planned (M3) |
 | **Evidence** | vehicle/property damage photos, ID/license scans, police report (scanned) | JPG / PNG (`/generate-image`) | vision caption / multimodal; PII on IDs | M3 | ⏳ planned |
 | **Tabular** | loss run, reserve report, premium register, agent commission sheet | XLSX / CSV | aggregation / metadata queries | M2 | ⏳ planned |
 | **Knowledge** | underwriting guidelines, claims handling manual, customer FAQ/KB | Markdown, docx | semantic KB retrieval | M2 | ⏳ planned |

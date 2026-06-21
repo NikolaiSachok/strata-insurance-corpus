@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>{{ claim_id }} — Denial Letter</title></head>
+<body>
+  <div class="synthetic-banner">{{ marker }}</div>
+  <div class="masthead">
+    <div class="company">{{ company }}</div>
+    <div class="doc-title">Claims Department</div>
+  </div>
+
+  <div class="letter-date">{{ letter_date }}</div>
+  <div class="addressee">
+    {{ holder_name }}<br>
+    {{ holder_address }}
+  </div>
+
+  <div class="letter-body">
+    <p>Re: Determination on claim {{ claim_id }} under policy {{ policy_id }}</p>
+    <p>Dear {{ holder_name }},</p>
+    <p>We have completed our review of your {{ line_label }} claim for the {{ cause_label }} loss reported to
+    have occurred on {{ date_of_loss }}. After careful consideration of the facts and the terms of your
+    policy, we regret to inform you that this claim has been denied.</p>
+    <p>The basis for this determination is that {{ reason }}. This decision is made in accordance with the
+    applicable provisions of your policy.</p>
+    <p>If you believe this determination is in error or wish to provide additional information, you may
+    contact your adjuster to request a review.</p>
+    <div class="signature">
+      <div>Sincerely,</div>
+      <div class="name">{{ adjuster_name }}</div>
+      <div>Claims Adjuster, {{ company }}</div>
+    </div>
+  </div>
+
+  <p class="meta-foot">This document is synthetic and generated for retrieval/benchmark testing.
+  No real person, business, or policy is described.</p>
+</body>
+</html>

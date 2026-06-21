@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>{{ claim_id }} — Adjuster Report</title></head>
+<body>
+  <div class="synthetic-banner">{{ marker }}</div>
+  <div class="masthead">
+    <div class="company">{{ company }}</div>
+    <div class="doc-title">{{ doc_title }}</div>
+  </div>
+
+  <h2>Claim &amp; Assignment</h2>
+  <table class="kv">
+    <tr><td class="k">Claim number</td><td class="v">{{ claim_id }}</td></tr>
+    <tr><td class="k">Policy number</td><td class="v">{{ policy_id }}</td></tr>
+    <tr><td class="k">Line of business</td><td class="v">{{ line_label }}</td></tr>
+    <tr><td class="k">Insured</td><td class="v">{{ holder_name }}</td></tr>
+    <tr><td class="k">Adjuster</td><td class="v">{{ adjuster_name }} ({{ adjuster_specialty }})</td></tr>
+    <tr><td class="k">Date of loss</td><td class="v">{{ date_of_loss }}</td></tr>
+    <tr><td class="k">Cause of loss</td><td class="v">{{ cause_label }}</td></tr>
+    <tr><td class="k">Disposition</td><td class="v"><span class="status {{ status }}">{{ disposition }}</span></td></tr>
+    <tr><td class="k">Reserve</td><td class="v">{{ reserve }}</td></tr>
+    <tr><td class="k">Paid to date</td><td class="v">{{ paid }}</td></tr>
+  </table>
+
+  <h2>Findings</h2>
+  <p class="clause">{{ findings }}</p>
+
+  <h2>Recommendation</h2>
+  <p class="clause">{{ recommendation }}</p>
+
+  <p class="meta-foot">This document is synthetic and generated for retrieval/benchmark testing.
+  No real person, business, or policy is described.</p>
+</body>
+</html>
