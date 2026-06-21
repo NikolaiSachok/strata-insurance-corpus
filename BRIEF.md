@@ -71,6 +71,11 @@ Seeded + deterministic end to end (same seed → byte-stable corpus, so CI can d
      *force real OCR* downstream. Keep both the clean text (for ground truth) and the scanned image.
    - **docx:** python-docx · **xlsx:** openpyxl · **images:** `/generate-image` (Nano Banana) for
      damage photos, property photos, ID/form scans, captioned + manifested.
+     - **Non-deterministic assets:** image *pixels* can't be byte-stable. So the **committed, reproducible
+       artifact is a seeded prompt spec** (`image-prompts.jsonl`: prompt + model id + settings + per-image
+       seed derived from the corpus seed), not the image. The pixels are gitignored / HF-published; the
+       recipe is committed. Same principle as caching LLM prose by `(seed, doc_id)` — the *instructions*
+       reproduce even where the *output* isn't bit-exact. (See docs/format-matrix.md.)
 4. **Provenance capture** — record, per document, the entity/field facts it asserts → feeds the golden eval.
 5. **Manifest + validation** — emit `manifest.json`; validate schema, coverage, and that every golden
    question's supporting doc exists.

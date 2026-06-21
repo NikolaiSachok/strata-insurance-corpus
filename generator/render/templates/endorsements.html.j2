@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>{{ policy_id }} — Endorsements</title></head>
+<body>
+  <div class="synthetic-banner">{{ marker }}</div>
+  <div class="masthead">
+    <div class="company">{{ company }}</div>
+    <div class="doc-title">{{ doc_title }}</div>
+  </div>
+
+  <h2>Endorsement Schedule — Policy {{ policy_id }}</h2>
+  <p class="clause">Named insured: {{ holder_name }}. The following endorsements amend the policy and
+  form a part of it.</p>
+
+  {% if rows %}
+  <table class="grid">
+    <thead><tr><th>Form code</th><th>Description</th></tr></thead>
+    <tbody>
+    {% for code, desc in rows %}
+      <tr><td>{{ code }}</td><td>{{ desc }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="clause">No endorsements apply to this policy. Coverage is provided per the base policy form.</p>
+  {% endif %}
+
+  <p class="meta-foot">This document is synthetic and generated for retrieval/benchmark testing.
+  No real person, business, or policy is described.</p>
+</body>
+</html>
