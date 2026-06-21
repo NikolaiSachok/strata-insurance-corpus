@@ -4,6 +4,8 @@
     "adjusters": 2,
     "agents": 3,
     "by_doc_type": {
+      "accident_statement": 1,
+      "accident_statement_scanned": 1,
       "adjuster_report": 5,
       "claims_manual": 1,
       "commission_summary": 1,
@@ -28,13 +30,13 @@
     "by_format": {
       "csv": 1,
       "docx": 6,
-      "jpg": 14,
+      "jpg": 15,
       "md": 2,
-      "pdf": 33,
+      "pdf": 34,
       "xlsx": 3
     },
     "claims": 5,
-    "documents": 59,
+    "documents": 61,
     "policies": 5,
     "policyholders": 6
   },
@@ -506,6 +508,45 @@
       "provenance": [],
       "scanned_of": "DOC-C-1002-FNOL",
       "sha256": "b0ef11a6c7d6d120b36d2b8d434d52e2a071cba93de9df27407b91a36d77c3c3",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1003-ACCIDENT",
+      "doc_type": "accident_statement",
+      "entity_ids": [
+        "C-1003",
+        "MOT-0000005",
+        "PH-00006",
+        "AD-001"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/claim/C-1003-accident-statement.pdf",
+      "provenance": [
+        {
+          "entity_id": "C-1003",
+          "field": "line",
+          "value": "personal_auto"
+        }
+      ],
+      "sha256": "a7e85fa161b9daebc1bf4a50d657be13bf52ee0f8f256c3fdb98d30a8ddce5c4",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1003-ACCIDENT-SCAN",
+      "doc_type": "accident_statement_scanned",
+      "entity_ids": [
+        "C-1003",
+        "MOT-0000005",
+        "PH-00006",
+        "AD-001"
+      ],
+      "format": "jpg",
+      "is_scanned": true,
+      "path": "docs/claim/C-1003-accident-statement-scanned.jpg",
+      "provenance": [],
+      "scanned_of": "DOC-C-1003-ACCIDENT",
+      "sha256": "538bcb8f569dce6cbfdf732fdef1964a908f5a3769810005401ed6e339d008b0",
       "synthetic": true
     },
     {

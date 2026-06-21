@@ -79,7 +79,10 @@ Generation scale is selected by `--profile`:
 
 ## Determinism contract
 
-Same `(seed, profile)` → byte-identical `model.json` and `roster.tsv` **across environments**.
+Same `(seed, profile)` → byte-identical `model.json` and `roster.tsv` **across environments and processes**.
+(A few Faker locale providers — e.g. `it_IT` `city()` — select from sets whose order is
+`PYTHONHASHSEED`-dependent, so generation pins `PYTHONHASHSEED=0`: the Makefile exports it and `run.py`
+re-execs with it. A cross-process test guards this.)
 Rendered PDFs/`.docx`/`.xlsx` and **scanned `.jpg`** variants are byte-identical too (PDF via
 `SOURCE_DATE_EPOCH`, docx/xlsx via pinned dates + normalized zip, scans via a per-document seed), but
 only with the **same render toolchain** — WeasyPrint + cairo/pango, python-docx, openpyxl, and for scans

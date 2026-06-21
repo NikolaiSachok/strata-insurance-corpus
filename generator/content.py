@@ -10,10 +10,11 @@ without changing callers.
 from __future__ import annotations
 
 import datetime as dt
+import random
 
 from . import COMPANY_NAME, CURRENCY_SYMBOL, SYNTHETIC_MARKER
 from .identity import COUNTRY_BY_CODE
-from .model import LINE_LABEL, Adjuster, Agent, Claim, Policy, Policyholder
+from .model import MAKES_MODELS, VEHICLE_COLOURS, LINE_LABEL, Adjuster, Agent, Claim, Policy, Policyholder
 
 
 def _add_days(iso_date: str, n: int) -> str:
@@ -415,6 +416,74 @@ _DENIAL_REASONS = [
 
 def denial_reason(claim: Claim) -> str:
     return _DENIAL_REASONS[sum(ord(c) for c in claim.id) % len(_DENIAL_REASONS)]
+
+
+# --- Motor accident statement (EAS-inspired, our own; issue #11) ----------- #
+_OTHER_DRIVERS = (
+    "J. Bauer", "M. Lefèvre", "S. Rossi", "A. García", "P. de Vries",
+    "C. Murphy", "K. Novák", "L. Andersson", "R. Costa", "T. Janssen",
+)
+# Fixed circumstance checklist; each cause checks boxes for vehicle A (insured) / B (other).
+_CIRCUMSTANCES = (
+    "was stopped or parked",
+    "was moving in the same direction",
+    "was changing lanes",
+    "struck the rear of the other vehicle",
+    "was turning or manoeuvring",
+    "no third party was involved",
+)
+_CAUSE_CIRC = {  # (A-checked indices, B-checked indices)
+    "rear_end_collision": ((1, 3), (0,)),
+    "single_vehicle": ((4, 5), ()),
+    "theft": ((0, 5), ()),
+    "hail": ((0, 5), ()),
+    "vandalism": ((0, 5), ()),
+    "animal_strike": ((1, 5), ()),
+}
+
+
+def _other_plate(rng: random.Random) -> str:
+    letters = "".join(rng.choice("ABCDEFGHJKLMNPRSTUVWXYZ") for _ in range(2))
+    tail = "".join(rng.choice("ABCDEFGHJKLMNPRSTUVWXYZ") for _ in range(2))
+    return f"{letters}-{rng.randint(1000, 9999)}-{tail}"
+
+
+def accident_statement_document(model_meta: dict, claim: Claim, policy: Policy, holder: Policyholder) -> dict:
+    """View-model for the Motor accident statement (PDF, Motor claims only).
+
+    The 'other party' is generated deterministically at document-build time (it is not a
+    Meridian policyholder, so it lives only on this form). Checkmarks follow the cause.
+    """
+    rng = random.Random(sum(ord(c) for c in claim.id) + 7919)
+    collision = claim.cause == "rear_end_collision"
+    a_idx, b_idx = _CAUSE_CIRC.get(claim.cause, ((0,), ()))
+    circumstances = [
+        {"label": label, "a": i in a_idx, "b": i in b_idx} for i, label in enumerate(_CIRCUMSTANCES)
+    ]
+    other = None
+    if collision:
+        make, model = rng.choice(MAKES_MODELS)
+        other = {
+            "driver": rng.choice(_OTHER_DRIVERS),
+            "vehicle": f"{make} {model}, {rng.choice(VEHICLE_COLOURS)}",
+            "plate": _other_plate(rng),
+        }
+    return {
+        "marker": SYNTHETIC_MARKER,
+        "company": COMPANY_NAME,
+        "doc_title": "Motor Accident Statement",
+        "claim_id": claim.id,
+        "policy_id": policy.id,
+        "accident_date": _eu_date(claim.date_of_loss),
+        "cause_label": cause_label(claim.cause),
+        "location": f"{holder.city} ({COUNTRY_BY_CODE.get(holder.country).name if COUNTRY_BY_CODE.get(holder.country) else holder.country})",
+        "vehicle_a": {"driver": holder.name, "policy": policy.id, "vehicle": _vehicle_str(policy) or "—"},
+        "vehicle_b": other,
+        "circumstances": circumstances,
+        "sketch_collision": collision,
+        "sig_a": holder.name,
+        "sig_b": other["driver"] if other else "—",
+    }
 
 
 def denial_letter_document(model_meta: dict, claim: Claim, policy: Policy, holder: Policyholder, adjuster: Adjuster) -> dict:

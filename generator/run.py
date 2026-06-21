@@ -19,6 +19,7 @@ import json
 from pathlib import Path
 
 from .content import (
+    accident_statement_document,
     adjuster_report_document,
     cause_label,
     contract_document,
@@ -260,6 +261,17 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
                 )
                 emit_scan(f"docs/claim/{claim.id}-denial-letter.pdf", denial_id, "denial_letter_scanned", claim_ids)
 
+            # Motor accident statement (Motor claims only) + scanned variant
+            if policy.line == "personal_auto":
+                acc_id = f"DOC-{claim.id}-ACCIDENT"
+                emit_pdf(
+                    acc_id, "accident_statement", "accident_statement.html.j2",
+                    accident_statement_document(model.meta, claim, policy, holder),
+                    f"docs/claim/{claim.id}-accident-statement.pdf", claim_ids,
+                    [Assertion(claim.id, "line", policy.line)],
+                )
+                emit_scan(f"docs/claim/{claim.id}-accident-statement.pdf", acc_id, "accident_statement_scanned", claim_ids)
+
         # Tabular family (corpus-level): registers in xlsx + commission in csv
         from .render.sheets import write_csv, write_xlsx
 
@@ -368,5 +380,29 @@ def main(argv=None) -> int:
     return 0
 
 
+def _pin_hash_seed() -> None:
+    """Re-exec once with PYTHONHASHSEED=0 so the corpus is byte-stable across processes.
+
+    Some Faker locale providers (e.g. it_IT city) pick from sets whose iteration order is
+    PYTHONHASHSEED-dependent; without a fixed hash seed model.json varies run-to-run.
+    Hash randomization is fixed at interpreter start, so we must re-exec to set it.
+    """
+    import os
+    import sys
+
+    if os.environ.get("PYTHONHASHSEED") != "0":
+        os.environ["PYTHONHASHSEED"] = "0"
+        os.execv(sys.executable, [sys.executable, "-m", "generator.run", *sys.argv[1:]])
+
+
 if __name__ == "__main__":
-    raise SystemExit(main())
+    import os
+    import sys
+
+    _pin_hash_seed()
+    _rc = main()
+    sys.stdout.flush()
+    sys.stderr.flush()
+    # Bypass interpreter teardown: weasyprint/fontconfig can segfault during native cleanup at
+    # exit (after all documents are written). os._exit avoids that without affecting the output.
+    os._exit(_rc)
