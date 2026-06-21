@@ -15,7 +15,7 @@ from pathlib import Path
 
 
 def _row(label: str, n: int) -> str:
-    return f"  {label:<24}{n:>6}"
+    return f"  {label:<26}{n:>6}"
 
 
 def summarize(out: Path) -> dict:

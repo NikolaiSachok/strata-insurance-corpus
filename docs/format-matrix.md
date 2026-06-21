@@ -19,7 +19,7 @@ documents render.
 | **Evidence** | vehicle/property damage photos, ID/license scans, police report (scanned) | JPG / PNG (`/generate-image`) | vision caption / multimodal; PII on IDs | M3 | ⏳ planned |
 | **Tabular** | loss run, reserve register, premium register, agent commission summary | XLSX / CSV | aggregation / metadata queries | M2 | ✅ loss run / reserve register / premium register (**xlsx**) + commission summary (**csv**) — built (#7) |
 | **Knowledge** | underwriting guidelines, claims handling manual, customer FAQ/KB | Markdown, docx | semantic KB retrieval | M2 | ✅ underwriting guidelines + customer FAQ (**Markdown**) + claims handling manual (**docx**) — built (#8) |
-| **Correspondence** | customer letters/emails, status notices | docx / txt / eml | retrieval over informal text | M2 | ⏳ planned |
+| **Correspondence** | customer letters/emails, status notices | docx / txt / eml | retrieval over informal text | — (unscheduled) | ⏳ planned |
 
 Legend: ✅ implemented · ⏳ planned (issue open). This table is kept honest — it
 describes only what is built plus what is explicitly scheduled.
