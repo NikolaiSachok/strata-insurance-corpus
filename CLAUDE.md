@@ -26,6 +26,9 @@ document-RAG. Usable standalone with any RAG stack, or as a plug-in corpus for
 - **LLM backend** for content generation: the signed-in `claude` CLI (free) or `ANTHROPIC_API_KEY`.
 - **Each issue's done = ** builds, is reproducible, `make validate` passes, and the relevant README/docs are
   updated; if it produces documents, add a representative artifact to `sample/`.
+- **Before landing a PR/branch, run `/review-board`** — an independent multi-agent panel (determinism,
+  leak-hygiene, honest-claims, correctness, synthetic-integrity, repo-hygiene) gated on the hard rules below.
+  It reports a PASS/BLOCK verdict; it does not fix or push. See `.claude/commands/review-board.md`.
 
 ## Hard rules (non-negotiable)
 - **Synthetic only, clearly labeled.** No real persons/companies/policies; no scraping real documents. Mark
