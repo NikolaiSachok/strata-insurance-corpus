@@ -191,6 +191,30 @@ def test_knowledge_markdown_deterministic_and_grounded():
     assert ", ".join(LINE_LABEL[ln] for ln in LINES) in a
 
 
+# Every doc type the generator builds today. The committed sample slice must contain
+# all of these, so it stays a representative slice as new families land. Add to this set
+# (and to the sample) when you add a doc type.
+BUILT_DOC_TYPES = {
+    "policy_declarations", "policy_contract", "policy_endorsements", "policy_schedule",
+    "fnol", "adjuster_report", "estimate", "settlement_letter", "denial_letter",
+    "loss_run", "reserve_register", "premium_register", "commission_summary",
+    "underwriting_guidelines", "claims_manual", "customer_faq",
+}
+
+
+def test_sample_profile_covers_all_doc_types(tmp_path):
+    """The committed sample slice must exercise every built doc type (representativeness)."""
+    import json
+
+    from generator.run import generate
+
+    generate(42, tmp_path / "sample", "sample")
+    manifest = json.loads((tmp_path / "sample" / "manifest.json").read_text())
+    sample_types = {d["doc_type"] for d in manifest["documents"]}
+    missing = BUILT_DOC_TYPES - sample_types
+    assert not missing, f"sample slice is missing doc types: {sorted(missing)}"
+
+
 def test_synthetic_markers_present():
     m = build_model(5, "slice")
     assert m.meta["synthetic"] is True

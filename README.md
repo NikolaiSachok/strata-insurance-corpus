@@ -6,20 +6,25 @@
 > exercise and benchmark document-RAG systems on *enterprise-shaped* data. Usable standalone with any
 > RAG stack, or as a drop-in corpus for [Strata-RAG](https://github.com/NikolaiSachok/Strata-RAG).
 
-**Status: 🚧 M1 foundation built; M2+ in progress.** The seeded generator, entity/data model, born-digital
-PDF rendering, manifest/provenance, and a golden-eval slice exist and run end-to-end today
-(`make generate` / `make sample` / `make validate` / `make test`). Text/tabular docs, scanned variants,
-images, and the Strata-RAG adapter are scheduled (M2–M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and
-the **[issues](../../issues)**.
+**Status: 🚧 M1 + M2 complete; M3+ in progress.** The seeded generator and entity model, all born-digital
+document families (policy / claim / tabular / knowledge), the manifest + provenance, and the
+golden-eval set (semantic + aggregation) run end-to-end today. Scanned variants, generated images,
+synthetic-PII injection, the eval harness, and the Strata-RAG adapter are scheduled (M3–M5). Design and
+roadmap: **[BRIEF.md](BRIEF.md)** and the **[issues](../../issues)**.
 
-### What runs today (M1)
+### What runs today (M1–M2)
 
 ```bash
 make sample     # -> committed sample/ slice + golden/golden.jsonl  (deterministic)
 make generate   # -> full corpus/ : 305 entities, 778 documents (651 PDF + 121 Word + 4 sheets + 2 Markdown), 255 golden Qs  (gitignored)
 make validate   # integrity + golden-support checks
+make stats      # corpus composition (documents by format/type, golden by class)
 make test       # determinism + referential-integrity suite
 ```
+
+Full-corpus composition (`make stats OUT=corpus`): 651 PDF · 121 Word · 3 xlsx · 1 csv · 2 Markdown;
+golden = 252 semantic + 3 aggregation. The committed `sample/` slice contains at least one of every
+built doc type (enforced by a test), so the repo is fully exercisable without a full run.
 
 Built: deterministic entity model + roster ([docs/data-model.md](docs/data-model.md)); the **policy** family
 — declarations / endorsements / coverage-schedule (born-digital PDF, WeasyPrint) + full **contract in Word
