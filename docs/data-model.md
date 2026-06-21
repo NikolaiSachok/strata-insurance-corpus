@@ -29,7 +29,7 @@ window around the anchor; each claim's date-of-loss falls inside its policy term
 | **Policyholder** | `PH-00001` | name, dob, email, phone, street/city/postcode, `country`, `national_id` | — |
 | **Agent** | `AG-001` | name, agency, region | — |
 | **Adjuster** | `AD-001` | name, specialty | — |
-| **Policy** | `MOT-/HH-/COM-0000001` | line, effective/expiry dates, annual_premium, limits, deductible, endorsements | `holder_id` → Policyholder, `agent_id` → Agent |
+| **Policy** | `MOT-/HH-/COM-0000001` | line, effective/expiry dates, annual_premium, limits, deductible, endorsements, **vehicle** (Motor only: make/model/year/colour/synthetic reg) | `holder_id` → Policyholder, `agent_id` → Agent |
 | **Claim** | `C-1000` | line, date_of_loss, reported_date, status, cause, reserve, paid, narrative_seed | `policy_id` → Policy, `holder_id` → Policyholder, `adjuster_id` → Adjuster |
 
 - **Lines:** internal keys `personal_auto`, `homeowners`, `bop`, shown as **Motor / Household / Commercial**;

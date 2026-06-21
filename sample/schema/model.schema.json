@@ -202,6 +202,12 @@
               "homeowners",
               "bop"
             ]
+          },
+          "vehicle": {
+            "type": [
+              "object",
+              "null"
+            ]
           }
         },
         "required": [

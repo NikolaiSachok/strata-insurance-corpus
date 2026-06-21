@@ -21,20 +21,20 @@
       "policy_schedule": 5,
       "premium_register": 1,
       "reserve_register": 1,
-      "settlement_letter": 2,
-      "settlement_letter_scanned": 2,
+      "settlement_letter": 3,
+      "settlement_letter_scanned": 3,
       "underwriting_guidelines": 1
     },
     "by_format": {
       "csv": 1,
       "docx": 6,
-      "jpg": 13,
+      "jpg": 14,
       "md": 2,
-      "pdf": 32,
+      "pdf": 33,
       "xlsx": 3
     },
     "claims": 5,
-    "documents": 57,
+    "documents": 59,
     "policies": 5,
     "policyholders": 6
   },
@@ -44,9 +44,9 @@
       "doc_type": "adjuster_report",
       "entity_ids": [
         "C-1000",
-        "HH-0000001",
-        "PH-00002",
-        "AD-001"
+        "COM-0000003",
+        "PH-00006",
+        "AD-002"
       ],
       "format": "pdf",
       "is_scanned": false,
@@ -55,7 +55,7 @@
         {
           "entity_id": "C-1000",
           "field": "cause",
-          "value": "kitchen fire"
+          "value": "slip-and-fall"
         },
         {
           "entity_id": "C-1000",
@@ -65,10 +65,10 @@
         {
           "entity_id": "C-1000",
           "field": "adjuster_id",
-          "value": "AD-001"
+          "value": "AD-002"
         }
       ],
-      "sha256": "df63fb7574dc406d0d3e811e659d3bd55bafc1d57212d4c253c29bb5bc56d6b4",
+      "sha256": "dd53542aa511ddba9594b6790be7a4669397e50c38025ea1a762877637c238c2",
       "synthetic": true
     },
     {
@@ -76,9 +76,9 @@
       "doc_type": "estimate",
       "entity_ids": [
         "C-1000",
-        "HH-0000001",
-        "PH-00002",
-        "AD-001"
+        "COM-0000003",
+        "PH-00006",
+        "AD-002"
       ],
       "format": "pdf",
       "is_scanned": false,
@@ -87,10 +87,10 @@
         {
           "entity_id": "C-1000",
           "field": "estimate_net_payable",
-          "value": "\u20ac41,050.00"
+          "value": "\u20ac8,550.00"
         }
       ],
-      "sha256": "1bbe1164f75cf7d0a58319f3d3212cfeedcd3fe6f6baf095c15114afd408294f",
+      "sha256": "175456d93f5bc3330938645b2fb944a685ec44ad871f59750b001efd037310c3",
       "synthetic": true
     },
     {
@@ -104,22 +104,22 @@
       "is_scanned": false,
       "path": "evidence/C-1000-evidence.jpg",
       "prompt_spec": {
-        "caption": "Fire and smoke damage in a domestic kitchen \u2014 charred cabinets and soot \u2014 Household claim C-1000 (Ireland).",
-        "cause": "kitchen_fire",
+        "caption": "A wet floor in a shop entrance marked with a hazard cone \u2014 Commercial claim C-1000 (Germany).",
+        "cause": "slip_and_fall",
         "claim_id": "C-1000",
-        "country": "IE",
+        "country": "DE",
         "doc_id": "DOC-C-1000-EVIDENCE",
-        "kind": "property_damage",
-        "line": "homeowners",
+        "kind": "commercial_damage",
+        "line": "bop",
         "model": "gemini-3.1-flash-image",
-        "negative_prompt": "no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark",
+        "negative_prompt": "no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks",
         "params": {
           "aspect_ratio": "4:3",
           "resolution": "1K",
           "seed": 4201986
         },
         "path": "evidence/C-1000-evidence.jpg",
-        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Ireland: fire and smoke damage in a domestic kitchen \u2014 charred cabinets and soot. Close framing on the damage with a plain, uncluttered background. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark."
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Germany: a wet floor in a shop entrance marked with a hazard cone. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks."
       },
       "provenance": [],
       "rendered": true,
@@ -131,9 +131,9 @@
       "doc_type": "fnol",
       "entity_ids": [
         "C-1000",
-        "HH-0000001",
-        "PH-00002",
-        "AD-001"
+        "COM-0000003",
+        "PH-00006",
+        "AD-002"
       ],
       "format": "pdf",
       "is_scanned": false,
@@ -142,12 +142,12 @@
         {
           "entity_id": "C-1000",
           "field": "cause",
-          "value": "kitchen fire"
+          "value": "slip-and-fall"
         },
         {
           "entity_id": "C-1000",
           "field": "date_of_loss",
-          "value": "2023-12-26"
+          "value": "2023-10-10"
         },
         {
           "entity_id": "C-1000",
@@ -155,7 +155,7 @@
           "value": "closed"
         }
       ],
-      "sha256": "9b395cee3b515beecb746a5bb8e7b6aec3eebb60c1033840bf95b24b35c7e741",
+      "sha256": "4d16cb5107133c8aa99f712ad475bca0293c586a53fdce071b58f2003313fdfb",
       "synthetic": true
     },
     {
@@ -163,16 +163,16 @@
       "doc_type": "fnol_scanned",
       "entity_ids": [
         "C-1000",
-        "HH-0000001",
-        "PH-00002",
-        "AD-001"
+        "COM-0000003",
+        "PH-00006",
+        "AD-002"
       ],
       "format": "jpg",
       "is_scanned": true,
       "path": "docs/claim/C-1000-fnol-scanned.jpg",
       "provenance": [],
       "scanned_of": "DOC-C-1000-FNOL",
-      "sha256": "70e4c1776260722d94a36c56bfbb745583849679c6a29a912b2844e93fddee58",
+      "sha256": "d8a15e7e5d170c4f74a684de567cc3885cf83b7ec1052c6abc27c5d3b5f40968",
       "synthetic": true
     },
     {
@@ -180,9 +180,9 @@
       "doc_type": "settlement_letter",
       "entity_ids": [
         "C-1000",
-        "HH-0000001",
-        "PH-00002",
-        "AD-001"
+        "COM-0000003",
+        "PH-00006",
+        "AD-002"
       ],
       "format": "pdf",
       "is_scanned": false,
@@ -191,7 +191,7 @@
         {
           "entity_id": "C-1000",
           "field": "paid",
-          "value": "\u20ac41,050.00"
+          "value": "\u20ac8,550.00"
         },
         {
           "entity_id": "C-1000",
@@ -199,7 +199,7 @@
           "value": "closed"
         }
       ],
-      "sha256": "9d4e5e4b8b571457b6c4ad9a0f5076479f5f879614aa38a5080f1fa7f6f004ae",
+      "sha256": "d95d71ff8bf99eab2a21ea4fe561300848cce252607f6ecaf84cf34b5fc4b318",
       "synthetic": true
     },
     {
@@ -207,16 +207,16 @@
       "doc_type": "settlement_letter_scanned",
       "entity_ids": [
         "C-1000",
-        "HH-0000001",
-        "PH-00002",
-        "AD-001"
+        "COM-0000003",
+        "PH-00006",
+        "AD-002"
       ],
       "format": "jpg",
       "is_scanned": true,
       "path": "docs/claim/C-1000-settlement-letter-scanned.jpg",
       "provenance": [],
       "scanned_of": "DOC-C-1000-SETTLEMENT",
-      "sha256": "3a93c690ee85f710ef47e1314839a3a71e322eba4a04a7762333742308225862",
+      "sha256": "71b15a770ac8c245db7551e1bd5fc6242633dafef7229df6bdd6e05e14f8b1e6",
       "synthetic": true
     },
     {
@@ -224,8 +224,8 @@
       "doc_type": "adjuster_report",
       "entity_ids": [
         "C-1001",
-        "HH-0000004",
-        "PH-00002",
+        "COM-0000004",
+        "PH-00004",
         "AD-001"
       ],
       "format": "pdf",
@@ -235,7 +235,7 @@
         {
           "entity_id": "C-1001",
           "field": "cause",
-          "value": "theft"
+          "value": "burglary"
         },
         {
           "entity_id": "C-1001",
@@ -248,7 +248,7 @@
           "value": "AD-001"
         }
       ],
-      "sha256": "a2b6d4e9a3a426adf3f5b10094bc69bbd9b8fecd55fb224725ea020b8fc57f93",
+      "sha256": "17ba5c94e76958e43706211dcbbab66bec0f0d5363323b8b44d93d11ae6af1aa",
       "synthetic": true
     },
     {
@@ -256,8 +256,8 @@
       "doc_type": "estimate",
       "entity_ids": [
         "C-1001",
-        "HH-0000004",
-        "PH-00002",
+        "COM-0000004",
+        "PH-00004",
         "AD-001"
       ],
       "format": "pdf",
@@ -267,10 +267,10 @@
         {
           "entity_id": "C-1001",
           "field": "estimate_net_payable",
-          "value": "\u20ac49,900.00"
+          "value": "\u20ac53,950.00"
         }
       ],
-      "sha256": "30d496746cef891c89ef6c9d56df04b6ff61a654bf83ca8673a8f06199ee8761",
+      "sha256": "78068e874fe46384b256d6b79f5d7866ac04236a7585b799cdb303afcd73959c",
       "synthetic": true
     },
     {
@@ -284,22 +284,22 @@
       "is_scanned": false,
       "path": "evidence/C-1001-evidence.jpg",
       "prompt_spec": {
-        "caption": "A forced-open residential door with a damaged lock after a burglary \u2014 Household claim C-1001 (Ireland).",
-        "cause": "theft",
+        "caption": "A forced-open shop shutter and a ransacked retail interior after a burglary \u2014 Commercial claim C-1001 (Netherlands).",
+        "cause": "burglary",
         "claim_id": "C-1001",
-        "country": "IE",
+        "country": "NL",
         "doc_id": "DOC-C-1001-EVIDENCE",
-        "kind": "property_damage",
-        "line": "homeowners",
+        "kind": "commercial_damage",
+        "line": "bop",
         "model": "gemini-3.1-flash-image",
-        "negative_prompt": "no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark",
+        "negative_prompt": "no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks",
         "params": {
           "aspect_ratio": "4:3",
           "resolution": "1K",
           "seed": 4201987
         },
         "path": "evidence/C-1001-evidence.jpg",
-        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Ireland: a forced-open residential door with a damaged lock after a burglary. Close framing on the damage with a plain, uncluttered background. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark."
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Netherlands: a forced-open shop shutter and a ransacked retail interior after a burglary. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks."
       },
       "provenance": [],
       "rendered": true,
@@ -311,8 +311,8 @@
       "doc_type": "fnol",
       "entity_ids": [
         "C-1001",
-        "HH-0000004",
-        "PH-00002",
+        "COM-0000004",
+        "PH-00004",
         "AD-001"
       ],
       "format": "pdf",
@@ -322,12 +322,12 @@
         {
           "entity_id": "C-1001",
           "field": "cause",
-          "value": "theft"
+          "value": "burglary"
         },
         {
           "entity_id": "C-1001",
           "field": "date_of_loss",
-          "value": "2024-12-17"
+          "value": "2024-07-04"
         },
         {
           "entity_id": "C-1001",
@@ -335,7 +335,7 @@
           "value": "open"
         }
       ],
-      "sha256": "23ab21fff9437d2b98aa6c273ba4b094510f85f6a3854aaa97c3efd08f5afd8e",
+      "sha256": "5ac925ecb5e62a3b8b7e9e8137646af6a4a6434872eef765df3fa58d456621e4",
       "synthetic": true
     },
     {
@@ -343,8 +343,8 @@
       "doc_type": "fnol_scanned",
       "entity_ids": [
         "C-1001",
-        "HH-0000004",
-        "PH-00002",
+        "COM-0000004",
+        "PH-00004",
         "AD-001"
       ],
       "format": "jpg",
@@ -352,7 +352,7 @@
       "path": "docs/claim/C-1001-fnol-scanned.jpg",
       "provenance": [],
       "scanned_of": "DOC-C-1001-FNOL",
-      "sha256": "1e4374c0a5467d256b27be9de307cbde01356f8270a77a7b6ff59fe9e9fa2fc9",
+      "sha256": "893c26db768ba0b6524d7ba6b592142c70db6fce3112ee93a3de55a5c590cc41",
       "synthetic": true
     },
     {
@@ -360,8 +360,8 @@
       "doc_type": "adjuster_report",
       "entity_ids": [
         "C-1002",
-        "COM-0000005",
-        "PH-00005",
+        "COM-0000003",
+        "PH-00006",
         "AD-001"
       ],
       "format": "pdf",
@@ -371,7 +371,7 @@
         {
           "entity_id": "C-1002",
           "field": "cause",
-          "value": "equipment breakdown"
+          "value": "burglary"
         },
         {
           "entity_id": "C-1002",
@@ -384,7 +384,7 @@
           "value": "AD-001"
         }
       ],
-      "sha256": "2c3cc77a15094ba7dc0678fa9e712d45fe15e2b7c534ea23b1e6707468d56edd",
+      "sha256": "8a23f3eb46300b5b2a21b81aa113b1e417d82d340f120a7e42cf6db863de9fa9",
       "synthetic": true
     },
     {
@@ -392,8 +392,8 @@
       "doc_type": "denial_letter",
       "entity_ids": [
         "C-1002",
-        "COM-0000005",
-        "PH-00005",
+        "COM-0000003",
+        "PH-00006",
         "AD-001"
       ],
       "format": "pdf",
@@ -406,7 +406,7 @@
           "value": "denied"
         }
       ],
-      "sha256": "556812da212a1564381b582b2911e0dfe73cf123a93d00cf56a10b3032bc1c61",
+      "sha256": "7032af5ee668f051b4fda492436db44854296c598f623f65e6ff11699acc0e1f",
       "synthetic": true
     },
     {
@@ -414,8 +414,8 @@
       "doc_type": "denial_letter_scanned",
       "entity_ids": [
         "C-1002",
-        "COM-0000005",
-        "PH-00005",
+        "COM-0000003",
+        "PH-00006",
         "AD-001"
       ],
       "format": "jpg",
@@ -423,7 +423,7 @@
       "path": "docs/claim/C-1002-denial-letter-scanned.jpg",
       "provenance": [],
       "scanned_of": "DOC-C-1002-DENIAL",
-      "sha256": "d75a9c79d3ce1bd4e79acfe845407931aa4ed005345018b0cb8967443b9a14d8",
+      "sha256": "97ebc38b9c7881e1cd0d39005d16bacc8523ae7fcac099709406c42810d06a32",
       "synthetic": true
     },
     {
@@ -437,22 +437,22 @@
       "is_scanned": false,
       "path": "evidence/C-1002-evidence.jpg",
       "prompt_spec": {
-        "caption": "A broken-down industrial machine in a workshop with a visible fault \u2014 Commercial claim C-1002 (Spain).",
-        "cause": "equipment_breakdown",
+        "caption": "A forced-open shop shutter and a ransacked retail interior after a burglary \u2014 Commercial claim C-1002 (Germany).",
+        "cause": "burglary",
         "claim_id": "C-1002",
-        "country": "ES",
+        "country": "DE",
         "doc_id": "DOC-C-1002-EVIDENCE",
         "kind": "commercial_damage",
         "line": "bop",
         "model": "gemini-3.1-flash-image",
-        "negative_prompt": "no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark",
+        "negative_prompt": "no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks",
         "params": {
           "aspect_ratio": "4:3",
           "resolution": "1K",
           "seed": 4201988
         },
         "path": "evidence/C-1002-evidence.jpg",
-        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Spain: a broken-down industrial machine in a workshop with a visible fault. Close framing on the damage with a plain, uncluttered background. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark."
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Germany: a forced-open shop shutter and a ransacked retail interior after a burglary. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks."
       },
       "provenance": [],
       "rendered": true,
@@ -464,8 +464,8 @@
       "doc_type": "fnol",
       "entity_ids": [
         "C-1002",
-        "COM-0000005",
-        "PH-00005",
+        "COM-0000003",
+        "PH-00006",
         "AD-001"
       ],
       "format": "pdf",
@@ -475,12 +475,12 @@
         {
           "entity_id": "C-1002",
           "field": "cause",
-          "value": "equipment breakdown"
+          "value": "burglary"
         },
         {
           "entity_id": "C-1002",
           "field": "date_of_loss",
-          "value": "2025-08-12"
+          "value": "2023-10-31"
         },
         {
           "entity_id": "C-1002",
@@ -488,7 +488,7 @@
           "value": "denied"
         }
       ],
-      "sha256": "ce112b4fd1e93e77c9aa6f05e794f6004174f8acec180a94829b16347160d481",
+      "sha256": "98990d7e71899e1bb33fc9a02ff98f2d2c19228dad6749a0ec3ba674dde94418",
       "synthetic": true
     },
     {
@@ -496,8 +496,8 @@
       "doc_type": "fnol_scanned",
       "entity_ids": [
         "C-1002",
-        "COM-0000005",
-        "PH-00005",
+        "COM-0000003",
+        "PH-00006",
         "AD-001"
       ],
       "format": "jpg",
@@ -505,7 +505,7 @@
       "path": "docs/claim/C-1002-fnol-scanned.jpg",
       "provenance": [],
       "scanned_of": "DOC-C-1002-FNOL",
-      "sha256": "18a33d9b66dbf1f2e314300c7dc477e32c9e53258b21d4d52c2e3ad9d753c3e7",
+      "sha256": "b0ef11a6c7d6d120b36d2b8d434d52e2a071cba93de9df27407b91a36d77c3c3",
       "synthetic": true
     },
     {
@@ -513,9 +513,9 @@
       "doc_type": "adjuster_report",
       "entity_ids": [
         "C-1003",
-        "COM-0000005",
-        "PH-00005",
-        "AD-002"
+        "MOT-0000005",
+        "PH-00006",
+        "AD-001"
       ],
       "format": "pdf",
       "is_scanned": false,
@@ -524,7 +524,7 @@
         {
           "entity_id": "C-1003",
           "field": "cause",
-          "value": "slip-and-fall"
+          "value": "rear-end collision"
         },
         {
           "entity_id": "C-1003",
@@ -534,10 +534,10 @@
         {
           "entity_id": "C-1003",
           "field": "adjuster_id",
-          "value": "AD-002"
+          "value": "AD-001"
         }
       ],
-      "sha256": "b7315ebeaa6ef3bbacbbd527a0b188dc2407705ea21df445da0570b0ea88f242",
+      "sha256": "b6a2b2381bc11c4eaf0b89c9cef4fb144af528f9439ea22ab115451ac6a955e6",
       "synthetic": true
     },
     {
@@ -545,9 +545,9 @@
       "doc_type": "estimate",
       "entity_ids": [
         "C-1003",
-        "COM-0000005",
-        "PH-00005",
-        "AD-002"
+        "MOT-0000005",
+        "PH-00006",
+        "AD-001"
       ],
       "format": "pdf",
       "is_scanned": false,
@@ -556,10 +556,10 @@
         {
           "entity_id": "C-1003",
           "field": "estimate_net_payable",
-          "value": "\u20ac8,550.00"
+          "value": "\u20ac48,050.00"
         }
       ],
-      "sha256": "475efead8654384246fc64e5a7ed449a255bb95b3473469382c6ac926f3e4865",
+      "sha256": "ed36094b9cb4c0942720f645c91e5826749a0a03eae5adda9fa5b195ad95bd5b",
       "synthetic": true
     },
     {
@@ -573,22 +573,22 @@
       "is_scanned": false,
       "path": "evidence/C-1003-evidence.jpg",
       "prompt_spec": {
-        "caption": "A wet floor in a shop entrance marked with a hazard cone \u2014 Commercial claim C-1003 (Spain).",
-        "cause": "slip_and_fall",
+        "caption": "A car with rear-end collision damage \u2014 crumpled rear bumper and dented boot \u2014 Motor claim C-1003 (Germany).",
+        "cause": "rear_end_collision",
         "claim_id": "C-1003",
-        "country": "ES",
+        "country": "DE",
         "doc_id": "DOC-C-1003-EVIDENCE",
-        "kind": "commercial_damage",
-        "line": "bop",
+        "kind": "vehicle_damage",
+        "line": "personal_auto",
         "model": "gemini-3.1-flash-image",
-        "negative_prompt": "no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark",
+        "negative_prompt": "no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks",
         "params": {
           "aspect_ratio": "4:3",
           "resolution": "1K",
           "seed": 4201989
         },
         "path": "evidence/C-1003-evidence.jpg",
-        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Spain: a wet floor in a shop entrance marked with a hazard cone. Close framing on the damage with a plain, uncluttered background. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark."
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Germany: a car with rear-end collision damage \u2014 crumpled rear bumper and dented boot. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks."
       },
       "provenance": [],
       "rendered": true,
@@ -600,9 +600,9 @@
       "doc_type": "fnol",
       "entity_ids": [
         "C-1003",
-        "COM-0000005",
-        "PH-00005",
-        "AD-002"
+        "MOT-0000005",
+        "PH-00006",
+        "AD-001"
       ],
       "format": "pdf",
       "is_scanned": false,
@@ -611,12 +611,12 @@
         {
           "entity_id": "C-1003",
           "field": "cause",
-          "value": "slip-and-fall"
+          "value": "rear-end collision"
         },
         {
           "entity_id": "C-1003",
           "field": "date_of_loss",
-          "value": "2025-07-23"
+          "value": "2025-10-07"
         },
         {
           "entity_id": "C-1003",
@@ -624,7 +624,7 @@
           "value": "closed"
         }
       ],
-      "sha256": "fb863ce31c058d79665b4cd41bc9711367d7a287b9702769288dc7f096e77966",
+      "sha256": "9f23cb78dcbffe7feb317353ad877b426af1128acf19a82d2551ff4e3bdee89d",
       "synthetic": true
     },
     {
@@ -632,16 +632,16 @@
       "doc_type": "fnol_scanned",
       "entity_ids": [
         "C-1003",
-        "COM-0000005",
-        "PH-00005",
-        "AD-002"
+        "MOT-0000005",
+        "PH-00006",
+        "AD-001"
       ],
       "format": "jpg",
       "is_scanned": true,
       "path": "docs/claim/C-1003-fnol-scanned.jpg",
       "provenance": [],
       "scanned_of": "DOC-C-1003-FNOL",
-      "sha256": "cb119f43bbd87547b2e0aafa034fdb3487770cbba8b2b6b1711d799a7ca357a7",
+      "sha256": "aabf1c55c479829bc40237554dbda62380bdae0d27baa2353566b97e6c564cf5",
       "synthetic": true
     },
     {
@@ -649,9 +649,9 @@
       "doc_type": "settlement_letter",
       "entity_ids": [
         "C-1003",
-        "COM-0000005",
-        "PH-00005",
-        "AD-002"
+        "MOT-0000005",
+        "PH-00006",
+        "AD-001"
       ],
       "format": "pdf",
       "is_scanned": false,
@@ -660,7 +660,7 @@
         {
           "entity_id": "C-1003",
           "field": "paid",
-          "value": "\u20ac8,550.00"
+          "value": "\u20ac48,050.00"
         },
         {
           "entity_id": "C-1003",
@@ -668,7 +668,7 @@
           "value": "closed"
         }
       ],
-      "sha256": "f822c013673e433e9938da637e303a1832fe0843bf34caf08488496595d3514c",
+      "sha256": "9cee32dae7923439df51de1ecdca3e916d9f993c42cf53207e4432eded2d9fe3",
       "synthetic": true
     },
     {
@@ -676,16 +676,16 @@
       "doc_type": "settlement_letter_scanned",
       "entity_ids": [
         "C-1003",
-        "COM-0000005",
-        "PH-00005",
-        "AD-002"
+        "MOT-0000005",
+        "PH-00006",
+        "AD-001"
       ],
       "format": "jpg",
       "is_scanned": true,
       "path": "docs/claim/C-1003-settlement-letter-scanned.jpg",
       "provenance": [],
       "scanned_of": "DOC-C-1003-SETTLEMENT",
-      "sha256": "7ca52a88a2229eb6ac409c0ee3da190f76839411503ff4f7f3e23f8a0957b0d3",
+      "sha256": "c16cedf47e306cbb269688c06bd3ac759a949c798e8bd69462071c610c8551da",
       "synthetic": true
     },
     {
@@ -693,9 +693,9 @@
       "doc_type": "adjuster_report",
       "entity_ids": [
         "C-1004",
-        "HH-0000004",
-        "PH-00002",
-        "AD-001"
+        "COM-0000003",
+        "PH-00006",
+        "AD-002"
       ],
       "format": "pdf",
       "is_scanned": false,
@@ -704,20 +704,20 @@
         {
           "entity_id": "C-1004",
           "field": "cause",
-          "value": "theft"
+          "value": "business interruption"
         },
         {
           "entity_id": "C-1004",
           "field": "status",
-          "value": "open"
+          "value": "closed"
         },
         {
           "entity_id": "C-1004",
           "field": "adjuster_id",
-          "value": "AD-001"
+          "value": "AD-002"
         }
       ],
-      "sha256": "b13c95f7521d1717a00799c0a2bfc8a4031396c34252f5eece465011908685e5",
+      "sha256": "c4fe1edac1788119f5cf47ae3106d9f6449165bc324e00b978c272151ea1382d",
       "synthetic": true
     },
     {
@@ -725,9 +725,9 @@
       "doc_type": "estimate",
       "entity_ids": [
         "C-1004",
-        "HH-0000004",
-        "PH-00002",
-        "AD-001"
+        "COM-0000003",
+        "PH-00006",
+        "AD-002"
       ],
       "format": "pdf",
       "is_scanned": false,
@@ -736,10 +736,10 @@
         {
           "entity_id": "C-1004",
           "field": "estimate_net_payable",
-          "value": "\u20ac12,850.00"
+          "value": "\u20ac48,950.00"
         }
       ],
-      "sha256": "f17ffe05103ffb1e00b59b256cbaa503b1068ce8d75e07aad1d98a3b7a567b43",
+      "sha256": "6f1fe7bad0f9caca4e90251e6efd30230e5b72937cb759fb244dd855356db078",
       "synthetic": true
     },
     {
@@ -753,22 +753,22 @@
       "is_scanned": false,
       "path": "evidence/C-1004-evidence.jpg",
       "prompt_spec": {
-        "caption": "A forced-open residential door with a damaged lock after a burglary \u2014 Household claim C-1004 (Ireland).",
-        "cause": "theft",
+        "caption": "A closed small business with shutters down and a temporary-closure notice \u2014 Commercial claim C-1004 (Germany).",
+        "cause": "business_interruption",
         "claim_id": "C-1004",
-        "country": "IE",
+        "country": "DE",
         "doc_id": "DOC-C-1004-EVIDENCE",
-        "kind": "property_damage",
-        "line": "homeowners",
+        "kind": "commercial_damage",
+        "line": "bop",
         "model": "gemini-3.1-flash-image",
-        "negative_prompt": "no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark",
+        "negative_prompt": "no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks",
         "params": {
           "aspect_ratio": "4:3",
           "resolution": "1K",
           "seed": 4201990
         },
         "path": "evidence/C-1004-evidence.jpg",
-        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Ireland: a forced-open residential door with a damaged lock after a burglary. Close framing on the damage with a plain, uncluttered background. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no manufacturer logos, brand names, or maker's badges on ANY object (vehicles, locks, appliances, signage); every visible object is generic and unbranded; no readable number plates or registration text; no recognizable faces; no text overlays; not a stock-photo watermark."
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Germany: a closed small business with shutters down and a temporary-closure notice. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks."
       },
       "provenance": [],
       "rendered": true,
@@ -780,9 +780,9 @@
       "doc_type": "fnol",
       "entity_ids": [
         "C-1004",
-        "HH-0000004",
-        "PH-00002",
-        "AD-001"
+        "COM-0000003",
+        "PH-00006",
+        "AD-002"
       ],
       "format": "pdf",
       "is_scanned": false,
@@ -791,20 +791,20 @@
         {
           "entity_id": "C-1004",
           "field": "cause",
-          "value": "theft"
+          "value": "business interruption"
         },
         {
           "entity_id": "C-1004",
           "field": "date_of_loss",
-          "value": "2024-10-15"
+          "value": "2023-12-14"
         },
         {
           "entity_id": "C-1004",
           "field": "status",
-          "value": "open"
+          "value": "closed"
         }
       ],
-      "sha256": "53892889729771a34fe675a4547357f15e5dfef44a2b84cc390ebc66a0f0a4c5",
+      "sha256": "8a1bd7b6dfacd30ea2368c94afcb45d78300bd494e1aab4e98de50bc0376b807",
       "synthetic": true
     },
     {
@@ -812,112 +812,252 @@
       "doc_type": "fnol_scanned",
       "entity_ids": [
         "C-1004",
-        "HH-0000004",
-        "PH-00002",
-        "AD-001"
+        "COM-0000003",
+        "PH-00006",
+        "AD-002"
       ],
       "format": "jpg",
       "is_scanned": true,
       "path": "docs/claim/C-1004-fnol-scanned.jpg",
       "provenance": [],
       "scanned_of": "DOC-C-1004-FNOL",
-      "sha256": "e1f9ac39a9e8242a03ebd9f16f9ad1584b2af9d2506d1519008b5e24ba32cf3e",
+      "sha256": "2ef8031b303ff7e0d34bf337eb4ada44e69e17923a43d1dce3dd6a7732e54cd4",
       "synthetic": true
     },
     {
-      "doc_id": "DOC-COM-0000005-CONTRACT",
+      "doc_id": "DOC-C-1004-SETTLEMENT",
+      "doc_type": "settlement_letter",
+      "entity_ids": [
+        "C-1004",
+        "COM-0000003",
+        "PH-00006",
+        "AD-002"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/claim/C-1004-settlement-letter.pdf",
+      "provenance": [
+        {
+          "entity_id": "C-1004",
+          "field": "paid",
+          "value": "\u20ac48,950.00"
+        },
+        {
+          "entity_id": "C-1004",
+          "field": "status",
+          "value": "closed"
+        }
+      ],
+      "sha256": "c530f392bf0cd2a08e1dece712f2a0812eeea024632485994e367ad5337d9a10",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1004-SETTLEMENT-SCAN",
+      "doc_type": "settlement_letter_scanned",
+      "entity_ids": [
+        "C-1004",
+        "COM-0000003",
+        "PH-00006",
+        "AD-002"
+      ],
+      "format": "jpg",
+      "is_scanned": true,
+      "path": "docs/claim/C-1004-settlement-letter-scanned.jpg",
+      "provenance": [],
+      "scanned_of": "DOC-C-1004-SETTLEMENT",
+      "sha256": "97e624443221205ee1d6ddb9631324bdb0215cdc44e24e4fabded5963bd2fa89",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-COM-0000003-CONTRACT",
       "doc_type": "policy_contract",
       "entity_ids": [
-        "COM-0000005",
-        "PH-00005"
+        "COM-0000003",
+        "PH-00006"
       ],
       "format": "docx",
       "is_scanned": false,
-      "path": "docs/policy/COM-0000005-contract.docx",
+      "path": "docs/policy/COM-0000003-contract.docx",
       "provenance": [
         {
-          "entity_id": "COM-0000005",
+          "entity_id": "COM-0000003",
           "field": "line",
           "value": "bop"
         }
       ],
-      "sha256": "e59e1309f7732a4788493c0eff00641a096e7fd1e02c0bb7f3cd75672cee9537",
+      "sha256": "a3754ad2e65df4cccec89a774dfd76149711ecd180894b5f25cfbbdce2ef3908",
       "synthetic": true
     },
     {
-      "doc_id": "DOC-COM-0000005-DEC",
+      "doc_id": "DOC-COM-0000003-DEC",
       "doc_type": "policy_declarations",
       "entity_ids": [
-        "COM-0000005",
-        "PH-00005",
+        "COM-0000003",
+        "PH-00006",
         "AG-002"
       ],
       "format": "pdf",
       "is_scanned": false,
-      "path": "docs/policy/COM-0000005-declarations.pdf",
+      "path": "docs/policy/COM-0000003-declarations.pdf",
       "provenance": [
         {
-          "entity_id": "COM-0000005",
+          "entity_id": "COM-0000003",
           "field": "annual_premium",
-          "value": "\u20ac4,485.00"
+          "value": "\u20ac3,525.00"
         },
         {
-          "entity_id": "COM-0000005",
+          "entity_id": "COM-0000003",
           "field": "effective_date",
-          "value": "2024-08-28"
+          "value": "2023-08-13"
         },
         {
-          "entity_id": "COM-0000005",
+          "entity_id": "COM-0000003",
           "field": "expiry_date",
-          "value": "2025-08-28"
+          "value": "2024-08-12"
         },
         {
-          "entity_id": "COM-0000005",
+          "entity_id": "COM-0000003",
           "field": "line",
           "value": "bop"
         }
       ],
-      "sha256": "620e69d6b6292968c31430c39628d6e07272466affbc7428bedd365ab622b64b",
+      "sha256": "37bafaf58180ee05377b76a8529de9d58bba599c2fcc7a7cb5e9c15e18e98803",
       "synthetic": true
     },
     {
-      "doc_id": "DOC-COM-0000005-ENDORSEMENTS",
+      "doc_id": "DOC-COM-0000003-ENDORSEMENTS",
       "doc_type": "policy_endorsements",
       "entity_ids": [
-        "COM-0000005",
-        "PH-00005"
+        "COM-0000003",
+        "PH-00006"
       ],
       "format": "pdf",
       "is_scanned": false,
-      "path": "docs/policy/COM-0000005-endorsements.pdf",
+      "path": "docs/policy/COM-0000003-endorsements.pdf",
       "provenance": [
         {
-          "entity_id": "COM-0000005",
+          "entity_id": "COM-0000003",
           "field": "endorsements",
-          "value": "EPLI, EQUIP_BREAKDOWN, SPOILAGE"
+          "value": "CYBER, HIRED_NONOWNED_AUTO, SPOILAGE"
         }
       ],
-      "sha256": "b53d4380d9284250732faa8a93fe6e6c8d2345b9ff8d22098052721fcfe6b49c",
+      "sha256": "9803db13169ef641751bb79269638543ad623141420c6f84300969725bc52d80",
       "synthetic": true
     },
     {
-      "doc_id": "DOC-COM-0000005-SCHEDULE",
+      "doc_id": "DOC-COM-0000003-SCHEDULE",
       "doc_type": "policy_schedule",
       "entity_ids": [
-        "COM-0000005",
-        "PH-00005"
+        "COM-0000003",
+        "PH-00006"
       ],
       "format": "pdf",
       "is_scanned": false,
-      "path": "docs/policy/COM-0000005-schedule.pdf",
+      "path": "docs/policy/COM-0000003-schedule.pdf",
       "provenance": [
         {
-          "entity_id": "COM-0000005",
+          "entity_id": "COM-0000003",
           "field": "deductible",
           "value": "\u20ac1,000.00"
         }
       ],
-      "sha256": "062c173396603c5771d7279e1ee42545dd2d96cf5e5fc5a51a8362e7f3d7cca2",
+      "sha256": "b27aa77b9a29069cb8446cc6d5deae2e05ad4f92ec16ddfe1459a25b703cb50e",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-COM-0000004-CONTRACT",
+      "doc_type": "policy_contract",
+      "entity_ids": [
+        "COM-0000004",
+        "PH-00004"
+      ],
+      "format": "docx",
+      "is_scanned": false,
+      "path": "docs/policy/COM-0000004-contract.docx",
+      "provenance": [
+        {
+          "entity_id": "COM-0000004",
+          "field": "line",
+          "value": "bop"
+        }
+      ],
+      "sha256": "876f1fbc77dcb825f377dc411a548a08789ed8717f2a75fe8b70ef875bb8f827",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-COM-0000004-DEC",
+      "doc_type": "policy_declarations",
+      "entity_ids": [
+        "COM-0000004",
+        "PH-00004",
+        "AG-003"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/policy/COM-0000004-declarations.pdf",
+      "provenance": [
+        {
+          "entity_id": "COM-0000004",
+          "field": "annual_premium",
+          "value": "\u20ac2,620.00"
+        },
+        {
+          "entity_id": "COM-0000004",
+          "field": "effective_date",
+          "value": "2024-02-20"
+        },
+        {
+          "entity_id": "COM-0000004",
+          "field": "expiry_date",
+          "value": "2025-02-19"
+        },
+        {
+          "entity_id": "COM-0000004",
+          "field": "line",
+          "value": "bop"
+        }
+      ],
+      "sha256": "e6f62a344c8c835924b7d28206435f7c3006a12997fcc0fdc6916fc6f8e610dc",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-COM-0000004-ENDORSEMENTS",
+      "doc_type": "policy_endorsements",
+      "entity_ids": [
+        "COM-0000004",
+        "PH-00004"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/policy/COM-0000004-endorsements.pdf",
+      "provenance": [
+        {
+          "entity_id": "COM-0000004",
+          "field": "endorsements",
+          "value": "EPLI, EQUIP_BREAKDOWN"
+        }
+      ],
+      "sha256": "336c37d7b8181ff4edccefa5a68dce8a3014824d8268b68b1b4a9d24065c9487",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-COM-0000004-SCHEDULE",
+      "doc_type": "policy_schedule",
+      "entity_ids": [
+        "COM-0000004",
+        "PH-00004"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/policy/COM-0000004-schedule.pdf",
+      "provenance": [
+        {
+          "entity_id": "COM-0000004",
+          "field": "deductible",
+          "value": "\u20ac1,000.00"
+        }
+      ],
+      "sha256": "b7ee2f75b9b56c05cbf2c27c03bec10ff4d31c9c7a419c916b4a1d23ee940cbe",
       "synthetic": true
     },
     {
@@ -1017,102 +1157,6 @@
       "synthetic": true
     },
     {
-      "doc_id": "DOC-HH-0000004-CONTRACT",
-      "doc_type": "policy_contract",
-      "entity_ids": [
-        "HH-0000004",
-        "PH-00002"
-      ],
-      "format": "docx",
-      "is_scanned": false,
-      "path": "docs/policy/HH-0000004-contract.docx",
-      "provenance": [
-        {
-          "entity_id": "HH-0000004",
-          "field": "line",
-          "value": "homeowners"
-        }
-      ],
-      "sha256": "0df81f468995eb7410c2eae9fa73bcf0c1d847466b328d58b8b46450d10654f4",
-      "synthetic": true
-    },
-    {
-      "doc_id": "DOC-HH-0000004-DEC",
-      "doc_type": "policy_declarations",
-      "entity_ids": [
-        "HH-0000004",
-        "PH-00002",
-        "AG-003"
-      ],
-      "format": "pdf",
-      "is_scanned": false,
-      "path": "docs/policy/HH-0000004-declarations.pdf",
-      "provenance": [
-        {
-          "entity_id": "HH-0000004",
-          "field": "annual_premium",
-          "value": "\u20ac2,545.00"
-        },
-        {
-          "entity_id": "HH-0000004",
-          "field": "effective_date",
-          "value": "2024-06-02"
-        },
-        {
-          "entity_id": "HH-0000004",
-          "field": "expiry_date",
-          "value": "2025-06-02"
-        },
-        {
-          "entity_id": "HH-0000004",
-          "field": "line",
-          "value": "homeowners"
-        }
-      ],
-      "sha256": "33c2a0ad248cac7f39d95d7534abe9acbbbceb6671cb2a74f14c6c45bde38bf1",
-      "synthetic": true
-    },
-    {
-      "doc_id": "DOC-HH-0000004-ENDORSEMENTS",
-      "doc_type": "policy_endorsements",
-      "entity_ids": [
-        "HH-0000004",
-        "PH-00002"
-      ],
-      "format": "pdf",
-      "is_scanned": false,
-      "path": "docs/policy/HH-0000004-endorsements.pdf",
-      "provenance": [
-        {
-          "entity_id": "HH-0000004",
-          "field": "endorsements",
-          "value": "ID_THEFT, ORD_OR_LAW, SCHEDULED_PROP"
-        }
-      ],
-      "sha256": "70432129a36d907f5840ce408995bbfb6c532f01def75ed44d91874d54da3d4c",
-      "synthetic": true
-    },
-    {
-      "doc_id": "DOC-HH-0000004-SCHEDULE",
-      "doc_type": "policy_schedule",
-      "entity_ids": [
-        "HH-0000004",
-        "PH-00002"
-      ],
-      "format": "pdf",
-      "is_scanned": false,
-      "path": "docs/policy/HH-0000004-schedule.pdf",
-      "provenance": [
-        {
-          "entity_id": "HH-0000004",
-          "field": "deductible",
-          "value": "\u20ac2,500.00"
-        }
-      ],
-      "sha256": "fece3d9296635995a54e06a609ba3b277d69b22341744b2a294a998f0029edf9",
-      "synthetic": true
-    },
-    {
       "doc_id": "DOC-KB-CLAIMS",
       "doc_type": "claims_manual",
       "entity_ids": [],
@@ -1198,7 +1242,7 @@
           "value": "personal_auto"
         }
       ],
-      "sha256": "2646f342ed57c9d7f0de92a382cbcda4a22005e760ce1c92a0175ca1a7389770",
+      "sha256": "74be634d4c72b4a8a2baf48da8ac0d91ede4e23f9f2814cd541663de59f5f044",
       "synthetic": true
     },
     {
@@ -1242,99 +1286,99 @@
       "synthetic": true
     },
     {
-      "doc_id": "DOC-MOT-0000003-CONTRACT",
+      "doc_id": "DOC-MOT-0000005-CONTRACT",
       "doc_type": "policy_contract",
       "entity_ids": [
-        "MOT-0000003",
-        "PH-00003"
+        "MOT-0000005",
+        "PH-00006"
       ],
       "format": "docx",
       "is_scanned": false,
-      "path": "docs/policy/MOT-0000003-contract.docx",
+      "path": "docs/policy/MOT-0000005-contract.docx",
       "provenance": [
         {
-          "entity_id": "MOT-0000003",
+          "entity_id": "MOT-0000005",
           "field": "line",
           "value": "personal_auto"
         }
       ],
-      "sha256": "f781cab696c2345940e75a485631d5f16b2b2268eebb1239b5213ff8e84c22e9",
+      "sha256": "c0d5bbb33d02e7a7b17fc8f71ed540bc5eb309180eabcaf2b6f03cc1b02d9958",
       "synthetic": true
     },
     {
-      "doc_id": "DOC-MOT-0000003-DEC",
+      "doc_id": "DOC-MOT-0000005-DEC",
       "doc_type": "policy_declarations",
       "entity_ids": [
-        "MOT-0000003",
-        "PH-00003",
-        "AG-002"
+        "MOT-0000005",
+        "PH-00006",
+        "AG-001"
       ],
       "format": "pdf",
       "is_scanned": false,
-      "path": "docs/policy/MOT-0000003-declarations.pdf",
+      "path": "docs/policy/MOT-0000005-declarations.pdf",
       "provenance": [
         {
-          "entity_id": "MOT-0000003",
+          "entity_id": "MOT-0000005",
           "field": "annual_premium",
-          "value": "\u20ac1,340.00"
+          "value": "\u20ac960.00"
         },
         {
-          "entity_id": "MOT-0000003",
+          "entity_id": "MOT-0000005",
           "field": "effective_date",
-          "value": "2023-10-09"
+          "value": "2024-12-04"
         },
         {
-          "entity_id": "MOT-0000003",
+          "entity_id": "MOT-0000005",
           "field": "expiry_date",
-          "value": "2024-10-08"
+          "value": "2025-12-04"
         },
         {
-          "entity_id": "MOT-0000003",
+          "entity_id": "MOT-0000005",
           "field": "line",
           "value": "personal_auto"
         }
       ],
-      "sha256": "7f78d472b667cb1358f438eca1cb538ee0ceb9ed17b081f518e412d13936eb09",
+      "sha256": "75141a0d2783f055200c79302fd99aa0f0afe358ef97a60d539edf6606636ae8",
       "synthetic": true
     },
     {
-      "doc_id": "DOC-MOT-0000003-ENDORSEMENTS",
+      "doc_id": "DOC-MOT-0000005-ENDORSEMENTS",
       "doc_type": "policy_endorsements",
       "entity_ids": [
-        "MOT-0000003",
-        "PH-00003"
+        "MOT-0000005",
+        "PH-00006"
       ],
       "format": "pdf",
       "is_scanned": false,
-      "path": "docs/policy/MOT-0000003-endorsements.pdf",
+      "path": "docs/policy/MOT-0000005-endorsements.pdf",
       "provenance": [
         {
-          "entity_id": "MOT-0000003",
+          "entity_id": "MOT-0000005",
           "field": "endorsements",
-          "value": "None"
+          "value": "GAP, NEW_CAR_REPL, UM_UIM"
         }
       ],
-      "sha256": "9c0265c21da1bda16043be23b418212ee434d7ff98f41a993126a58a7d1320b5",
+      "sha256": "3a31d1c9cdfe63429fff08a0445a1480dd506272a6874c4634cab5f361e972d0",
       "synthetic": true
     },
     {
-      "doc_id": "DOC-MOT-0000003-SCHEDULE",
+      "doc_id": "DOC-MOT-0000005-SCHEDULE",
       "doc_type": "policy_schedule",
       "entity_ids": [
-        "MOT-0000003",
-        "PH-00003"
+        "MOT-0000005",
+        "PH-00006"
       ],
       "format": "pdf",
       "is_scanned": false,
-      "path": "docs/policy/MOT-0000003-schedule.pdf",
+      "path": "docs/policy/MOT-0000005-schedule.pdf",
       "provenance": [
         {
-          "entity_id": "MOT-0000003",
+          "entity_id": "MOT-0000005",
           "field": "deductible",
-          "value": "\u20ac1,000.00"
+          "value": "\u20ac500.00"
         }
       ],
-      "sha256": "333c939b3623207bb7d381572e539ee2c583b6271993e242e7ed993c91f7cc29",
+      "sha256": "c9632299376d5a06ef7fe7724ca060eb33c86cbc69914cb2a0f45e6d093fb35d",
       "synthetic": true
     },
     {
@@ -1349,7 +1393,7 @@
       "is_scanned": false,
       "path": "docs/tabular/commission-summary.csv",
       "provenance": [],
-      "sha256": "05f30c52829788ac3ec1e757777fc1a4cccdc696bddafcd43635c109a8c7b408",
+      "sha256": "6b0f3663251fceaa4e5d349d3a2ac6a327ed5d02329d7be9c2384f3726d1ed6c",
       "synthetic": true
     },
     {
@@ -1366,7 +1410,7 @@
       "is_scanned": false,
       "path": "docs/tabular/loss-run.xlsx",
       "provenance": [],
-      "sha256": "9b562e91736d926e5a6beed6b80fde8744a607cdd0d72103eca2cef30c0f970d",
+      "sha256": "50f4a46c36e7cf5f8c1a0f217e31398ee8e21f722f27f032d7cd80f3f490e7ed",
       "synthetic": true
     },
     {
@@ -1375,29 +1419,28 @@
       "entity_ids": [
         "HH-0000001",
         "MOT-0000002",
-        "MOT-0000003",
-        "HH-0000004",
-        "COM-0000005"
+        "COM-0000003",
+        "COM-0000004",
+        "MOT-0000005"
       ],
       "format": "xlsx",
       "is_scanned": false,
       "path": "docs/tabular/premium-register.xlsx",
       "provenance": [],
-      "sha256": "85aeac40e6dd56db902f59a457611343193c165f4e534c71f32a551e3d4befea",
+      "sha256": "f1a089ab3ccd50cd48324592545f6b5e3ded31fcf35dd13d462d30997427e64e",
       "synthetic": true
     },
     {
       "doc_id": "DOC-TAB-RESERVE",
       "doc_type": "reserve_register",
       "entity_ids": [
-        "C-1001",
-        "C-1004"
+        "C-1001"
       ],
       "format": "xlsx",
       "is_scanned": false,
       "path": "docs/tabular/reserve-register.xlsx",
       "provenance": [],
-      "sha256": "65905c32f5c9b0563e554319291ab49758a36cb2b98c7ae71dcd32ecd6436ad6",
+      "sha256": "e9f1405479f773f34bfe6b4a517dadc246963123e9a825b532f9114c4764a4ea",
       "synthetic": true
     }
   ],

@@ -15,6 +15,7 @@
     <tr><td class="k">Named insured</td><td class="v">{{ holder_name }}</td></tr>
     <tr><td class="k">Mailing address</td><td class="v">{{ holder_address }}</td></tr>
     <tr><td class="k">Policy period</td><td class="v">{{ effective_date }} to {{ expiry_date }}</td></tr>
+    {% if vehicle %}<tr><td class="k">Insured vehicle</td><td class="v">{{ vehicle }}</td></tr>{% endif %}
     <tr><td class="k">Producing agent</td><td class="v">{{ agent_name }} — {{ agency }}</td></tr>
     <tr><td class="k">Annual premium</td><td class="v">{{ annual_premium }}</td></tr>
     <tr><td class="k">Deductible</td><td class="v">{{ deductible }}</td></tr>

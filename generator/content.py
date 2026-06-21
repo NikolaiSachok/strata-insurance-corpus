@@ -61,6 +61,13 @@ def _money(x: float) -> str:
     return f"{CURRENCY_SYMBOL}{x:,.2f}"
 
 
+def _vehicle_str(policy: Policy) -> str | None:
+    v = policy.vehicle
+    if not v:
+        return None
+    return f"{v['make']} {v['model']} ({v['year']}, {v['colour']}) — reg {v['registration']}"
+
+
 def _limits_lines(policy: Policy) -> list[tuple[str, str]]:
     pretty = {
         "bodily_injury_per_person": "Bodily injury — per person",
@@ -158,6 +165,7 @@ def declarations_document(model_meta: dict, policy: Policy, holder: Policyholder
         "deductible": _money(policy.deductible),
         "limits": _limits_lines(policy),
         "endorsements": endo,
+        "vehicle": _vehicle_str(policy),
     }
 
 
@@ -271,6 +279,7 @@ def fnol_document(
         "adjuster_name": adjuster.name,
         "adjuster_specialty": adjuster.specialty,
         "reserve": _money(claim.reserve),
+        "vehicle": _vehicle_str(policy),
         "narrative": narrative_for_claim(claim, holder, policy),
     }
 

@@ -66,6 +66,17 @@ def build_golden(
                 "provenance": {"entity_id": policy.id, "field": "annual_premium"},
             }
         )
+        if policy.vehicle:
+            items.append(
+                {
+                    "id": f"Q-{policy.id}-vehicle",
+                    "question": f"What make and model of vehicle is insured under policy {policy.id}?",
+                    "answer": f"{policy.vehicle['make']} {policy.vehicle['model']}",
+                    "relevant_doc_ids": [doc_id],
+                    "query_class": "semantic",
+                    "provenance": {"entity_id": policy.id, "field": "vehicle"},
+                }
+            )
     for claim in model.claims:
         doc_id = settlement_doc_for_claim.get(claim.id)
         if not doc_id:

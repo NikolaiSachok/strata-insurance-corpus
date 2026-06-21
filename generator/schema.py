@@ -91,6 +91,7 @@ MODEL_SCHEMA = {
                     "limits": {"type": "object"},
                     "deductible": _NUM,
                     "endorsements": {"type": "array", "items": _STR},
+                    "vehicle": {"type": ["object", "null"]},  # insured vehicle (Motor only)
                 },
                 ["id", "holder_id", "agent_id", "line", "effective_date", "expiry_date", "annual_premium"],
             ),

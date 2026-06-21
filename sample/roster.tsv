@@ -10,13 +10,13 @@ AG-002	agent	Aleksandr Weihmann				Höfig Risk Partners; Germany
 AG-003	agent	Alexandre Traore				Paris Assurances; France
 AD-001	adjuster	Frédéric Joly-Gallet				motor physical damage
 AD-002	adjuster	Colm Davis				motor physical damage
-COM-0000005	policy	Commercial policy — Albano Llopis Hierro	bop	PH-00005		agent=AG-002; eff=2024-08-28
+COM-0000003	policy	Commercial policy — Dr. Christof Walter B.Sc.	bop	PH-00006		agent=AG-002; eff=2023-08-13
+COM-0000004	policy	Commercial policy — Wouter Verwoert-Goyaerts van Waderle	bop	PH-00004		agent=AG-003; eff=2024-02-20
 HH-0000001	policy	Household policy — Mr. Stewart Montague	homeowners	PH-00002		agent=AG-003; eff=2023-10-08
-HH-0000004	policy	Household policy — Mr. Stewart Montague	homeowners	PH-00002		agent=AG-003; eff=2024-06-02
 MOT-0000002	policy	Motor policy — Mr. Stewart Montague	personal_auto	PH-00002		agent=AG-002; eff=2024-01-31
-MOT-0000003	policy	Motor policy — Yves Traore	personal_auto	PH-00003		agent=AG-002; eff=2023-10-09
-C-1000	claim	Household claim — kitchen fire	homeowners	HH-0000001	closed	dol=2023-12-26; adjuster=AD-001
-C-1001	claim	Household claim — theft	homeowners	HH-0000004	open	dol=2024-12-17; adjuster=AD-001
-C-1002	claim	Commercial claim — equipment breakdown	bop	COM-0000005	denied	dol=2025-08-12; adjuster=AD-001
-C-1003	claim	Commercial claim — slip and fall	bop	COM-0000005	closed	dol=2025-07-23; adjuster=AD-002
-C-1004	claim	Household claim — theft	homeowners	HH-0000004	open	dol=2024-10-15; adjuster=AD-001
+MOT-0000005	policy	Motor policy — Dr. Christof Walter B.Sc.	personal_auto	PH-00006		agent=AG-001; eff=2024-12-04
+C-1000	claim	Commercial claim — slip and fall	bop	COM-0000003	closed	dol=2023-10-10; adjuster=AD-002
+C-1001	claim	Commercial claim — burglary	bop	COM-0000004	open	dol=2024-07-04; adjuster=AD-001
+C-1002	claim	Commercial claim — burglary	bop	COM-0000003	denied	dol=2023-10-31; adjuster=AD-001
+C-1003	claim	Motor claim — rear end collision	personal_auto	MOT-0000005	closed	dol=2025-10-07; adjuster=AD-001
+C-1004	claim	Commercial claim — business interruption	bop	COM-0000003	closed	dol=2023-12-14; adjuster=AD-002

@@ -43,11 +43,13 @@ uv run python -m generator.run --seed 42 --out /tmp/m --profile slice --no-rende
 
 ## Evidence images — done criteria
 
-AI-rendered evidence pixels are non-deterministic and the model does not guarantee the prompt's
-negatives, so before an image enters `sample/` it must be: (1) **visually verified** to contain NO
-recognizable faces, readable number plates, or real brand logos/badges; and (2) finalized through
-`render/image.py` so it carries the **EXIF synthetic marker**. The committed reproducible artifact is
-the prompt-spec in `image-prompts.jsonl`; the full-corpus pixels are produced on-demand for the HF release.
+The corpus is **synthetic but realistic**: synthetic faces, vehicle makes, and invented plates are
+*allowed* — they're the realistic PII a redaction system is benchmarked on, and PII handling belongs in
+the consuming RAG layer, not the source documents. So before an image enters `sample/` it must only be:
+(1) **visually verified** NOT to depict a **real identifiable individual** (e.g. a public figure) or a
+**real named company** as the claim party; and (2) finalized through `render/image.py` so it carries the
+**EXIF synthetic marker**. The committed reproducible artifact is the prompt-spec in `image-prompts.jsonl`;
+the full-corpus pixels are produced on-demand for the HF release.
 
 ## Native dependency (PDF)
 

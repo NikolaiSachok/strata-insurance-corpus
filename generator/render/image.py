@@ -8,8 +8,9 @@ carries its synthetic provenance even though it has no visible watermark (a wate
 would defeat the vision-RAG purpose).
 
 DONE criteria for an evidence image (before it enters `sample/`):
-  1. visually verified to honour the prompt's negatives — NO recognizable faces, readable
-     number plates, or real brand logos/badges (the model does not guarantee this);
+  1. visually verified NOT to depict a real identifiable individual (e.g. a public figure) or a
+     real named company as the claim party — synthetic faces / vehicle makes / invented plates are
+     fine (realistic PII for the redaction showcase; PII handling is the RAG layer's job);
   2. finalized through ``finalize_evidence`` so it carries the EXIF synthetic marker.
 """
 
