@@ -91,8 +91,8 @@ two-query-class design) + ground truth + provenance:
 
 - **Semantic / extractive:** "What cause of loss did the adjuster cite for claim C-1042?" → answer +
   the exact source doc/span.
-- **Aggregation / metadata:** "Total open reserves on auto claims in Q3?" / "How many claims exceed
-  $50k?" → answer computed from the model (the spreadsheets are the retrieval target).
+- **Aggregation / metadata:** "Total open reserves on Motor claims in Q3?" / "How many claims exceed
+  €50k?" → answer computed from the model (the spreadsheets are the retrieval target).
 - **Multi-hop / cross-doc:** "Is the damage in claim C-1042's photos consistent with the estimate?" →
   forces image + document fusion.
 
