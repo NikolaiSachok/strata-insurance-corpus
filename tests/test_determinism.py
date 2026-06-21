@@ -141,6 +141,42 @@ def test_estimate_settlement_amounts_consistent():
         assert round(sum(_money(a) for _, a in est["rows"]), 2) == gross
 
 
+def test_xlsx_byte_stable(tmp_path):
+    """The .xlsx renderer must be byte-reproducible (normalized zip + pinned modified)."""
+    import zipfile
+
+    from generator import tabular
+    from generator.render.sheets import write_xlsx
+
+    m = build_model(42, "sample")
+    table = tabular.premium_register(m)
+    a = tmp_path / "a.xlsx"
+    b = tmp_path / "b.xlsx"
+    write_xlsx([table], a)
+    write_xlsx([table], b)
+    assert a.read_bytes() == b.read_bytes()
+    assert "xl/workbook.xml" in zipfile.ZipFile(a).namelist()
+
+
+def test_aggregation_golden_matches_model():
+    """Golden aggregation answers must equal the model-computed totals (single source)."""
+    from generator import tabular
+    from generator.golden import build_golden
+
+    m = build_model(42, "sample")
+    tab_ids = {
+        "loss_run": "D1",
+        "reserve_register": "D2",
+        "premium_register": "D3",
+        "commission_summary": "D4",
+    }
+    golden = build_golden(m, {}, {}, {}, tab_ids)
+    agg = {x["id"]: x["answer"] for x in golden if x["query_class"] == "aggregation"}
+    assert agg["Q-AGG-open-reserve"] == f"${tabular.total_open_reserve(m):,.2f}"
+    assert agg["Q-AGG-total-premium"] == f"${tabular.total_annual_premium(m):,.2f}"
+    assert agg["Q-AGG-open-claims"] == str(tabular.open_claim_count(m))
+
+
 def test_synthetic_markers_present():
     m = build_model(5, "slice")
     assert m.meta["synthetic"] is True

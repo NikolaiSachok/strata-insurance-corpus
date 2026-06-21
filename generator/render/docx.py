@@ -9,29 +9,12 @@ core-property dates to a fixed datetime and re-pack the archive with normalized
 
 from __future__ import annotations
 
-import datetime as dt
 import io
-import zipfile
 from pathlib import Path
 
 from .. import COMPANY_NAME, SYNTHETIC_MARKER
-
-# Fixed packaging clock (the model anchor). Not a wall-clock read.
-_FIXED_DT = dt.datetime(2024, 7, 1, 0, 0, 0)
-_ZIP_MTIME = (1980, 1, 1, 0, 0, 0)  # zip epoch floor — constant, content-independent
-
-
-def _normalize_docx(raw: bytes) -> bytes:
-    """Re-pack a .docx zip deterministically (sorted members, fixed mtime)."""
-    src = zipfile.ZipFile(io.BytesIO(raw))
-    out = io.BytesIO()
-    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
-        for name in sorted(src.namelist()):
-            zi = zipfile.ZipInfo(name, date_time=_ZIP_MTIME)
-            zi.compress_type = zipfile.ZIP_DEFLATED
-            zi.external_attr = 0o644 << 16
-            z.writestr(zi, src.read(name))
-    return out.getvalue()
+from ._repro import FIXED_DT as _FIXED_DT
+from ._repro import normalize_zip as _normalize_docx
 
 
 def _new_document():

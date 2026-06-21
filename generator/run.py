@@ -30,6 +30,7 @@ from .content import (
     schedule_document,
     settlement_letter_document,
 )
+from . import tabular
 from .golden import build_golden, write_golden
 from .manifest import write_manifest
 from .model import ANCHOR_EPOCH, build_model, index, write_model
@@ -73,6 +74,7 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
     fnol_doc_for_claim: dict[str, str] = {}
     decl_doc_for_policy: dict[str, str] = {}
     settlement_doc_for_claim: dict[str, str] = {}
+    tabular_doc_ids: dict[str, str] = {}
 
     if render:
         from .render.docx import write_contract_docx  # lazy imports
@@ -229,11 +231,36 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
                     [Assertion(claim.id, "status", "denied")],
                 )
 
+        # Tabular family (corpus-level): registers in xlsx + commission in csv
+        from .render.sheets import write_csv, write_xlsx
+
+        tab_specs = [
+            ("DOC-TAB-LOSS-RUN", "loss_run", "xlsx", "docs/tabular/loss-run.xlsx",
+             lambda p: write_xlsx([tabular.loss_run(model)], p), [c.id for c in model.claims]),
+            ("DOC-TAB-RESERVE", "reserve_register", "xlsx", "docs/tabular/reserve-register.xlsx",
+             lambda p: write_xlsx([tabular.reserve_register(model)], p), [c.id for c in model.claims if c.status == "open"]),
+            ("DOC-TAB-PREMIUM", "premium_register", "xlsx", "docs/tabular/premium-register.xlsx",
+             lambda p: write_xlsx([tabular.premium_register(model)], p), [p.id for p in model.policies]),
+            ("DOC-TAB-COMMISSION", "commission_summary", "csv", "docs/tabular/commission-summary.csv",
+             lambda p: write_csv(tabular.commission_summary(model), p), [a.id for a in model.agents]),
+        ]
+        for doc_id, doc_type, fmt, rel, writer, entity_ids in tab_specs:
+            writer(out / rel)
+            tabular_doc_ids[doc_type] = doc_id
+            records.append(
+                DocRecord(
+                    doc_id=doc_id, doc_type=doc_type, format=fmt, path=rel,
+                    entity_ids=entity_ids, asserts=[], sha256=sha256_file(out / rel),
+                )
+            )
+
     # 4. manifest
     write_manifest(out, model.meta, records)
 
     # 5. golden
-    golden = build_golden(model, fnol_doc_for_claim, decl_doc_for_policy, settlement_doc_for_claim)
+    golden = build_golden(
+        model, fnol_doc_for_claim, decl_doc_for_policy, settlement_doc_for_claim, tabular_doc_ids
+    )
     write_golden(out, golden)
 
     return {
