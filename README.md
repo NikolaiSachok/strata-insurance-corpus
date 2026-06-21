@@ -6,11 +6,11 @@
 > exercise and benchmark document-RAG systems on *enterprise-shaped* data. Usable standalone with any
 > RAG stack, or as a drop-in corpus for [Strata-RAG](https://github.com/NikolaiSachok/Strata-RAG).
 
-**Status: 🚧 M1 + M2 complete; M3+ in progress.** The seeded generator and entity model, all born-digital
-document families (policy / claim / tabular / knowledge), the manifest + provenance, and the
-golden-eval set (semantic + aggregation) run end-to-end today. Scanned variants, generated images,
-synthetic-PII injection, the eval harness, and the Strata-RAG adapter are scheduled (M3–M5). Design and
-roadmap: **[BRIEF.md](BRIEF.md)** and the **[issues](../../issues)**.
+**Status: 🚧 M1 + M2 complete; M3 in progress.** The seeded generator and entity model, all born-digital
+document families (policy / claim / tabular / knowledge), **scanned (OCR-target) variants** of the claim
+forms/letters, the manifest + provenance, and the golden-eval set (semantic + aggregation) run end-to-end
+today. Generated images, synthetic-PII injection, the eval harness, and the Strata-RAG adapter are
+scheduled (M3–M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and the **[issues](../../issues)**.
 
 ### What runs today (M1–M2)
 

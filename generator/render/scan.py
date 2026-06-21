@@ -34,8 +34,11 @@ def scan_pdf(
 
     pdf = pdfium.PdfDocument(str(pdf_path))
     try:
-        page = pdf[0]  # our forms/letters are single-page
-        im = page.render(scale=dpi / 72).to_pil().convert("L")  # rasterize on white -> grayscale
+        # Forms/letters are single-page by construction. Fail loudly rather than silently
+        # dropping content if a future (e.g. LLM-authored) source ever spans >1 page.
+        if len(pdf) != 1:
+            raise ValueError(f"scan_pdf expects a single-page document, got {len(pdf)} pages: {pdf_path}")
+        im = pdf[0].render(scale=dpi / 72).to_pil().convert("L")  # rasterize on white -> grayscale
     finally:
         pdf.close()
 
