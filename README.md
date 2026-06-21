@@ -6,9 +6,27 @@
 > exercise and benchmark document-RAG systems on *enterprise-shaped* data. Usable standalone with any
 > RAG stack, or as a drop-in corpus for [Strata-RAG](https://github.com/NikolaiSachok/Strata-RAG).
 
-**Status: 🚧 planning / scaffolding.** The design and roadmap live in **[BRIEF.md](BRIEF.md)** and the
-**[issues](../../issues)**. No data is generated yet — this repo currently defines *what* will be built
-and *how*, so a contributor (human or agent) can pick up any issue and start.
+**Status: 🚧 M1 foundation built; M2+ in progress.** The seeded generator, entity/data model, born-digital
+PDF rendering, manifest/provenance, and a golden-eval slice exist and run end-to-end today
+(`make generate` / `make sample` / `make validate` / `make test`). Text/tabular docs, scanned variants,
+images, and the Strata-RAG adapter are scheduled (M2–M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and
+the **[issues](../../issues)**.
+
+### What runs today (M1)
+
+```bash
+make sample     # -> committed sample/ slice + golden/golden.jsonl  (deterministic)
+make generate   # -> full corpus/ : 305 entities, 560 documents (440 PDF + 120 Word), 200 golden Qs  (gitignored)
+make validate   # integrity + golden-support checks
+make test       # determinism + referential-integrity suite
+```
+
+Built: deterministic entity model + roster ([docs/data-model.md](docs/data-model.md)); the **policy** family
+— declarations / endorsements / coverage-schedule (born-digital PDF, WeasyPrint) + full **contract in Word
+`.docx`** (python-docx) — and **FNOL** PDFs; all renderers byte-reproducible (`SOURCE_DATE_EPOCH` / pinned
+docx packaging); `manifest.json` with per-doc provenance + sha256; the **semantic** golden-question class
+(cause-of-loss + premium). The doc-type × format build-out is tracked in
+[docs/format-matrix.md](docs/format-matrix.md).
 
 ---
 
@@ -54,15 +72,15 @@ Auto · Home · Small-commercial lines. The document universe maps to every real
 - **Standalone or plug-in.** Works with any RAG system; ships a [Strata-RAG](https://github.com/NikolaiSachok/Strata-RAG)
   adapter so the engine can mount it via `RAGEVAL_PLUGINS_DIR`.
 
-## Repo layout (planned)
+## Repo layout
 
 ```
-generator/   the seeded synthetic-data pipeline (content → render → formats + provenance)
-sample/      a small, committed slice of the corpus (so the repo is usable without a full run)
-golden/      the golden evaluation set (semantic + aggregation queries, answers, provenance)
-adapter/     the Strata-RAG source adapter (register_adapter / register_family)
-docs/        design notes, the company spec, the format matrix
-Makefile     generate / sample / validate targets
+generator/   the seeded synthetic-data pipeline (model → content → render + provenance)   [M1 ✅]
+sample/      a small, committed slice of the corpus (so the repo is usable without a full run) [M1 ✅]
+golden/      the golden evaluation set (semantic now; aggregation + multi-hop in M4)        [M1 ✅]
+adapter/     the Strata-RAG source adapter (register_adapter / register_family)             [M5 ⏳]
+docs/        the data model, the format matrix, related work                                 [M1 ✅]
+Makefile     generate / sample / validate / test targets                                     [M1 ✅]
 ```
 
 The **full corpus** (hundreds of documents + images) is reproducible locally and will be published as a

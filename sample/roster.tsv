@@ -1,0 +1,22 @@
+id	type	name	line	parent_id	status	detail
+PH-00001	policyholder	Abigail Shaffer				Lake Jeremyport, CO
+PH-00002	policyholder	Jamie Chavez				Carlshire, FM
+PH-00003	policyholder	Matthew Foster				Lake Jenniferside, WV
+PH-00004	policyholder	Gina Carter				North Jessicaland, WV
+PH-00005	policyholder	Betty Alvarez				Lake Crystalbury, CA
+PH-00006	policyholder	Andrea Young				Taylorburgh, KY
+AG-001	agent	Allison Hill				Walker Insurance Group; Northeast
+AG-002	agent	Megan Mcclain				Miller Risk Partners; Southeast
+AG-003	agent	Allen Robinson				Wagner Agency; Southeast
+AD-001	adjuster	Cristian Santos				auto physical damage
+AD-002	adjuster	Connie Lawrence				auto physical damage
+HO-0000001	policy	Homeowners policy — Matthew Foster	homeowners	PH-00003		agent=AG-003; eff=2023-10-05
+HO-0000003	policy	Homeowners policy — Abigail Shaffer	homeowners	PH-00001		agent=AG-001; eff=2023-04-21
+PA-0000002	policy	Personal Auto policy — Betty Alvarez	personal_auto	PH-00005		agent=AG-002; eff=2024-10-12
+PA-0000004	policy	Personal Auto policy — Andrea Young	personal_auto	PH-00006		agent=AG-002; eff=2024-12-26
+PA-0000005	policy	Personal Auto policy — Jamie Chavez	personal_auto	PH-00002		agent=AG-002; eff=2024-01-31
+C-1000	claim	Homeowners claim — theft	homeowners	HO-0000001	closed	dol=2024-04-28; adjuster=AD-002
+C-1001	claim	Homeowners claim — liability slip	homeowners	HO-0000003	closed	dol=2024-03-22; adjuster=AD-001
+C-1002	claim	Personal Auto claim — vandalism	personal_auto	PA-0000002	open	dol=2024-12-23; adjuster=AD-002
+C-1003	claim	Personal Auto claim — single vehicle	personal_auto	PA-0000004	denied	dol=2025-06-30; adjuster=AD-002
+C-1004	claim	Personal Auto claim — single vehicle	personal_auto	PA-0000005	open	dol=2024-03-18; adjuster=AD-002

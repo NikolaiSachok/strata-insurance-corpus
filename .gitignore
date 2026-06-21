@@ -2,7 +2,6 @@
 # Do NOT commit it — only the small committed sample/ slice lives in git.
 /corpus/
 *.qdrant/
-manifest.json
 
 # LLM content cache (keyed by seed+doc_id; reproducible, not source)
 .cache/

@@ -1,0 +1,51 @@
+@page {
+  size: Letter;
+  margin: 2.2cm 2cm;
+  @bottom-center {
+    content: "SYNTHETIC — Meridian Mutual (fictional) · not a real insurance document";
+    font-size: 7pt;
+    color: #999;
+  }
+  @bottom-right {
+    content: "Page " counter(page) " of " counter(pages);
+    font-size: 7pt;
+    color: #999;
+  }
+}
+
+html { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 10.5pt; color: #1a1a1a; }
+body { line-height: 1.45; }
+
+.synthetic-banner {
+  border: 1px solid #c0392b;
+  color: #c0392b;
+  font-size: 7.5pt;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 3px 6px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.masthead { border-bottom: 2px solid #1f3a5f; padding-bottom: 6px; margin-bottom: 14px; }
+.masthead .company { font-size: 15pt; font-weight: 700; color: #1f3a5f; }
+.masthead .doc-title { font-size: 11pt; color: #444; margin-top: 2px; }
+
+h2 { font-size: 11pt; color: #1f3a5f; border-bottom: 1px solid #d9d9d9; padding-bottom: 2px; margin: 16px 0 8px; }
+
+table.kv { width: 100%; border-collapse: collapse; margin: 6px 0; }
+table.kv td { padding: 3px 6px; vertical-align: top; }
+table.kv td.k { width: 38%; color: #555; }
+table.kv td.v { font-weight: 600; }
+
+table.grid { width: 100%; border-collapse: collapse; margin: 6px 0; }
+table.grid th, table.grid td { border: 1px solid #cfcfcf; padding: 4px 8px; text-align: left; font-size: 9.5pt; }
+table.grid th { background: #eef2f7; }
+
+.clause { margin: 6px 0; text-align: justify; }
+.narrative { margin: 6px 0; text-align: justify; background: #fafafa; border-left: 3px solid #1f3a5f; padding: 8px 10px; }
+.status { text-transform: uppercase; font-weight: 700; }
+.status.open { color: #b7791f; }
+.status.closed { color: #2f855a; }
+.status.denied { color: #c0392b; }
+.meta-foot { margin-top: 18px; font-size: 7.5pt; color: #999; }

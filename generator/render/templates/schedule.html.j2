@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>{{ policy_id }} — Coverage Schedule</title></head>
+<body>
+  <div class="synthetic-banner">{{ marker }}</div>
+  <div class="masthead">
+    <div class="company">{{ company }}</div>
+    <div class="doc-title">{{ doc_title }}</div>
+  </div>
+
+  <h2>Coverage Schedule — Policy {{ policy_id }}</h2>
+  <table class="kv">
+    <tr><td class="k">Named insured</td><td class="v">{{ holder_name }}</td></tr>
+    <tr><td class="k">Policy period</td><td class="v">{{ effective_date }} to {{ expiry_date }}</td></tr>
+    <tr><td class="k">Annual premium</td><td class="v">{{ annual_premium }}</td></tr>
+    <tr><td class="k">Deductible (per occurrence)</td><td class="v">{{ deductible }}</td></tr>
+  </table>
+
+  <h2>Schedule of Coverages</h2>
+  <table class="grid">
+    <thead><tr><th>Coverage</th><th>Limit of insurance</th><th>Deductible</th></tr></thead>
+    <tbody>
+    {% for label, value in limits %}
+      <tr><td>{{ label }}</td><td>{{ value }}</td><td>{{ deductible }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <p class="meta-foot">This document is synthetic and generated for retrieval/benchmark testing.
+  No real person, business, or policy is described.</p>
+</body>
+</html>

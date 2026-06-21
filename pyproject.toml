@@ -7,19 +7,22 @@ requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "Nikolai Sachok" }]
 
-# Deps are indicative for the planned generator (pin during M1). Kept minimal + standard.
+# Generator runtime deps. Kept minimal + standard; resolved to latest compatible by uv.
 dependencies = [
   "faker>=25",          # seeded synthetic entities (names, addresses, ids)
   "jinja2>=3",          # HTML/text templating for documents
-  "python-docx>=1",     # .docx rendering
-  "openpyxl>=3",        # .xlsx tabular rendering
-  "pillow>=10",         # image handling + scan-effect compositing
+  "weasyprint>=62",     # HTML/CSS -> born-digital PDF (system libs: cairo/pango/gdk-pixbuf)
+  "python-docx>=1",     # .docx rendering (M2)
+  "openpyxl>=3",        # .xlsx tabular rendering (M2)
+  "pillow>=10",         # image handling + scan-effect compositing (M3)
   "pyyaml>=6",
 ]
 
 [project.optional-dependencies]
-pdf = ["weasyprint>=62"]   # HTML/CSS -> PDF (alt: reportlab). Decided in M2.
 dev = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+include = ["generator*"]
 
 [project.urls]
 Homepage = "https://github.com/NikolaiSachok/strata-insurance-corpus"
