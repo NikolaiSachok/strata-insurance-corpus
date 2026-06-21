@@ -2,110 +2,110 @@
   "adjusters": [
     {
       "id": "AD-001",
-      "name": "Cristian Santos",
-      "specialty": "auto physical damage"
+      "name": "Frédéric Joly-Gallet",
+      "specialty": "motor physical damage"
     },
     {
       "id": "AD-002",
-      "name": "Connie Lawrence",
-      "specialty": "auto physical damage"
+      "name": "Colm Davis",
+      "specialty": "motor physical damage"
     }
   ],
   "agents": [
     {
-      "agency": "Walker Insurance Group",
+      "agency": "Hyman Insurance Group",
       "id": "AG-001",
-      "name": "Allison Hill",
-      "region": "Northeast"
+      "name": "Mr. Alister Kinnear",
+      "region": "Ireland"
     },
     {
-      "agency": "Miller Risk Partners",
+      "agency": "Höfig Risk Partners",
       "id": "AG-002",
-      "name": "Megan Mcclain",
-      "region": "Southeast"
+      "name": "Aleksandr Weihmann",
+      "region": "Germany"
     },
     {
-      "agency": "Wagner Agency",
+      "agency": "Paris Assurances",
       "id": "AG-003",
-      "name": "Allen Robinson",
-      "region": "Southeast"
+      "name": "Alexandre Traore",
+      "region": "France"
     }
   ],
   "claims": [
     {
-      "adjuster_id": "AD-002",
-      "cause": "theft",
-      "date_of_loss": "2024-04-28",
-      "holder_id": "PH-00003",
+      "adjuster_id": "AD-001",
+      "cause": "kitchen_fire",
+      "date_of_loss": "2023-12-26",
+      "holder_id": "PH-00002",
       "id": "C-1000",
       "line": "homeowners",
-      "narrative_seed": "theft affecting homeowners policy HO-0000001 on 2024-04-28",
-      "paid": 45350.0,
-      "policy_id": "HO-0000001",
-      "reported_date": "2024-05-02",
+      "narrative_seed": "kitchen fire affecting homeowners policy HH-0000001 on 2023-12-26",
+      "paid": 41050.0,
+      "policy_id": "HH-0000001",
+      "reported_date": "2024-01-05",
       "reserve": 0.0,
       "status": "closed"
     },
     {
       "adjuster_id": "AD-001",
-      "cause": "liability_slip",
-      "date_of_loss": "2024-03-22",
-      "holder_id": "PH-00001",
+      "cause": "theft",
+      "date_of_loss": "2024-12-17",
+      "holder_id": "PH-00002",
       "id": "C-1001",
       "line": "homeowners",
-      "narrative_seed": "liability slip affecting homeowners policy HO-0000003 on 2024-03-22",
-      "paid": 23950.0,
-      "policy_id": "HO-0000003",
-      "reported_date": "2024-03-29",
-      "reserve": 0.0,
-      "status": "closed"
-    },
-    {
-      "adjuster_id": "AD-002",
-      "cause": "vandalism",
-      "date_of_loss": "2024-12-23",
-      "holder_id": "PH-00005",
-      "id": "C-1002",
-      "line": "personal_auto",
-      "narrative_seed": "vandalism affecting personal_auto policy PA-0000002 on 2024-12-23",
-      "paid": 8635.48,
-      "policy_id": "PA-0000002",
-      "reported_date": "2024-12-26",
-      "reserve": 28900.0,
+      "narrative_seed": "theft affecting homeowners policy HH-0000004 on 2024-12-17",
+      "paid": 10561.12,
+      "policy_id": "HH-0000004",
+      "reported_date": "2024-12-23",
+      "reserve": 49900.0,
       "status": "open"
     },
     {
-      "adjuster_id": "AD-002",
-      "cause": "single_vehicle",
-      "date_of_loss": "2025-06-30",
-      "holder_id": "PH-00006",
-      "id": "C-1003",
-      "line": "personal_auto",
-      "narrative_seed": "single vehicle affecting personal_auto policy PA-0000004 on 2025-06-30",
+      "adjuster_id": "AD-001",
+      "cause": "equipment_breakdown",
+      "date_of_loss": "2025-08-12",
+      "holder_id": "PH-00005",
+      "id": "C-1002",
+      "line": "bop",
+      "narrative_seed": "equipment breakdown affecting bop policy COM-0000005 on 2025-08-12",
       "paid": 0.0,
-      "policy_id": "PA-0000004",
-      "reported_date": "2025-07-03",
+      "policy_id": "COM-0000005",
+      "reported_date": "2025-08-13",
       "reserve": 0.0,
       "status": "denied"
     },
     {
       "adjuster_id": "AD-002",
-      "cause": "single_vehicle",
-      "date_of_loss": "2024-03-18",
+      "cause": "slip_and_fall",
+      "date_of_loss": "2025-07-23",
+      "holder_id": "PH-00005",
+      "id": "C-1003",
+      "line": "bop",
+      "narrative_seed": "slip and fall affecting bop policy COM-0000005 on 2025-07-23",
+      "paid": 8550.0,
+      "policy_id": "COM-0000005",
+      "reported_date": "2025-07-28",
+      "reserve": 0.0,
+      "status": "closed"
+    },
+    {
+      "adjuster_id": "AD-001",
+      "cause": "theft",
+      "date_of_loss": "2024-10-15",
       "holder_id": "PH-00002",
       "id": "C-1004",
-      "line": "personal_auto",
-      "narrative_seed": "single vehicle affecting personal_auto policy PA-0000005 on 2024-03-18",
-      "paid": 5813.86,
-      "policy_id": "PA-0000005",
-      "reported_date": "2024-03-18",
-      "reserve": 18350.0,
+      "line": "homeowners",
+      "narrative_seed": "theft affecting homeowners policy HH-0000004 on 2024-10-15",
+      "paid": 4474.47,
+      "policy_id": "HH-0000004",
+      "reported_date": "2024-10-23",
+      "reserve": 12850.0,
       "status": "open"
     }
   ],
   "meta": {
     "anchor_date": "2024-07-01",
-    "company": "Meridian Mutual Insurance Company",
+    "company": "Meridian Mutual Insurance SE",
     "counts": {
       "adjusters": 2,
       "agents": 3,
@@ -113,83 +113,30 @@
       "policies": 5,
       "policyholders": 6
     },
+    "currency": "EUR",
     "generator_version": "0.0.1",
     "marker": "SYNTHETIC — Meridian Mutual (fictional)",
     "profile": "sample",
+    "region": "Europe",
     "seed": 42,
     "synthetic": true
   },
   "policies": [
     {
       "agent_id": "AG-003",
-      "annual_premium": 2075.0,
-      "deductible": 2500.0,
-      "effective_date": "2023-10-05",
+      "annual_premium": 2455.0,
+      "deductible": 5000.0,
+      "effective_date": "2023-10-08",
       "endorsements": [],
-      "expiry_date": "2024-10-04",
-      "holder_id": "PH-00003",
-      "id": "HO-0000001",
+      "expiry_date": "2024-10-07",
+      "holder_id": "PH-00002",
+      "id": "HH-0000001",
       "limits": {
-        "dwelling": 650000,
-        "personal_liability": 100000,
-        "personal_property": 325000
-      },
-      "line": "homeowners"
-    },
-    {
-      "agent_id": "AG-002",
-      "annual_premium": 1290.0,
-      "deductible": 250.0,
-      "effective_date": "2024-10-12",
-      "endorsements": [
-        "RENTAL_REIMB",
-        "ROADSIDE"
-      ],
-      "expiry_date": "2025-10-12",
-      "holder_id": "PH-00005",
-      "id": "PA-0000002",
-      "limits": {
-        "bodily_injury_per_accident": 500000,
-        "bodily_injury_per_person": 250000,
-        "property_damage": 100000
-      },
-      "line": "personal_auto"
-    },
-    {
-      "agent_id": "AG-001",
-      "annual_premium": 1610.0,
-      "deductible": 2500.0,
-      "effective_date": "2023-04-21",
-      "endorsements": [
-        "ID_THEFT",
-        "ORD_OR_LAW",
-        "SCHEDULED_PROP"
-      ],
-      "expiry_date": "2024-04-20",
-      "holder_id": "PH-00001",
-      "id": "HO-0000003",
-      "limits": {
-        "dwelling": 600000,
+        "dwelling": 350000,
         "personal_liability": 500000,
-        "personal_property": 300000
+        "personal_property": 175000
       },
       "line": "homeowners"
-    },
-    {
-      "agent_id": "AG-002",
-      "annual_premium": 1235.0,
-      "deductible": 1000.0,
-      "effective_date": "2024-12-26",
-      "endorsements": [],
-      "expiry_date": "2025-12-26",
-      "holder_id": "PH-00006",
-      "id": "PA-0000004",
-      "limits": {
-        "bodily_injury_per_accident": 500000,
-        "bodily_injury_per_person": 250000,
-        "property_damage": 100000
-      },
-      "line": "personal_auto"
     },
     {
       "agent_id": "AG-002",
@@ -202,87 +149,143 @@
       ],
       "expiry_date": "2025-01-30",
       "holder_id": "PH-00002",
-      "id": "PA-0000005",
+      "id": "MOT-0000002",
       "limits": {
         "bodily_injury_per_accident": 500000,
         "bodily_injury_per_person": 250000,
         "property_damage": 100000
       },
       "line": "personal_auto"
+    },
+    {
+      "agent_id": "AG-002",
+      "annual_premium": 1340.0,
+      "deductible": 1000.0,
+      "effective_date": "2023-10-09",
+      "endorsements": [],
+      "expiry_date": "2024-10-08",
+      "holder_id": "PH-00003",
+      "id": "MOT-0000003",
+      "limits": {
+        "bodily_injury_per_accident": 500000,
+        "bodily_injury_per_person": 250000,
+        "property_damage": 100000
+      },
+      "line": "personal_auto"
+    },
+    {
+      "agent_id": "AG-003",
+      "annual_premium": 2545.0,
+      "deductible": 2500.0,
+      "effective_date": "2024-06-02",
+      "endorsements": [
+        "ID_THEFT",
+        "ORD_OR_LAW",
+        "SCHEDULED_PROP"
+      ],
+      "expiry_date": "2025-06-02",
+      "holder_id": "PH-00002",
+      "id": "HH-0000004",
+      "limits": {
+        "dwelling": 600000,
+        "personal_liability": 100000,
+        "personal_property": 300000
+      },
+      "line": "homeowners"
+    },
+    {
+      "agent_id": "AG-002",
+      "annual_premium": 4485.0,
+      "deductible": 1000.0,
+      "effective_date": "2024-08-28",
+      "endorsements": [
+        "EPLI",
+        "EQUIP_BREAKDOWN",
+        "SPOILAGE"
+      ],
+      "expiry_date": "2025-08-28",
+      "holder_id": "PH-00005",
+      "id": "COM-0000005",
+      "limits": {
+        "building": 1750000,
+        "business_personal_property": 300000,
+        "general_liability": 500000
+      },
+      "line": "bop"
     }
   ],
   "policyholders": [
     {
-      "city": "Lake Jeremyport",
-      "dob": "1964-07-02",
-      "email": "jpeterson@example.org",
+      "city": "Sint Joost",
+      "country": "NL",
+      "dob": "1974-01-01",
+      "email": "kianjansdr@example.net",
       "id": "PH-00001",
-      "name": "Abigail Shaffer",
-      "phone": "(511) 615-5940",
-      "state": "CO",
-      "street": "161 Calderon River Suite 931",
-      "synthetic_tax_id": "903-11-3582",
-      "zip": "31013"
+      "name": "Ali Schellekens",
+      "national_id": "133890832",
+      "phone": "+3181 9600133",
+      "postcode": "6026 RJ",
+      "street": "Juliaweg 863"
     },
     {
-      "city": "Carlshire",
-      "dob": "1987-09-20",
-      "email": "francisco53@example.net",
+      "city": "Dermot Ville",
+      "country": "IE",
+      "dob": "1960-12-18",
+      "email": "brutondarren@example.org",
       "id": "PH-00002",
-      "name": "Jamie Chavez",
-      "phone": "(419) 283-2764",
-      "state": "FM",
-      "street": "503 Linda Locks",
-      "synthetic_tax_id": "903-71-3257",
-      "zip": "94599"
+      "name": "Mr. Stewart Montague",
+      "national_id": "7038374GA",
+      "phone": "989.608.3863",
+      "postcode": "K154PC8",
+      "street": "65 Fenning Street"
     },
     {
-      "city": "Lake Jenniferside",
-      "dob": "1956-11-23",
-      "email": "ithomas@example.org",
-      "id": "PH-00003",
-      "name": "Matthew Foster",
-      "phone": "(884) 969-6532",
-      "state": "WV",
-      "street": "01226 Paul Ranch Suite 848",
-      "synthetic_tax_id": "969-53-3611",
-      "zip": "35474"
-    },
-    {
-      "city": "North Jessicaland",
+      "city": "Rocher",
+      "country": "FR",
       "dob": "1973-10-09",
-      "email": "shawnmckay@example.net",
+      "email": "mauryaudrey@example.org",
+      "id": "PH-00003",
+      "name": "Yves Traore",
+      "national_id": "002654235116155",
+      "phone": "+33 (0)2 35 33 89 08",
+      "postcode": "54448",
+      "street": "863, chemin de Robert"
+    },
+    {
+      "city": "Lippenhuizen",
+      "country": "NL",
+      "dob": "1985-01-24",
+      "email": "de-gruijterdylan@example.com",
       "id": "PH-00004",
-      "name": "Gina Carter",
-      "phone": "(482) 814-8932",
-      "state": "WV",
-      "street": "88095 Smith Lake Suite 303",
-      "synthetic_tax_id": "900-97-2615",
-      "zip": "70323"
+      "name": "Wouter Verwoert-Goyaerts van Waderle",
+      "national_id": "781618497",
+      "phone": "+3194-0781618",
+      "postcode": "5316DO",
+      "street": "Elinehof 103"
     },
     {
-      "city": "Lake Crystalbury",
-      "dob": "1957-07-11",
-      "email": "josephbrennan@example.com",
+      "city": "Valladolid",
+      "country": "ES",
+      "dob": "1965-04-23",
+      "email": "emiliocalatayud@example.net",
       "id": "PH-00005",
-      "name": "Betty Alvarez",
-      "phone": "(383) 465-7871",
-      "state": "CA",
-      "street": "15098 Brianna Avenue",
-      "synthetic_tax_id": "935-19-3527",
-      "zip": "04618"
+      "name": "Albano Llopis Hierro",
+      "national_id": "09335534-L",
+      "phone": "+34823 96 00 13",
+      "postcode": "11463",
+      "street": "Paseo Heliodoro Rivas 57"
     },
     {
-      "city": "Taylorburgh",
-      "dob": "1953-06-04",
-      "email": "ilewis@example.net",
+      "city": "Hünfeld",
+      "country": "DE",
+      "dob": "1959-04-25",
+      "email": "schaefersigfried@example.org",
       "id": "PH-00006",
-      "name": "Andrea Young",
-      "phone": "(997) 376-3116",
-      "state": "KY",
-      "street": "6701 Richard Junction Apt. 333",
-      "synthetic_tax_id": "911-48-1584",
-      "zip": "61138"
+      "name": "Dr. Christof Walter B.Sc.",
+      "national_id": "04131647525",
+      "phone": "+49(0)1338908386",
+      "postcode": "23511",
+      "street": "Schachtring 2"
     }
   ]
 }

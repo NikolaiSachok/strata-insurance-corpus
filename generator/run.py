@@ -30,7 +30,7 @@ from .content import (
     schedule_document,
     settlement_letter_document,
 )
-from . import knowledge, tabular
+from . import CURRENCY_SYMBOL, knowledge, tabular
 from .golden import build_golden, write_golden
 from .manifest import write_manifest
 from .model import ANCHOR_EPOCH, build_model, index, write_model
@@ -40,7 +40,7 @@ from .schema import write_schema
 
 def _money(x: float) -> str:
     """Match content._money so manifest provenance values equal the rendered text."""
-    return f"${x:,.2f}"
+    return f"{CURRENCY_SYMBOL}{x:,.2f}"
 
 
 # Generated artifacts removed before each run so regeneration leaves no orphans.

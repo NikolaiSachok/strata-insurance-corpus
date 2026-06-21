@@ -23,6 +23,7 @@ from pathlib import Path
 from faker import Faker
 
 from . import COMPANY_NAME, SYNTHETIC_MARKER, __version__
+from .identity import COUNTRIES, national_id
 
 # --- fixed temporal anchor (the corpus "now"); a coherent ~2-year window -----
 ANCHOR = dt.date(2024, 7, 1)
@@ -30,15 +31,15 @@ ANCHOR = dt.date(2024, 7, 1)
 ANCHOR_EPOCH = 1719792000  # 2024-07-01T00:00:00Z
 
 LINES = ("personal_auto", "homeowners", "bop")
+# European product labels (internal keys are kept stable; only display + id codes are EU).
 LINE_LABEL = {
-    "personal_auto": "Personal Auto",
-    "homeowners": "Homeowners",
-    "bop": "Businessowners (BOP)",
+    "personal_auto": "Motor",
+    "homeowners": "Household",
+    "bop": "Commercial",
 }
-LINE_CODE = {"personal_auto": "PA", "homeowners": "HO", "bop": "BOP"}
+LINE_CODE = {"personal_auto": "MOT", "homeowners": "HH", "bop": "COM"}
 
-REGIONS = ("Northeast", "Southeast", "Midwest", "Southwest", "West")
-ADJUSTER_SPECIALTIES = ("auto physical damage", "property", "liability", "commercial")
+ADJUSTER_SPECIALTIES = ("motor physical damage", "property", "liability", "commercial")
 
 ENDORSEMENTS = {
     "personal_auto": ["RENTAL_REIMB", "ROADSIDE", "GAP", "NEW_CAR_REPL", "UM_UIM"],
@@ -73,9 +74,9 @@ class Policyholder:
     phone: str
     street: str
     city: str
-    state: str
-    zip: str
-    synthetic_tax_id: str  # 9NN-NN-NNNN — area "9" never issued -> clearly fake
+    postcode: str
+    country: str  # ISO-3166 alpha-2 (DE/FR/ES/IT/NL/IE)
+    national_id: str  # synthetic, format-shaped but deliberately invalid (see identity.py)
 
 
 @dataclass(frozen=True)
@@ -195,47 +196,57 @@ def build_model(seed: int, profile: str = "full") -> Model:
     counts = PROFILES[profile]
 
     rng = random.Random(seed)
-    fake = Faker("en_US")
-    fake.seed_instance(seed)
+    # One seeded Faker per country locale; calls are consumed in a fixed, rng-driven order.
+    fakers = {c.locale: Faker(c.locale) for c in COUNTRIES}
+    for fk in fakers.values():
+        fk.seed_instance(seed)
 
-    # 1. Agents
+    def _oneline(s: str) -> str:
+        return " ".join(s.split())
+
+    # 1. Agents — each operates in one European country
     agents: list[Agent] = []
     for i in range(counts["agents"]):
+        country = rng.choice(COUNTRIES)
+        fk = fakers[country.locale]
         agents.append(
             Agent(
                 id=f"AG-{i + 1:03d}",
-                name=fake.name(),
-                agency=f"{fake.last_name()} {rng.choice(['Insurance Group', 'Agency', 'Risk Partners', 'Financial'])}",
-                region=rng.choice(REGIONS),
+                name=fk.name(),
+                agency=f"{fk.last_name()} {rng.choice(['Insurance Group', 'Assurances', 'Risk Partners', 'Versicherung'])}",
+                region=country.name,
             )
         )
 
     # 2. Adjusters
     adjusters: list[Adjuster] = []
     for i in range(counts["adjusters"]):
+        fk = fakers[rng.choice(COUNTRIES).locale]
         adjusters.append(
             Adjuster(
                 id=f"AD-{i + 1:03d}",
-                name=fake.name(),
+                name=fk.name(),
                 specialty=rng.choice(ADJUSTER_SPECIALTIES),
             )
         )
 
-    # 3. Policyholders
+    # 3. Policyholders — distributed across the European countries
     holders: list[Policyholder] = []
     for i in range(counts["holders"]):
+        country = rng.choice(COUNTRIES)
+        fk = fakers[country.locale]
         holders.append(
             Policyholder(
                 id=f"PH-{i + 1:05d}",
-                name=fake.name(),
+                name=fk.name(),
                 dob=_dob(rng),
-                email=fake.ascii_safe_email(),
-                phone=fake.numerify("(###) ###-####"),
-                street=fake.street_address(),
-                city=fake.city(),
-                state=fake.state_abbr(),
-                zip=fake.postcode(),
-                synthetic_tax_id=f"9{rng.randint(0, 99):02d}-{rng.randint(0, 99):02d}-{rng.randint(0, 9999):04d}",
+                email=fk.ascii_safe_email(),
+                phone=fk.phone_number(),
+                street=_oneline(fk.street_address()),
+                city=fk.city(),
+                postcode=str(fk.postcode()),
+                country=country.code,
+                national_id=national_id(country.code, rng),
             )
         )
 
@@ -274,7 +285,9 @@ def build_model(seed: int, profile: str = "full") -> Model:
         span = (exp - eff).days
         dol = eff + dt.timedelta(days=rng.randint(1, span - 1))
         reported = dol + dt.timedelta(days=rng.randint(0, 10))
-        status = rng.choices(STATUSES, weights=[6, 3, 1])[0]
+        # Guarantee the first three claims cover closed/open/denied so even the small
+        # sample slice exercises every status-dependent document (settlement + denial).
+        status = STATUSES[i] if i < len(STATUSES) else rng.choices(STATUSES, weights=[6, 3, 1])[0]
         cause = rng.choice(CAUSES[policy.line])
         if status == "open":
             reserve = _dollars(rng, 2000, 60000, step=50)
@@ -309,6 +322,8 @@ def build_model(seed: int, profile: str = "full") -> Model:
         "generator_version": __version__,
         "seed": seed,
         "profile": profile,
+        "currency": "EUR",
+        "region": "Europe",
         "anchor_date": ANCHOR.isoformat(),
         "counts": {
             "policyholders": len(holders),
@@ -357,7 +372,7 @@ def roster_rows(model: Model) -> list[tuple]:
     holder_name = {h.id: h.name for h in model.policyholders}
     rows: list[tuple] = []
     for h in model.policyholders:
-        rows.append((h.id, "policyholder", h.name, "", "", "", f"{h.city}, {h.state}"))
+        rows.append((h.id, "policyholder", h.name, "", "", "", f"{h.city}, {h.country}"))
     for a in model.agents:
         rows.append((a.id, "agent", a.name, "", "", "", f"{a.agency}; {a.region}"))
     for a in model.adjusters:

@@ -17,12 +17,15 @@ full corpus is published as a HuggingFace dataset; CI validates schema + regener
 
 ## The fictional company — Meridian Mutual
 
-A mid-size US property-&-casualty mutual insurer. Lines of business: **personal auto, homeowners, and
-small-commercial (BOP)**. Enough structure to be realistic, small enough to generate fully:
+A mid-size **pan-European** property-&-casualty mutual insurer (a *Societas Europaea*, "Meridian Mutual
+Insurance SE"). Lines of business: **Motor, Household, and small-commercial**. Policyholders are distributed
+across six Eurozone countries (**DE, FR, ES, IT, NL, IE**) with locale-correct names/addresses; amounts are
+in **€** and dates display as **DD/MM/YYYY**. Documents are English-language (localization is a backlog item,
+issue #27). Enough structure to be realistic, small enough to generate fully:
 
 - **Org:** underwriting, claims, actuarial/finance, agency/distribution, customer service.
-- **Scale target (MVP):** ~60–100 policyholders, ~120 policies, ~80 claims (mix of auto/home/commercial,
-  open + closed), ~15 agents, ~10 adjusters. A few hundred documents total.
+- **Scale target (MVP):** ~60–100 policyholders, ~120 policies, ~80 claims (mix of motor/household/commercial,
+  open + closed + denied), ~15 agents, ~10 adjusters. A few hundred documents total.
 - **Time window:** a coherent ~2-year span so ledgers, reserves, and claim timelines line up.
 
 All entities are **synthetic and clearly labeled** (generated names, fake IDs); documents carry a
@@ -33,7 +36,8 @@ All entities are **synthetic and clearly labeled** (generated names, fake IDs); 
 A deterministic seeded model generated **first**; every document derives from it (so cross-document facts
 are consistent and the golden answers are knowable):
 
-- **Policyholder**(id, name, address, dob, contact, synthetic SSN-format id)
+- **Policyholder**(id, name, address, dob, contact, country, synthetic national-ID — per-country format,
+  deliberately checksum-invalid so it cannot match a real person)
 - **Agent**(id, name, agency, region) · **Adjuster**(id, name, specialty)
 - **Policy**(id, holder_id, line, effective/expiry, premium, limits, deductibles, endorsements, agent_id)
 - **Claim**(id, policy_id, line, date_of_loss, status, reserve, paid, adjuster_id, cause, narrative seed)
@@ -87,8 +91,8 @@ two-query-class design) + ground truth + provenance:
 
 - **Semantic / extractive:** "What cause of loss did the adjuster cite for claim C-1042?" → answer +
   the exact source doc/span.
-- **Aggregation / metadata:** "Total open reserves on auto claims in Q3?" / "How many claims exceed
-  $50k?" → answer computed from the model (the spreadsheets are the retrieval target).
+- **Aggregation / metadata:** "Total open reserves on Motor claims in Q3?" / "How many claims exceed
+  €50k?" → answer computed from the model (the spreadsheets are the retrieval target).
 - **Multi-hop / cross-doc:** "Is the damage in claim C-1042's photos consistent with the estimate?" →
   forces image + document fusion.
 

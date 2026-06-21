@@ -17,7 +17,7 @@ from pathlib import Path
 from .. import COMPANY_NAME, SYNTHETIC_MARKER
 from ._repro import FIXED_DT, normalize_zip
 
-_CURRENCY_FMT = "$#,##0.00"
+_CURRENCY_FMT = "€#,##0.00"
 
 # openpyxl stamps dcterms:modified with the wall clock at save(); pin it back to
 # the fixed anchor so the .xlsx is byte-reproducible.

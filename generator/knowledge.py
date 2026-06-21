@@ -35,20 +35,20 @@ def underwriting_guidelines() -> dict:
                 "heading": "Eligibility",
                 "paragraphs": ["Risks are accepted subject to the following general criteria:"],
                 "bullets": [
-                    "Personal Auto: licensed drivers with an acceptable motor-vehicle record; rated by vehicle and territory.",
-                    "Homeowners: owner-occupied dwellings in insurable condition; subject to property inspection.",
-                    "Businessowners (BOP): eligible small businesses within approved class codes and size limits.",
+                    "Motor: licensed drivers with an acceptable driving record; rated by vehicle and territory.",
+                    "Household: owner-occupied dwellings in insurable condition; subject to property inspection.",
+                    "Commercial: eligible small businesses within approved activity classes and size limits.",
                 ],
             },
             {
                 "heading": "Limits and Deductibles",
                 "paragraphs": [
-                    "Personal Auto liability is offered at 50/100/50, 100/300/100, and 250/500/100 limits, with "
-                    "physical-damage deductibles of $250, $500, or $1,000.",
-                    "Homeowners dwelling limits range from $250,000 to $650,000 with deductibles of $1,000, $2,500, "
-                    "or $5,000; personal liability is offered at $100,000, $300,000, or $500,000.",
-                    "BOP building limits range up to $2,000,000 with general-liability limits of $500,000, "
-                    "$1,000,000, or $2,000,000.",
+                    "Motor third-party liability is offered at €50,000/€100,000/€50,000, €100,000/€300,000/€100,000, "
+                    "and €250,000/€500,000/€100,000 limits, with own-damage deductibles of €250, €500, or €1,000.",
+                    "Household dwelling sums insured range from €250,000 to €650,000 with deductibles of €1,000, "
+                    "€2,500, or €5,000; personal liability is offered at €100,000, €300,000, or €500,000.",
+                    "Commercial building limits range up to €2,000,000 with general-liability limits of €500,000, "
+                    "€1,000,000, or €2,000,000.",
                 ],
             },
             {

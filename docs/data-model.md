@@ -8,10 +8,13 @@ by construction. JSON Schema for all of this is emitted to `<out>/schema/` at ge
 
 ## Company
 
-A mid-size US property-&-casualty mutual insurer, **Meridian Mutual** (fictional). Lines of
-business: **personal auto**, **homeowners**, **small-commercial (BOP)**. All entities are
-synthetic and clearly labelled; the synthetic tax id uses the never-issued `9NN-NN-NNNN`
-area prefix so it can never collide with a real SSN.
+A mid-size **pan-European** property-&-casualty mutual insurer, **Meridian Mutual Insurance SE**
+(fictional). Lines of business: **Motor**, **Household**, **small-commercial (Commercial)**. Policyholders
+are distributed across six Eurozone countries (**DE, FR, ES, IT, NL, IE**) with locale-correct
+names/addresses (Faker locales); amounts are **€**, dates display **DD/MM/YYYY**. All entities are synthetic
+and clearly labelled; each policyholder's `national_id` is **format-shaped but deliberately invalid** per
+country (see [`generator/identity.py`](../generator/identity.py)) — it violates the official checksum or
+uses a reserved value, so it can never match a real person's identifier.
 
 ## Temporal anchoring
 
@@ -23,19 +26,20 @@ window around the anchor; each claim's date-of-loss falls inside its policy term
 
 | Entity | Id format | Key fields | Foreign keys |
 |---|---|---|---|
-| **Policyholder** | `PH-00001` | name, dob, email, phone, street/city/state/zip, `synthetic_tax_id` | — |
+| **Policyholder** | `PH-00001` | name, dob, email, phone, street/city/postcode, `country`, `national_id` | — |
 | **Agent** | `AG-001` | name, agency, region | — |
 | **Adjuster** | `AD-001` | name, specialty | — |
-| **Policy** | `PA-/HO-/BOP-0000001` | line, effective/expiry dates, annual_premium, limits, deductible, endorsements | `holder_id` → Policyholder, `agent_id` → Agent |
+| **Policy** | `MOT-/HH-/COM-0000001` | line, effective/expiry dates, annual_premium, limits, deductible, endorsements | `holder_id` → Policyholder, `agent_id` → Agent |
 | **Claim** | `C-1000` | line, date_of_loss, reported_date, status, cause, reserve, paid, narrative_seed | `policy_id` → Policy, `holder_id` → Policyholder, `adjuster_id` → Adjuster |
 
-- **Lines:** `personal_auto`, `homeowners`, `bop`. The policy id prefix encodes the line
-  (`PA`/`HO`/`BOP`).
-- **Claim status:** `closed` (~60%), `open` (~30%), `denied` (~10%). Reserve/paid follow status
-  (open → positive reserve + partial paid; closed → reserve 0, paid set; denied → both 0), so
-  aggregation golden questions (M4) have knowable answers.
-- **Limits** are line-shaped: auto carries BI-per-person / BI-per-accident / PD; homeowners
-  carries dwelling / personal-property / personal-liability; BOP carries building / BPP /
+- **Lines:** internal keys `personal_auto`, `homeowners`, `bop`, shown as **Motor / Household / Commercial**;
+  the policy id prefix encodes the line (`MOT`/`HH`/`COM`).
+- **Claim status:** `closed` / `open` / `denied` (the first three claims are forced to cover all three so
+  even the small sample exercises every status-dependent document; the rest are weighted ~60/30/10).
+  Reserve/paid follow status (open → positive reserve + partial paid; closed → reserve 0, paid set;
+  denied → both 0), so aggregation golden questions have knowable answers.
+- **Limits** are line-shaped (amounts in €): Motor carries BI-per-person / BI-per-accident / PD; Household
+  carries dwelling / personal-property / personal-liability; Commercial carries building / BPP /
   general-liability.
 
 ## `model.json`

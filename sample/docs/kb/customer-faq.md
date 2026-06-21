@@ -4,7 +4,7 @@
 
 > SYNTHETIC — Meridian Mutual (fictional)
 
-Answers to common questions for Meridian Mutual Insurance Company policyholders.
+Answers to common questions for Meridian Mutual Insurance SE policyholders.
 
 ## How do I file a claim?
 
@@ -20,4 +20,4 @@ For a covered loss, we pay the cost to repair or replace the damaged property le
 
 ## What lines of insurance do you offer?
 
-We offer Personal Auto, Homeowners, Businessowners (BOP).
+We offer Motor, Household, Commercial.
