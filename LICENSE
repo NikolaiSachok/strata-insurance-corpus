@@ -26,3 +26,12 @@ The generated DATA and the committed sample corpus are licensed separately under
 Creative Commons Attribution 4.0 International (CC-BY-4.0). All data is SYNTHETIC;
 it depicts a fictional insurer ("Meridian Mutual") and fictional persons. Any
 resemblance to real people, companies, or events is coincidental.
+
+---
+
+Third-party assets (retain their own licenses; NOT relicensed under the above):
+
+- generator/render/templates/fonts/PatrickHand-Regular.ttf — "Patrick Hand" font,
+  Copyright (c) 2010-2012 Patrick Wagesreiter, licensed under the SIL Open Font
+  License 1.1. The full license is bundled alongside the font at
+  generator/render/templates/fonts/OFL.txt.
