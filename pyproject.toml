@@ -1,0 +1,30 @@
+[project]
+name = "strata-insurance-corpus"
+version = "0.0.1"
+description = "Reproducible synthetic multi-format insurance document corpus + golden eval set"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Nikolai Sachok" }]
+
+# Deps are indicative for the planned generator (pin during M1). Kept minimal + standard.
+dependencies = [
+  "faker>=25",          # seeded synthetic entities (names, addresses, ids)
+  "jinja2>=3",          # HTML/text templating for documents
+  "python-docx>=1",     # .docx rendering
+  "openpyxl>=3",        # .xlsx tabular rendering
+  "pillow>=10",         # image handling + scan-effect compositing
+  "pyyaml>=6",
+]
+
+[project.optional-dependencies]
+pdf = ["weasyprint>=62"]   # HTML/CSS -> PDF (alt: reportlab). Decided in M2.
+dev = ["pytest>=8"]
+
+[project.urls]
+Homepage = "https://github.com/NikolaiSachok/strata-insurance-corpus"
+Engine = "https://github.com/NikolaiSachok/Strata-RAG"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

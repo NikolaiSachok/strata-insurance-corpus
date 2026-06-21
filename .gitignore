@@ -1,0 +1,25 @@
+# The full generated corpus is reproducible (make generate) + published to HuggingFace.
+# Do NOT commit it — only the small committed sample/ slice lives in git.
+/corpus/
+*.qdrant/
+manifest.json
+
+# LLM content cache (keyed by seed+doc_id; reproducible, not source)
+.cache/
+.llm-cache/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+build/
+dist/
+
+# OS / editor
+.DS_Store
+.env
+.idea/
+.vscode/
