@@ -120,7 +120,7 @@ def test_estimate_settlement_amounts_consistent():
     from generator.content import estimate_document, settlement_letter_document
 
     def _money(s):
-        return float(s.replace("$", "").replace(",", ""))
+        return float(s.replace("€", "").replace(",", ""))
 
     m = build_model(42, "sample")
     idx = index(m)
@@ -133,11 +133,11 @@ def test_estimate_settlement_amounts_consistent():
         est = estimate_document(m.meta, claim, policy, holder)
         settle = settlement_letter_document(m.meta, claim, policy, holder, adjuster)
 
-        expected_net = f"${claim.paid:,.2f}"
+        expected_net = f"€{claim.paid:,.2f}"
         assert est["net_payable"] == expected_net
         assert settle["paid"] == expected_net
         gross = round(claim.paid + policy.deductible, 2)
-        assert est["gross_total"] == f"${gross:,.2f}"
+        assert est["gross_total"] == f"€{gross:,.2f}"
         assert round(sum(_money(a) for _, a in est["rows"]), 2) == gross
 
 
@@ -172,8 +172,8 @@ def test_aggregation_golden_matches_model():
     }
     golden = build_golden(m, {}, {}, {}, tab_ids)
     agg = {x["id"]: x["answer"] for x in golden if x["query_class"] == "aggregation"}
-    assert agg["Q-AGG-open-reserve"] == f"${tabular.total_open_reserve(m):,.2f}"
-    assert agg["Q-AGG-total-premium"] == f"${tabular.total_annual_premium(m):,.2f}"
+    assert agg["Q-AGG-open-reserve"] == f"€{tabular.total_open_reserve(m):,.2f}"
+    assert agg["Q-AGG-total-premium"] == f"€{tabular.total_annual_premium(m):,.2f}"
     assert agg["Q-AGG-open-claims"] == str(tabular.open_claim_count(m))
 
 
@@ -240,6 +240,19 @@ def test_synthetic_markers_present():
     m = build_model(5, "slice")
     assert m.meta["synthetic"] is True
     assert "SYNTHETIC" in m.meta["marker"]
-    # synthetic tax id uses the never-issued "9" area prefix
+    # every policyholder is in a supported European country with a synthetic national id
     for h in m.policyholders:
-        assert h.synthetic_tax_id.startswith("9")
+        assert h.country in {"DE", "FR", "ES", "IT", "NL", "IE"}
+        assert h.national_id
+
+
+def test_national_ids_are_invalid_dni():
+    """ES DNI national ids must carry the WRONG control letter (clearly synthetic)."""
+    from generator.identity import _DNI_LETTERS
+
+    m = build_model(11, "full")
+    for h in m.policyholders:
+        if h.country != "ES":
+            continue
+        num, letter = h.national_id.split("-")
+        assert letter != _DNI_LETTERS[int(num) % 23], f"{h.national_id} has a VALID DNI letter"

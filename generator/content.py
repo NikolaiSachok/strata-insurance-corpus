@@ -11,13 +11,27 @@ from __future__ import annotations
 
 import datetime as dt
 
-from . import COMPANY_NAME, SYNTHETIC_MARKER
+from . import COMPANY_NAME, CURRENCY_SYMBOL, SYNTHETIC_MARKER
+from .identity import COUNTRY_BY_CODE
 from .model import LINE_LABEL, Adjuster, Agent, Claim, Policy, Policyholder
 
 
 def _add_days(iso_date: str, n: int) -> str:
     """Deterministic date arithmetic on an ISO date string (no wall-clock)."""
     return (dt.date.fromisoformat(iso_date) + dt.timedelta(days=n)).isoformat()
+
+
+def _eu_date(iso_date: str) -> str:
+    """ISO date -> European display format DD/MM/YYYY."""
+    d = dt.date.fromisoformat(iso_date)
+    return f"{d.day:02d}/{d.month:02d}/{d.year}"
+
+
+def _address(holder: Policyholder) -> str:
+    country = COUNTRY_BY_CODE.get(holder.country)
+    country_name = country.name if country else holder.country
+    return f"{holder.street}, {holder.postcode} {holder.city}, {country_name}"
+
 
 # Human-readable cause labels (also the golden-answer surface form).
 CAUSE_LABEL = {
@@ -44,7 +58,7 @@ def cause_label(cause: str) -> str:
 
 
 def _money(x: float) -> str:
-    return f"${x:,.2f}"
+    return f"{CURRENCY_SYMBOL}{x:,.2f}"
 
 
 def _limits_lines(policy: Policy) -> list[tuple[str, str]]:
@@ -135,11 +149,11 @@ def declarations_document(model_meta: dict, policy: Policy, holder: Policyholder
         "policy_id": policy.id,
         "line_label": LINE_LABEL[policy.line],
         "holder_name": holder.name,
-        "holder_address": f"{holder.street}, {holder.city}, {holder.state} {holder.zip}",
+        "holder_address": _address(holder),
         "agent_name": agent.name,
         "agency": agent.agency,
-        "effective_date": policy.effective_date,
-        "expiry_date": policy.expiry_date,
+        "effective_date": _eu_date(policy.effective_date),
+        "expiry_date": _eu_date(policy.expiry_date),
         "annual_premium": _money(policy.annual_premium),
         "deductible": _money(policy.deductible),
         "limits": _limits_lines(policy),
@@ -168,8 +182,8 @@ def contract_document(model_meta: dict, policy: Policy, holder: Policyholder) ->
         "policy_id": policy.id,
         "line_label": LINE_LABEL[policy.line],
         "holder_name": holder.name,
-        "effective_date": policy.effective_date,
-        "expiry_date": policy.expiry_date,
+        "effective_date": _eu_date(policy.effective_date),
+        "expiry_date": _eu_date(policy.expiry_date),
         "sections": sections,
     }
 
@@ -195,8 +209,8 @@ def schedule_document(model_meta: dict, policy: Policy, holder: Policyholder) ->
         "doc_title": f"{LINE_LABEL[policy.line]} Policy — Coverage Schedule",
         "policy_id": policy.id,
         "holder_name": holder.name,
-        "effective_date": policy.effective_date,
-        "expiry_date": policy.expiry_date,
+        "effective_date": _eu_date(policy.effective_date),
+        "expiry_date": _eu_date(policy.expiry_date),
         "deductible": _money(policy.deductible),
         "annual_premium": _money(policy.annual_premium),
         "limits": _limits_lines(policy),
@@ -213,14 +227,15 @@ def narrative_for_claim(claim: Claim, holder: Policyholder, policy: Policy) -> s
     cause = cause_label(claim.cause)
     # A deterministic variant chosen from the claim id (stable, no RNG state).
     variant = sum(ord(ch) for ch in claim.id) % 2
+    dol = _eu_date(claim.date_of_loss)
     if variant == 0:
         lead = (
-            f"On {claim.date_of_loss}, the insured reported a loss involving {cause} "
+            f"On {dol}, the insured reported a loss involving {cause} "
             f"under {LINE_LABEL[policy.line]} policy {policy.id}."
         )
     else:
         lead = (
-            f"The insured contacted us regarding {cause} that occurred on {claim.date_of_loss}, "
+            f"The insured contacted us regarding {cause} that occurred on {dol}, "
             f"associated with {LINE_LABEL[policy.line]} policy {policy.id}."
         )
     detail = {
@@ -249,8 +264,8 @@ def fnol_document(
         "holder_name": holder.name,
         "holder_phone": holder.phone,
         "holder_email": holder.email,
-        "date_of_loss": claim.date_of_loss,
-        "reported_date": claim.reported_date,
+        "date_of_loss": _eu_date(claim.date_of_loss),
+        "reported_date": _eu_date(claim.reported_date),
         "status": claim.status,
         "cause_label": cause_label(claim.cause),
         "adjuster_name": adjuster.name,
@@ -299,8 +314,8 @@ def adjuster_report_document(model_meta: dict, claim: Claim, policy: Policy, hol
         "holder_name": holder.name,
         "adjuster_name": adjuster.name,
         "adjuster_specialty": adjuster.specialty,
-        "date_of_loss": claim.date_of_loss,
-        "reported_date": claim.reported_date,
+        "date_of_loss": _eu_date(claim.date_of_loss),
+        "reported_date": _eu_date(claim.reported_date),
         "cause_label": cause,
         "status": claim.status,
         "reserve": _money(claim.reserve),
@@ -351,7 +366,7 @@ def estimate_document(model_meta: dict, claim: Claim, policy: Policy, holder: Po
         "policy_id": policy.id,
         "line_label": LINE_LABEL[policy.line],
         "holder_name": holder.name,
-        "date_of_loss": claim.date_of_loss,
+        "date_of_loss": _eu_date(claim.date_of_loss),
         "cause_label": cause_label(claim.cause),
         "rows": list(zip(labels, [_money(a) for a in amounts])),
         "gross_total": _money(gross),
@@ -366,13 +381,13 @@ def settlement_letter_document(model_meta: dict, claim: Claim, policy: Policy, h
         "marker": SYNTHETIC_MARKER,
         "company": COMPANY_NAME,
         "doc_title": "Claim Settlement",
-        "letter_date": _add_days(claim.reported_date, 30),
+        "letter_date": _eu_date(_add_days(claim.reported_date, 30)),
         "claim_id": claim.id,
         "policy_id": policy.id,
         "line_label": LINE_LABEL[policy.line],
         "holder_name": holder.name,
-        "holder_address": f"{holder.street}, {holder.city}, {holder.state} {holder.zip}",
-        "date_of_loss": claim.date_of_loss,
+        "holder_address": _address(holder),
+        "date_of_loss": _eu_date(claim.date_of_loss),
         "cause_label": cause_label(claim.cause),
         "paid": _money(claim.paid),
         "deductible": _money(policy.deductible),
@@ -399,13 +414,13 @@ def denial_letter_document(model_meta: dict, claim: Claim, policy: Policy, holde
         "marker": SYNTHETIC_MARKER,
         "company": COMPANY_NAME,
         "doc_title": "Claim Determination — Denial",
-        "letter_date": _add_days(claim.reported_date, 21),
+        "letter_date": _eu_date(_add_days(claim.reported_date, 21)),
         "claim_id": claim.id,
         "policy_id": policy.id,
         "line_label": LINE_LABEL[policy.line],
         "holder_name": holder.name,
-        "holder_address": f"{holder.street}, {holder.city}, {holder.state} {holder.zip}",
-        "date_of_loss": claim.date_of_loss,
+        "holder_address": _address(holder),
+        "date_of_loss": _eu_date(claim.date_of_loss),
         "cause_label": cause_label(claim.cause),
         "reason": denial_reason(claim),
         "adjuster_name": adjuster.name,

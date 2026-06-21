@@ -16,14 +16,14 @@ scheduled (M3–M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and the **[iss
 
 ```bash
 make sample     # -> committed sample/ slice + golden/golden.jsonl  (deterministic)
-make generate   # -> full corpus/ : 305 entities, 918 documents (651 PDF + 121 Word + 4 sheets + 2 MD + 140 scanned JPG), 255 golden Qs  (gitignored)
+make generate   # -> full corpus/ : 305 entities, 902 documents (642 PDF + 121 Word + 4 sheets + 2 MD + 133 scanned JPG), 246 golden Qs  (gitignored)
 make validate   # integrity + golden-support checks
 make stats      # corpus composition (documents by format/type, golden by class)
 make test       # determinism + referential-integrity suite
 ```
 
-Full-corpus composition (`make stats OUT=corpus`): 651 PDF · 121 Word · 3 xlsx · 1 csv · 2 Markdown ·
-140 scanned JPG; golden = 252 semantic + 3 aggregation. The committed `sample/` slice contains at least
+Full-corpus composition (`make stats OUT=corpus`): 642 PDF · 121 Word · 3 xlsx · 1 csv · 2 Markdown ·
+133 scanned JPG; golden = 243 semantic + 3 aggregation. The committed `sample/` slice contains at least
 one of every built doc type (enforced by a test), so the repo is fully exercisable without a full run.
 
 Built: deterministic entity model + roster ([docs/data-model.md](docs/data-model.md)); the **policy** family
@@ -56,9 +56,10 @@ That's the gap this fills. And because every byte is **generated**, two things f
 2. **The eval set is ground-truth *by construction*** — generation records which document/field answers
    which question, so the golden Q→A labels are correct, not crowd-guessed.
 
-## What it will contain — Meridian Mutual (fictional P&C insurer)
+## What it will contain — Meridian Mutual Insurance SE (fictional pan-European P&C insurer)
 
-Auto · Home · Small-commercial lines. The document universe maps to every real document-RAG challenge:
+Motor · Household · Small-commercial lines, with policyholders across six Eurozone countries (DE/FR/ES/IT/NL/IE),
+€ amounts, and DD/MM/YYYY dates. The document universe maps to every real document-RAG challenge:
 
 | Document family | Formats | RAG capability it exercises |
 |---|---|---|
@@ -67,7 +68,7 @@ Auto · Home · Small-commercial lines. The document universe maps to every real
 | Evidence: damage/property photos, ID scans, police reports | **images** | **vision captioning / multimodal retrieval** |
 | Loss runs, reserve & premium tables, commission sheets | Excel/CSV | **tabular / aggregation queries** |
 | Underwriting guidelines, manuals, FAQ / knowledge base | Markdown, docx | semantic knowledge retrieval |
-| Roster: policyholders, policies, claims, agents, adjusters | TSV | **master-data join + PII redaction** (synthetic SSNs / policy #s) |
+| Roster: policyholders, policies, claims, agents, adjusters | TSV | **master-data join + PII redaction** (synthetic national IDs / policy #s) |
 
 ## Design principles
 

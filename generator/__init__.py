@@ -7,4 +7,5 @@ Seeded, deterministic synthetic-data pipeline for the fictional P&C insurer
 __version__ = "0.0.1"
 
 SYNTHETIC_MARKER = "SYNTHETIC — Meridian Mutual (fictional)"
-COMPANY_NAME = "Meridian Mutual Insurance Company"
+COMPANY_NAME = "Meridian Mutual Insurance SE"  # pan-European mutual insurer (Societas Europaea)
+CURRENCY_SYMBOL = "€"

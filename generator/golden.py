@@ -14,7 +14,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from . import tabular
+from . import CURRENCY_SYMBOL, tabular
 from .content import cause_label
 from .model import LINE_LABEL, LINES, Model
 
@@ -60,7 +60,7 @@ def build_golden(
             {
                 "id": f"Q-{policy.id}-premium",
                 "question": f"What is the annual premium for policy {policy.id}?",
-                "answer": f"${policy.annual_premium:,.2f}",
+                "answer": f"{CURRENCY_SYMBOL}{policy.annual_premium:,.2f}",
                 "relevant_doc_ids": [doc_id],
                 "query_class": "semantic",
                 "provenance": {"entity_id": policy.id, "field": "annual_premium"},
@@ -74,7 +74,7 @@ def build_golden(
             {
                 "id": f"Q-{claim.id}-settlement",
                 "question": f"What amount did Meridian Mutual pay to settle claim {claim.id}?",
-                "answer": f"${claim.paid:,.2f}",
+                "answer": f"{CURRENCY_SYMBOL}{claim.paid:,.2f}",
                 "relevant_doc_ids": [doc_id],
                 "query_class": "semantic",
                 "provenance": {"entity_id": claim.id, "field": "paid"},
@@ -86,7 +86,7 @@ def build_golden(
             {
                 "id": "Q-AGG-open-reserve",
                 "question": "What is the total open reserve across all claims?",
-                "answer": f"${tabular.total_open_reserve(model):,.2f}",
+                "answer": f"{CURRENCY_SYMBOL}{tabular.total_open_reserve(model):,.2f}",
                 "relevant_doc_ids": [tabular_doc_ids["reserve_register"]],
                 "query_class": "aggregation",
                 "provenance": {"entity_id": "CORPUS", "field": "sum(reserve) where status=open"},
@@ -97,7 +97,7 @@ def build_golden(
             {
                 "id": "Q-AGG-total-premium",
                 "question": "What is the total annual premium across all policies?",
-                "answer": f"${tabular.total_annual_premium(model):,.2f}",
+                "answer": f"{CURRENCY_SYMBOL}{tabular.total_annual_premium(model):,.2f}",
                 "relevant_doc_ids": [tabular_doc_ids["premium_register"]],
                 "query_class": "aggregation",
                 "provenance": {"entity_id": "CORPUS", "field": "sum(annual_premium)"},

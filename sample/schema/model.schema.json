@@ -224,6 +224,16 @@
           "city": {
             "type": "string"
           },
+          "country": {
+            "enum": [
+              "DE",
+              "FR",
+              "ES",
+              "IT",
+              "NL",
+              "IE"
+            ]
+          },
           "dob": {
             "format": "date",
             "type": "string"
@@ -238,20 +248,16 @@
           "name": {
             "type": "string"
           },
+          "national_id": {
+            "type": "string"
+          },
           "phone": {
             "type": "string"
           },
-          "state": {
+          "postcode": {
             "type": "string"
           },
           "street": {
-            "type": "string"
-          },
-          "synthetic_tax_id": {
-            "pattern": "^9[0-9]{2}-[0-9]{2}-[0-9]{4}$",
-            "type": "string"
-          },
-          "zip": {
             "type": "string"
           }
         },
@@ -259,7 +265,8 @@
           "id",
           "name",
           "dob",
-          "synthetic_tax_id"
+          "country",
+          "national_id"
         ],
         "type": "object"
       },

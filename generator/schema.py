@@ -56,11 +56,11 @@ MODEL_SCHEMA = {
                     "phone": _STR,
                     "street": _STR,
                     "city": _STR,
-                    "state": _STR,
-                    "zip": _STR,
-                    "synthetic_tax_id": {"type": "string", "pattern": "^9[0-9]{2}-[0-9]{2}-[0-9]{4}$"},
+                    "postcode": _STR,
+                    "country": {"enum": ["DE", "FR", "ES", "IT", "NL", "IE"]},
+                    "national_id": _STR,  # synthetic, format-shaped but deliberately invalid (see identity.py)
                 },
-                ["id", "name", "dob", "synthetic_tax_id"],
+                ["id", "name", "dob", "country", "national_id"],
             ),
         },
         "agents": {
