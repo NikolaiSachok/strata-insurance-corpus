@@ -81,6 +81,8 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
         from .render.docx import write_contract_docx  # lazy imports
         from .render.pdf import write_pdf
 
+        from .render.scan import doc_seed, scan_pdf
+
         def emit_pdf(doc_id, doc_type, template, ctx, rel, entity_ids, asserts):
             write_pdf(template, ctx, out / rel, ANCHOR_EPOCH)
             records.append(
@@ -92,6 +94,23 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
                     entity_ids=entity_ids,
                     asserts=asserts,
                     sha256=sha256_file(out / rel),
+                )
+            )
+
+        def emit_scan(source_rel, source_doc_id, doc_type, entity_ids):
+            """Degrade an already-written PDF into a scanned (OCR-target) variant."""
+            rel = source_rel.rsplit(".", 1)[0] + "-scanned.jpg"
+            scan_pdf(out / source_rel, out / rel, doc_seed(source_doc_id, seed))
+            records.append(
+                DocRecord(
+                    doc_id=f"{source_doc_id}-SCAN",
+                    doc_type=doc_type,
+                    format="jpg",
+                    path=rel,
+                    entity_ids=entity_ids,
+                    is_scanned=True,
+                    sha256=sha256_file(out / rel),
+                    source_doc_id=source_doc_id,
                 )
             )
 
@@ -189,6 +208,7 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
                     Assertion(claim.id, "status", claim.status),
                 ],
             )
+            emit_scan(f"docs/claim/{claim.id}-fnol.pdf", fnol_id, "fnol_scanned", claim_ids)
 
             # Adjuster report
             emit_pdf(
@@ -224,13 +244,16 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
                         Assertion(claim.id, "status", claim.status),
                     ],
                 )
+                emit_scan(f"docs/claim/{claim.id}-settlement-letter.pdf", settle_id, "settlement_letter_scanned", claim_ids)
             elif claim.status == "denied":
+                denial_id = f"DOC-{claim.id}-DENIAL"
                 emit_pdf(
-                    f"DOC-{claim.id}-DENIAL", "denial_letter", "denial_letter.html.j2",
+                    denial_id, "denial_letter", "denial_letter.html.j2",
                     denial_letter_document(model.meta, claim, policy, holder, adjuster),
                     f"docs/claim/{claim.id}-denial-letter.pdf", claim_ids,
                     [Assertion(claim.id, "status", "denied")],
                 )
+                emit_scan(f"docs/claim/{claim.id}-denial-letter.pdf", denial_id, "denial_letter_scanned", claim_ids)
 
         # Tabular family (corpus-level): registers in xlsx + commission in csv
         from .render.sheets import write_csv, write_xlsx

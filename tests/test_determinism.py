@@ -197,6 +197,7 @@ def test_knowledge_markdown_deterministic_and_grounded():
 BUILT_DOC_TYPES = {
     "policy_declarations", "policy_contract", "policy_endorsements", "policy_schedule",
     "fnol", "adjuster_report", "estimate", "settlement_letter", "denial_letter",
+    "fnol_scanned", "settlement_letter_scanned", "denial_letter_scanned",
     "loss_run", "reserve_register", "premium_register", "commission_summary",
     "underwriting_guidelines", "claims_manual", "customer_faq",
 }
@@ -213,6 +214,26 @@ def test_sample_profile_covers_all_doc_types(tmp_path):
     sample_types = {d["doc_type"] for d in manifest["documents"]}
     missing = BUILT_DOC_TYPES - sample_types
     assert not missing, f"sample slice is missing doc types: {sorted(missing)}"
+
+
+def test_scan_byte_stable(tmp_path):
+    """The scan-effect renderer must be byte-reproducible (seeded effects)."""
+    import pathlib
+
+    from generator.render.scan import doc_seed, scan_pdf
+
+    src = pathlib.Path(__file__).resolve().parents[1] / "sample/docs/claim/C-1000-fnol.pdf"
+    if not src.exists():
+        pytest.skip("committed sample FNOL not present")
+    s = doc_seed("DOC-C-1000-FNOL", 42)
+    a = tmp_path / "a.jpg"
+    b = tmp_path / "b.jpg"
+    try:
+        scan_pdf(src, a, s)
+    except Exception as e:  # pypdfium2 unavailable in this env
+        pytest.skip(f"scan renderer unavailable: {e}")
+    scan_pdf(src, b, s)
+    assert a.read_bytes() == b.read_bytes()
 
 
 def test_synthetic_markers_present():

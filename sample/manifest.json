@@ -9,8 +9,10 @@
       "commission_summary": 1,
       "customer_faq": 1,
       "denial_letter": 1,
+      "denial_letter_scanned": 1,
       "estimate": 4,
       "fnol": 5,
+      "fnol_scanned": 5,
       "loss_run": 1,
       "policy_contract": 5,
       "policy_declarations": 5,
@@ -19,17 +21,19 @@
       "premium_register": 1,
       "reserve_register": 1,
       "settlement_letter": 2,
+      "settlement_letter_scanned": 2,
       "underwriting_guidelines": 1
     },
     "by_format": {
       "csv": 1,
       "docx": 6,
+      "jpg": 8,
       "md": 2,
       "pdf": 32,
       "xlsx": 3
     },
     "claims": 5,
-    "documents": 44,
+    "documents": 52,
     "policies": 5,
     "policyholders": 6
   },
@@ -121,6 +125,23 @@
       "synthetic": true
     },
     {
+      "doc_id": "DOC-C-1000-FNOL-SCAN",
+      "doc_type": "fnol_scanned",
+      "entity_ids": [
+        "C-1000",
+        "HO-0000001",
+        "PH-00003",
+        "AD-002"
+      ],
+      "format": "jpg",
+      "is_scanned": true,
+      "path": "docs/claim/C-1000-fnol-scanned.jpg",
+      "provenance": [],
+      "scanned_of": "DOC-C-1000-FNOL",
+      "sha256": "74de1bbbf1d29ecde32f1dd5b458a077a2892872e3b0ce9f60873b9eedc77dbd",
+      "synthetic": true
+    },
+    {
       "doc_id": "DOC-C-1000-SETTLEMENT",
       "doc_type": "settlement_letter",
       "entity_ids": [
@@ -145,6 +166,23 @@
         }
       ],
       "sha256": "c5177857bb034f6a372b44e5b057d56c44d5102a04a0809a0776e2bb6d7061ed",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1000-SETTLEMENT-SCAN",
+      "doc_type": "settlement_letter_scanned",
+      "entity_ids": [
+        "C-1000",
+        "HO-0000001",
+        "PH-00003",
+        "AD-002"
+      ],
+      "format": "jpg",
+      "is_scanned": true,
+      "path": "docs/claim/C-1000-settlement-letter-scanned.jpg",
+      "provenance": [],
+      "scanned_of": "DOC-C-1000-SETTLEMENT",
+      "sha256": "33dd9cbe52ea8f6f45be2bd7658543bec6216b055cfffc8449707cb5af862b33",
       "synthetic": true
     },
     {
@@ -234,6 +272,23 @@
       "synthetic": true
     },
     {
+      "doc_id": "DOC-C-1001-FNOL-SCAN",
+      "doc_type": "fnol_scanned",
+      "entity_ids": [
+        "C-1001",
+        "HO-0000003",
+        "PH-00001",
+        "AD-001"
+      ],
+      "format": "jpg",
+      "is_scanned": true,
+      "path": "docs/claim/C-1001-fnol-scanned.jpg",
+      "provenance": [],
+      "scanned_of": "DOC-C-1001-FNOL",
+      "sha256": "84a0afb22ab5ec193842cbed827a152eef46fcecbc299fb4bd19f0f794826a07",
+      "synthetic": true
+    },
+    {
       "doc_id": "DOC-C-1001-SETTLEMENT",
       "doc_type": "settlement_letter",
       "entity_ids": [
@@ -258,6 +313,23 @@
         }
       ],
       "sha256": "b3b22cfe46dfaae98e5787292fbf782b23c9132a2b9e025650caf7d2bad62daa",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1001-SETTLEMENT-SCAN",
+      "doc_type": "settlement_letter_scanned",
+      "entity_ids": [
+        "C-1001",
+        "HO-0000003",
+        "PH-00001",
+        "AD-001"
+      ],
+      "format": "jpg",
+      "is_scanned": true,
+      "path": "docs/claim/C-1001-settlement-letter-scanned.jpg",
+      "provenance": [],
+      "scanned_of": "DOC-C-1001-SETTLEMENT",
+      "sha256": "370e3bc81da219a661f64540b54418886de0dd1939ca8c9ccafa2ca2870eb4eb",
       "synthetic": true
     },
     {
@@ -347,6 +419,23 @@
       "synthetic": true
     },
     {
+      "doc_id": "DOC-C-1002-FNOL-SCAN",
+      "doc_type": "fnol_scanned",
+      "entity_ids": [
+        "C-1002",
+        "PA-0000002",
+        "PH-00005",
+        "AD-002"
+      ],
+      "format": "jpg",
+      "is_scanned": true,
+      "path": "docs/claim/C-1002-fnol-scanned.jpg",
+      "provenance": [],
+      "scanned_of": "DOC-C-1002-FNOL",
+      "sha256": "561c83f459ea3988ee62eeb5e85a0e74eab76bf3bb211736f76fcb1521d1f91b",
+      "synthetic": true
+    },
+    {
       "doc_id": "DOC-C-1003-ADJ",
       "doc_type": "adjuster_report",
       "entity_ids": [
@@ -401,6 +490,23 @@
       "synthetic": true
     },
     {
+      "doc_id": "DOC-C-1003-DENIAL-SCAN",
+      "doc_type": "denial_letter_scanned",
+      "entity_ids": [
+        "C-1003",
+        "PA-0000004",
+        "PH-00006",
+        "AD-002"
+      ],
+      "format": "jpg",
+      "is_scanned": true,
+      "path": "docs/claim/C-1003-denial-letter-scanned.jpg",
+      "provenance": [],
+      "scanned_of": "DOC-C-1003-DENIAL",
+      "sha256": "8c54f95cf22211b6f131010839d6589c9ef88e36c79ef06df9a1332442329fcd",
+      "synthetic": true
+    },
+    {
       "doc_id": "DOC-C-1003-FNOL",
       "doc_type": "fnol",
       "entity_ids": [
@@ -430,6 +536,23 @@
         }
       ],
       "sha256": "afa85dd02cf4758de240883a36861f903b19bf4ae8cece32616e8d70cc4e8440",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1003-FNOL-SCAN",
+      "doc_type": "fnol_scanned",
+      "entity_ids": [
+        "C-1003",
+        "PA-0000004",
+        "PH-00006",
+        "AD-002"
+      ],
+      "format": "jpg",
+      "is_scanned": true,
+      "path": "docs/claim/C-1003-fnol-scanned.jpg",
+      "provenance": [],
+      "scanned_of": "DOC-C-1003-FNOL",
+      "sha256": "da649704c3f9921a60c9bf314c8e8f2942f1a74d1c16f9f2142e40e9d92e7f46",
       "synthetic": true
     },
     {
@@ -516,6 +639,23 @@
         }
       ],
       "sha256": "05f09f854a3440797c38d2d54b3217a375a7743926f116c06e9faecd5051b971",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1004-FNOL-SCAN",
+      "doc_type": "fnol_scanned",
+      "entity_ids": [
+        "C-1004",
+        "PA-0000005",
+        "PH-00002",
+        "AD-002"
+      ],
+      "format": "jpg",
+      "is_scanned": true,
+      "path": "docs/claim/C-1004-fnol-scanned.jpg",
+      "provenance": [],
+      "scanned_of": "DOC-C-1004-FNOL",
+      "sha256": "2e977cadbd4fe4c295c16673e4b3a3876ef18290d64f5a2a91eb491c0711948a",
       "synthetic": true
     },
     {

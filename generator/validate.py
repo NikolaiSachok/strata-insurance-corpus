@@ -81,6 +81,12 @@ def validate(out: Path) -> tuple[bool, list[str]]:
             if actual != d["sha256"]:
                 errors.append(f"document {d['doc_id']}: sha256 mismatch ({actual[:8]} != {d['sha256'][:8]})")
 
+    # --- scanned variants reference a real source document ----------------- #
+    for d in manifest["documents"]:
+        src = d.get("scanned_of")
+        if src and src not in doc_ids:
+            errors.append(f"document {d['doc_id']}: scanned_of {src} not in manifest")
+
     # --- golden questions resolve ------------------------------------------ #
     n_golden = 0
     if golden_path.exists():

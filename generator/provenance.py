@@ -24,16 +24,17 @@ class Assertion:
 class DocRecord:
     doc_id: str
     doc_type: str  # policy_contract | fnol | ...
-    format: str  # pdf | docx | xlsx | png | ...
+    format: str  # pdf | docx | xlsx | png | jpg | ...
     path: str  # relative to the corpus root
     entity_ids: list  # every entity this doc is "about"
     asserts: list = field(default_factory=list)  # list[Assertion]
     is_scanned: bool = False
     synthetic: bool = True
     sha256: str = ""
+    source_doc_id: str = ""  # for scanned variants: the clean doc this was rendered from
 
     def to_obj(self) -> dict:
-        return {
+        obj = {
             "doc_id": self.doc_id,
             "doc_type": self.doc_type,
             "format": self.format,
@@ -44,6 +45,9 @@ class DocRecord:
             "sha256": self.sha256,
             "provenance": [{"entity_id": a.entity_id, "field": a.field, "value": a.value} for a in self.asserts],
         }
+        if self.source_doc_id:
+            obj["scanned_of"] = self.source_doc_id
+        return obj
 
 
 def sha256_file(path: Path) -> str:

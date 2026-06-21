@@ -16,15 +16,15 @@ roadmap: **[BRIEF.md](BRIEF.md)** and the **[issues](../../issues)**.
 
 ```bash
 make sample     # -> committed sample/ slice + golden/golden.jsonl  (deterministic)
-make generate   # -> full corpus/ : 305 entities, 778 documents (651 PDF + 121 Word + 4 sheets + 2 Markdown), 255 golden Qs  (gitignored)
+make generate   # -> full corpus/ : 305 entities, 918 documents (651 PDF + 121 Word + 4 sheets + 2 MD + 140 scanned JPG), 255 golden Qs  (gitignored)
 make validate   # integrity + golden-support checks
 make stats      # corpus composition (documents by format/type, golden by class)
 make test       # determinism + referential-integrity suite
 ```
 
-Full-corpus composition (`make stats OUT=corpus`): 651 PDF · 121 Word · 3 xlsx · 1 csv · 2 Markdown;
-golden = 252 semantic + 3 aggregation. The committed `sample/` slice contains at least one of every
-built doc type (enforced by a test), so the repo is fully exercisable without a full run.
+Full-corpus composition (`make stats OUT=corpus`): 651 PDF · 121 Word · 3 xlsx · 1 csv · 2 Markdown ·
+140 scanned JPG; golden = 252 semantic + 3 aggregation. The committed `sample/` slice contains at least
+one of every built doc type (enforced by a test), so the repo is fully exercisable without a full run.
 
 Built: deterministic entity model + roster ([docs/data-model.md](docs/data-model.md)); the **policy** family
 — declarations / endorsements / coverage-schedule (born-digital PDF, WeasyPrint) + full **contract in Word
