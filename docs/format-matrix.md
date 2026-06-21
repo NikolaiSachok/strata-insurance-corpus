@@ -17,7 +17,7 @@ documents render.
 | **Policy** | policy contract, declarations page, endorsements, coverage schedule | PDF (born-digital), docx | semantic + structured extraction | M1 / M2 | ✅ declarations / endorsements / coverage-schedule (PDF) + full contract (**docx**) — all built (#5) |
 | **Claim** | FNOL form, adjuster report, damage/repair estimate, settlement letter, denial letter | PDF + **scanned variant** | OCR, layout-aware chunking | M1 / M2 / M3 | ✅ FNOL (M1) + adjuster report / estimate / settlement & denial letters (PDF, #6); scanned variants planned (M3) |
 | **Evidence** | vehicle/property damage photos, ID/license scans, police report (scanned) | JPG / PNG (`/generate-image`) | vision caption / multimodal; PII on IDs | M3 | ⏳ planned |
-| **Tabular** | loss run, reserve report, premium register, agent commission sheet | XLSX / CSV | aggregation / metadata queries | M2 | ⏳ planned |
+| **Tabular** | loss run, reserve register, premium register, agent commission summary | XLSX / CSV | aggregation / metadata queries | M2 | ✅ loss run / reserve register / premium register (**xlsx**) + commission summary (**csv**) — built (#7) |
 | **Knowledge** | underwriting guidelines, claims handling manual, customer FAQ/KB | Markdown, docx | semantic KB retrieval | M2 | ⏳ planned |
 | **Correspondence** | customer letters/emails, status notices | docx / txt / eml | retrieval over informal text | M2 | ⏳ planned |
 
@@ -35,7 +35,8 @@ describes only what is built plus what is explicitly scheduled.
   text and the degraded image are kept and cross-linked in the manifest.
 - **docx** — `python-docx` (policy contract, #5). Reproducibility: core-property dates are pinned and the
   package zip is re-packed with normalized member timestamps, so the same content yields a byte-identical
-  `.docx`. **xlsx (M2)** — `openpyxl`.
+  `.docx`. **xlsx** — `openpyxl` (#7); reproducible via the same normalized-zip path, plus a pin of the
+  `dcterms:modified` timestamp openpyxl stamps at save. **csv** — UTF-8 text (inherently deterministic).
 - **Images (M3)** — generated via the `/generate-image` skill (Nano Banana) for damage/property
   photos and ID/form scans, each captioned and recorded in the manifest. Image **pixels are not
   byte-deterministic**, so the committed, reproducible artifact is the **prompt spec**, not the image

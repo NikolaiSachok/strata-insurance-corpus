@@ -4,7 +4,7 @@
     "adjusters": 2,
     "agents": 3,
     "claims": 5,
-    "documents": 37,
+    "documents": 41,
     "policies": 5,
     "policyholders": 6
   },
@@ -971,6 +971,69 @@
         }
       ],
       "sha256": "632a094b8fc9efebea6f6f3d507287664c8c08720b7f26d4b5e5a24841dbc6fa",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-TAB-COMMISSION",
+      "doc_type": "commission_summary",
+      "entity_ids": [
+        "AG-001",
+        "AG-002",
+        "AG-003"
+      ],
+      "format": "csv",
+      "is_scanned": false,
+      "path": "docs/tabular/commission-summary.csv",
+      "provenance": [],
+      "sha256": "44b6da6a100925f8f99ff81eedb7921e8fe4126d29b3bc8a831a4fb91d82bbea",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-TAB-LOSS-RUN",
+      "doc_type": "loss_run",
+      "entity_ids": [
+        "C-1000",
+        "C-1001",
+        "C-1002",
+        "C-1003",
+        "C-1004"
+      ],
+      "format": "xlsx",
+      "is_scanned": false,
+      "path": "docs/tabular/loss-run.xlsx",
+      "provenance": [],
+      "sha256": "0f2ade894a750d4e7490565ce99179a9ae0226c2bd7ecffbba80d8e35ca3b04d",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-TAB-PREMIUM",
+      "doc_type": "premium_register",
+      "entity_ids": [
+        "HO-0000001",
+        "PA-0000002",
+        "HO-0000003",
+        "PA-0000004",
+        "PA-0000005"
+      ],
+      "format": "xlsx",
+      "is_scanned": false,
+      "path": "docs/tabular/premium-register.xlsx",
+      "provenance": [],
+      "sha256": "99dcde75e97b75da3bbc17faf5bc81a8af902f41d440a491fd8c1a793ae9ae54",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-TAB-RESERVE",
+      "doc_type": "reserve_register",
+      "entity_ids": [
+        "C-1002",
+        "C-1004"
+      ],
+      "format": "xlsx",
+      "is_scanned": false,
+      "path": "docs/tabular/reserve-register.xlsx",
+      "provenance": [],
+      "sha256": "d2ff8db5b4f559ddad74c54662b339b5f20f5656ef8b1993360050fcb125e276",
       "synthetic": true
     }
   ],
