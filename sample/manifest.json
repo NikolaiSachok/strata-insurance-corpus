@@ -11,6 +11,7 @@
       "denial_letter": 1,
       "denial_letter_scanned": 1,
       "estimate": 4,
+      "evidence_photo": 5,
       "fnol": 5,
       "fnol_scanned": 5,
       "loss_run": 1,
@@ -27,13 +28,13 @@
     "by_format": {
       "csv": 1,
       "docx": 6,
-      "jpg": 8,
+      "jpg": 13,
       "md": 2,
       "pdf": 32,
       "xlsx": 3
     },
     "claims": 5,
-    "documents": 52,
+    "documents": 57,
     "policies": 5,
     "policyholders": 6
   },
@@ -90,6 +91,39 @@
         }
       ],
       "sha256": "1bbe1164f75cf7d0a58319f3d3212cfeedcd3fe6f6baf095c15114afd408294f",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1000-EVIDENCE",
+      "doc_type": "evidence_photo",
+      "entity_ids": [
+        "C-1000"
+      ],
+      "format": "jpg",
+      "is_generated": true,
+      "is_scanned": false,
+      "path": "evidence/C-1000-evidence.jpg",
+      "prompt_spec": {
+        "caption": "Fire and smoke damage in a domestic kitchen \u2014 charred cabinets and soot \u2014 Household claim C-1000 (Ireland).",
+        "cause": "kitchen_fire",
+        "claim_id": "C-1000",
+        "country": "IE",
+        "doc_id": "DOC-C-1000-EVIDENCE",
+        "kind": "property_damage",
+        "line": "homeowners",
+        "model": "gemini-3.1-flash-image",
+        "negative_prompt": "no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark",
+        "params": {
+          "aspect_ratio": "4:3",
+          "resolution": "1K",
+          "seed": 4201986
+        },
+        "path": "evidence/C-1000-evidence.jpg",
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Ireland: fire and smoke damage in a domestic kitchen \u2014 charred cabinets and soot. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark."
+      },
+      "provenance": [],
+      "rendered": true,
+      "sha256": "93485717da7877c5c7cde038f9a6a6bc75b4c0e3f96766bb852b75dc76fd6546",
       "synthetic": true
     },
     {
@@ -240,6 +274,39 @@
       "synthetic": true
     },
     {
+      "doc_id": "DOC-C-1001-EVIDENCE",
+      "doc_type": "evidence_photo",
+      "entity_ids": [
+        "C-1001"
+      ],
+      "format": "jpg",
+      "is_generated": true,
+      "is_scanned": false,
+      "path": "evidence/C-1001-evidence.jpg",
+      "prompt_spec": {
+        "caption": "A forced-open residential door with a damaged lock after a burglary \u2014 Household claim C-1001 (Ireland).",
+        "cause": "theft",
+        "claim_id": "C-1001",
+        "country": "IE",
+        "doc_id": "DOC-C-1001-EVIDENCE",
+        "kind": "property_damage",
+        "line": "homeowners",
+        "model": "gemini-3.1-flash-image",
+        "negative_prompt": "no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark",
+        "params": {
+          "aspect_ratio": "4:3",
+          "resolution": "1K",
+          "seed": 4201987
+        },
+        "path": "evidence/C-1001-evidence.jpg",
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Ireland: a forced-open residential door with a damaged lock after a burglary. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark."
+      },
+      "provenance": [],
+      "rendered": true,
+      "sha256": "66bb620e4af5439846ea7fc95aee7013b0cbb05d41979839f9951dcc68861e9e",
+      "synthetic": true
+    },
+    {
       "doc_id": "DOC-C-1001-FNOL",
       "doc_type": "fnol",
       "entity_ids": [
@@ -360,6 +427,39 @@
       "synthetic": true
     },
     {
+      "doc_id": "DOC-C-1002-EVIDENCE",
+      "doc_type": "evidence_photo",
+      "entity_ids": [
+        "C-1002"
+      ],
+      "format": "jpg",
+      "is_generated": true,
+      "is_scanned": false,
+      "path": "evidence/C-1002-evidence.jpg",
+      "prompt_spec": {
+        "caption": "A broken-down industrial machine in a workshop with a visible fault \u2014 Commercial claim C-1002 (Spain).",
+        "cause": "equipment_breakdown",
+        "claim_id": "C-1002",
+        "country": "ES",
+        "doc_id": "DOC-C-1002-EVIDENCE",
+        "kind": "commercial_damage",
+        "line": "bop",
+        "model": "gemini-3.1-flash-image",
+        "negative_prompt": "no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark",
+        "params": {
+          "aspect_ratio": "4:3",
+          "resolution": "1K",
+          "seed": 4201988
+        },
+        "path": "evidence/C-1002-evidence.jpg",
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Spain: a broken-down industrial machine in a workshop with a visible fault. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark."
+      },
+      "provenance": [],
+      "rendered": true,
+      "sha256": "dc5ee635a526146071a61b52b1e1d7a0988516a05ab2acc9f3ab47c772fde041",
+      "synthetic": true
+    },
+    {
       "doc_id": "DOC-C-1002-FNOL",
       "doc_type": "fnol",
       "entity_ids": [
@@ -460,6 +560,39 @@
         }
       ],
       "sha256": "475efead8654384246fc64e5a7ed449a255bb95b3473469382c6ac926f3e4865",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1003-EVIDENCE",
+      "doc_type": "evidence_photo",
+      "entity_ids": [
+        "C-1003"
+      ],
+      "format": "jpg",
+      "is_generated": true,
+      "is_scanned": false,
+      "path": "evidence/C-1003-evidence.jpg",
+      "prompt_spec": {
+        "caption": "A wet floor in a shop entrance marked with a hazard cone \u2014 Commercial claim C-1003 (Spain).",
+        "cause": "slip_and_fall",
+        "claim_id": "C-1003",
+        "country": "ES",
+        "doc_id": "DOC-C-1003-EVIDENCE",
+        "kind": "commercial_damage",
+        "line": "bop",
+        "model": "gemini-3.1-flash-image",
+        "negative_prompt": "no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark",
+        "params": {
+          "aspect_ratio": "4:3",
+          "resolution": "1K",
+          "seed": 4201989
+        },
+        "path": "evidence/C-1003-evidence.jpg",
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Spain: a wet floor in a shop entrance marked with a hazard cone. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark."
+      },
+      "provenance": [],
+      "rendered": true,
+      "sha256": "f13842ea9991b64951dae6ceadfad6e85a175aa1eb00a8e4bb7d7c528e89d34a",
       "synthetic": true
     },
     {
@@ -607,6 +740,39 @@
         }
       ],
       "sha256": "f17ffe05103ffb1e00b59b256cbaa503b1068ce8d75e07aad1d98a3b7a567b43",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1004-EVIDENCE",
+      "doc_type": "evidence_photo",
+      "entity_ids": [
+        "C-1004"
+      ],
+      "format": "jpg",
+      "is_generated": true,
+      "is_scanned": false,
+      "path": "evidence/C-1004-evidence.jpg",
+      "prompt_spec": {
+        "caption": "A forced-open residential door with a damaged lock after a burglary \u2014 Household claim C-1004 (Ireland).",
+        "cause": "theft",
+        "claim_id": "C-1004",
+        "country": "IE",
+        "doc_id": "DOC-C-1004-EVIDENCE",
+        "kind": "property_damage",
+        "line": "homeowners",
+        "model": "gemini-3.1-flash-image",
+        "negative_prompt": "no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark",
+        "params": {
+          "aspect_ratio": "4:3",
+          "resolution": "1K",
+          "seed": 4201990
+        },
+        "path": "evidence/C-1004-evidence.jpg",
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Ireland: a forced-open residential door with a damaged lock after a burglary. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no readable number plates or registration text, no recognizable faces, no real company logos, no text overlays, not a stock-photo watermark."
+      },
+      "provenance": [],
+      "rendered": true,
+      "sha256": "fd174d722809ec71647ddb8037e2c1d5c191f22995924c908d6953b50e685450",
       "synthetic": true
     },
     {
