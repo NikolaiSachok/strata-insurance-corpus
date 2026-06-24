@@ -532,7 +532,7 @@
           "value": "personal_auto"
         }
       ],
-      "sha256": "a7e85fa161b9daebc1bf4a50d657be13bf52ee0f8f256c3fdb98d30a8ddce5c4",
+      "sha256": "568bdac022ba18745385d2221fedd89abe588e258010fb22cc60bbd1eb73dad7",
       "synthetic": true
     },
     {
@@ -549,7 +549,7 @@
       "path": "docs/claim/C-1003-accident-statement-scanned.jpg",
       "provenance": [],
       "scanned_of": "DOC-C-1003-ACCIDENT",
-      "sha256": "538bcb8f569dce6cbfdf732fdef1964a908f5a3769810005401ed6e339d008b0",
+      "sha256": "16add96c2e91fe88e86dca6c9058b7f4097cf02135eaea389481e12a7bfbe4e4",
       "synthetic": true
     },
     {

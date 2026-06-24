@@ -105,11 +105,37 @@ def validate(out: Path) -> tuple[bool, list[str]]:
                 if did not in doc_ids:
                     errors.append(f"golden {q.get('id', i)}: relevant_doc_id {did} not in manifest")
 
+    # --- redaction PII index resolves (#12) -------------------------------- #
+    n_pii = 0
+    pii_path = out / "pii-index.jsonl"
+    if pii_path.exists():
+        valid_mod = {"text", "image_text", "image_region"}
+        for i, raw in enumerate(pii_path.read_text(encoding="utf-8").splitlines()):
+            if not raw.strip():
+                continue
+            n_pii += 1
+            s = json.loads(raw)
+            if s["doc_id"] not in doc_ids:
+                errors.append(f"pii span {i}: doc_id {s['doc_id']} not in manifest")
+            if s.get("modality") not in valid_mod:
+                errors.append(f"pii span {i} ({s['doc_id']}): bad modality {s.get('modality')!r}")
+            # entity must resolve to a model entity (third-party PII is doc-local, scoped to its claim)
+            eid = s.get("entity_id")
+            if s.get("entity_type") != "third_party" and eid not in all_ids:
+                errors.append(f"pii span {i} ({s['doc_id']}): entity_id {eid} not in model")
+            # only a FACE region may be value-less; every text/image-text target must be redactable
+            if s.get("pii_type") == "FACE":
+                if s.get("value") is not None:
+                    errors.append(f"pii span {i} ({s['doc_id']}): FACE span should have null value")
+            elif not s.get("value"):
+                errors.append(f"pii span {i} ({s['doc_id']}): empty PII value")
+
     ok = not errors
     if ok:
         print(
             f"[validate] OK — {out}: "
-            f"{len(all_ids)} entities, {len(manifest['documents'])} documents, {n_golden} golden questions"
+            f"{len(all_ids)} entities, {len(manifest['documents'])} documents, "
+            f"{n_golden} golden questions, {n_pii} PII spans"
         )
     return ok, errors
 

@@ -38,6 +38,7 @@ faces/*-face.jpg                     AI ID portraits — one per policyholder (r
 image-prompts.jsonl                 seeded prompt-spec recipe for every AI image — evidence photos + ID portraits (the reproducible artifact)
 manifest.json                       every document + provenance + sha256
 golden.jsonl                        golden eval questions (semantic + aggregation) — mirrored to ../golden/golden.jsonl
+pii-index.jsonl                     redaction ground truth — every PII span (doc · type · field · value · modality)
 ```
 
 The `evidence/` and `faces/` images are AI-generated (non-deterministic pixels); `image-prompts.jsonl` is their

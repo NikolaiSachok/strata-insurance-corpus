@@ -41,13 +41,14 @@ table.circ th { background: #eef2f7; }
       <div class="vt">Vehicle A — insured</div>
       <div class="flbl">Driver</div><div class="hw">{{ vehicle_a.driver }}</div>
       <div class="flbl">Policy</div><div class="hw">{{ vehicle_a.policy }}</div>
+      <div class="flbl">Registration</div><div class="hw" style="white-space:nowrap">{{ vehicle_a.plate }}</div>
       <div class="flbl">Vehicle</div><div class="hw">{{ vehicle_a.vehicle }}</div>
     </div>
     <div class="veh">
       <div class="vt">Vehicle B — other party</div>
       {% if vehicle_b %}
       <div class="flbl">Driver</div><div class="hw">{{ vehicle_b.driver }}</div>
-      <div class="flbl">Registration</div><div class="hw">{{ vehicle_b.plate }}</div>
+      <div class="flbl">Registration</div><div class="hw" style="white-space:nowrap">{{ vehicle_b.plate }}</div>
       <div class="flbl">Vehicle</div><div class="hw">{{ vehicle_b.vehicle }}</div>
       {% else %}
       <div class="hw" style="margin-top:14px">No third party involved.</div>
