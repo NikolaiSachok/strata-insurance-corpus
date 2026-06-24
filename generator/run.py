@@ -245,6 +245,8 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
                     Assertion(claim.id, "cause", cause_label(claim.cause)),
                     Assertion(claim.id, "date_of_loss", claim.date_of_loss),
                     Assertion(claim.id, "status", claim.status),
+                    # the FNOL ties the claim to its policy — the bridge fact for cross-doc (multi-hop) joins
+                    Assertion(claim.id, "policy_id", policy.id),
                 ],
             )
             emit_scan(f"docs/claim/{claim.id}-fnol.pdf", fnol_id, "fnol_scanned", claim_ids)

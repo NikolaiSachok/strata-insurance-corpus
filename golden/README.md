@@ -19,8 +19,28 @@ line, aligned with general enterprise-RAG benchmark formats:
 | `id` | Stable question id. |
 | `question` / `answer` | The query and its ground-truth answer. |
 | `relevant_doc_ids` | **Every** document that asserts the answer (resolve via `manifest.json`). |
-| `query_class` | `semantic` · `aggregation` · `multi_hop` (planned). |
-| `provenance` | The `{entity_id, field}` the answer comes from. |
+| `query_class` | `semantic` · `aggregation` · `multi_hop`. |
+| `provenance` | Single-hop: `{entity_id, field}`. Multi-hop: `{hops: [{entity_id, field, value, doc_ids}, …]}`. |
+
+### Multi-hop (cross-document)
+
+A `multi_hop` question's answer lives on a document you reach only by traversing from another, so its
+provenance is the explicit **chain** and `relevant_doc_ids` spans the whole chain:
+
+```json
+{"id": "Q-MH-C-1000-premium", "question": "What is the annual premium on the policy under which claim C-1000 was filed?",
+ "answer": "€3,525.00", "relevant_doc_ids": ["DOC-C-1000-FNOL", "DOC-COM-0000003-DEC"],
+ "query_class": "multi_hop",
+ "provenance": {"hops": [{"entity_id": "C-1000", "field": "policy_id", "value": "COM-0000003", "doc_ids": ["DOC-C-1000-FNOL"]},
+                         {"entity_id": "COM-0000003", "field": "annual_premium", "value": "€3,525.00", "doc_ids": ["DOC-COM-0000003-DEC"]}]}}
+```
+
+The FNOL ties the claim to its policy (the bridge); the policy's **annual premium** lives on the
+declarations and appears on **no** claim document, so the join is genuinely required. The answer is the
+terminal hop's value. Joins whose answer fact already co-occurs with the bridge on one document are
+single-doc and are *not* emitted as multi-hop — e.g. a settlement letter stating both the cause and the
+amount, or the FNOL, which already names the insured vehicle. (A test enforces that a multi-hop answer is
+not readable in its bridge document.)
 
 ## Grounded by construction (#13)
 
@@ -36,5 +56,7 @@ asserted by each of its cited documents, or validation fails.
   policyholder national identifier, lines of business.
 - ✅ **`aggregation`** — corpus-level totals/counts (open reserve, total premium, open-claim count),
   asserted on the registers that tabulate them.
-- ⏳ **`multi_hop`** (cross-doc / image fusion) class + an `eval.py` harness computing
-  Recall@K / nDCG / answer-correctness (reuses Strata-RAG metrics where practical) — #14, #15.
+- ✅ **`multi_hop`** — cross-document joins (claim→policy→declarations for the policy's annual premium — a
+  fact that lives on no claim document), each with an explicit, grounded hop chain.
+- ⏳ An `eval.py` harness computing Recall@K / nDCG / answer-correctness (reuses Strata-RAG metrics where
+  practical) — #15.

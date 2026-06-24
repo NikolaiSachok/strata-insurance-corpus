@@ -31,6 +31,28 @@ def _q(qid, question, value, doc_ids, query_class, entity_id, field):
     }
 
 
+def _hop(prov, entity_id, field):
+    """One step of a multi-hop chain: the asserted ``value`` + the docs that assert it, or ``None``."""
+    support = support_for(prov, entity_id, field)
+    if support is None:
+        return None
+    value, doc_ids = support
+    return {"entity_id": entity_id, "field": field, "value": value, "doc_ids": doc_ids}
+
+
+def _multihop(qid, question, hops):
+    """A cross-document question: answer is the terminal hop's value; relevant docs span the whole chain."""
+    relevant = sorted({d for h in hops for d in h["doc_ids"]})
+    return {
+        "id": qid,
+        "question": question,
+        "answer": hops[-1]["value"],
+        "relevant_doc_ids": relevant,
+        "query_class": "multi_hop",
+        "provenance": {"hops": hops},
+    }
+
+
 def build_golden(model: Model, prov: dict) -> list[dict]:
     """Build golden items, each grounded in the provenance index ``prov``.
 
@@ -74,6 +96,24 @@ def build_golden(model: Model, prov: dict) -> list[dict]:
     # --- knowledge-base semantic (fact stated in the guidelines) ----------- #
     add("CORPUS", "lines_of_business", "Q-KB-lines",
         "Which lines of business does Meridian Mutual underwrite?", "semantic")
+
+    # --- multi-hop / cross-document --------------------------------------- #
+    # The answer lives on a document you reach only by traversing from another: the FNOL ties a claim to
+    # its policy (the bridge), but the policy's *premium* lives on the declarations and appears on no claim
+    # document — so answering genuinely requires both hops. Each hop is grounded and relevant_doc_ids spans
+    # the chain. We deliberately avoid "joins" whose answer fact already co-occurs with the bridge on one
+    # document — e.g. the settlement letter states both the cause and the amount, and the FNOL already names
+    # the insured vehicle — those are single-doc answerable, not multi-hop (enforced by a test).
+    for claim in model.claims:
+        bridge = _hop(prov, claim.id, "policy_id")  # claim -> policy (FNOL)
+        if bridge is None:
+            continue
+        prem = _hop(prov, bridge["value"], "annual_premium")  # policy -> premium (declarations)
+        if prem is not None:
+            items.append(_multihop(
+                f"Q-MH-{claim.id}-premium",
+                f"What is the annual premium on the policy under which claim {claim.id} was filed?",
+                [bridge, prem]))
 
     items.sort(key=lambda x: x["id"])
     return items

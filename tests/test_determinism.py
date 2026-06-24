@@ -204,6 +204,48 @@ def test_provenance_index_resolves_and_detects_contradiction():
         support_for(bad, "C-1", "cause")
 
 
+def test_multihop_golden_is_grounded_cross_document(tmp_path):
+    """Multi-hop questions exist, span >= 2 distinct documents, and each hop is provenance-grounded."""
+    import json
+
+    from generator.run import generate
+
+    generate(42, tmp_path / "mh", "sample")
+    manifest = json.loads((tmp_path / "mh" / "manifest.json").read_text())
+    doc_assert = {d["doc_id"]: {(a["entity_id"], a["field"]): a["value"] for a in d.get("provenance", [])}
+                  for d in manifest["documents"]}
+    golden = [json.loads(l) for l in (tmp_path / "mh" / "golden.jsonl").read_text().splitlines() if l.strip()]
+    mh = [q for q in golden if q["query_class"] == "multi_hop"]
+    assert mh, "no multi-hop questions emitted"
+    for q in mh:
+        hops = q["provenance"]["hops"]
+        assert len(hops) >= 2, q["id"]
+        # genuinely cross-document: the chain touches >= 2 distinct docs
+        assert len(set(q["relevant_doc_ids"])) >= 2, q["id"]
+        assert q["relevant_doc_ids"] == sorted({d for h in hops for d in h["doc_ids"]})
+        assert q["answer"] == hops[-1]["value"]
+        for h in hops:  # every hop fact is asserted by its cited docs
+            for did in h["doc_ids"]:
+                assert doc_assert[did][(h["entity_id"], h["field"])] == h["value"], (q["id"], did)
+
+    # Genuinely cross-document: the answer must NOT be readable in the bridge (non-terminal) documents,
+    # otherwise the question is single-doc answerable (the trap that sank the vehicle/settlement joins).
+    try:
+        import pypdfium2 as pdfium
+    except Exception as e:  # pragma: no cover
+        pytest.skip(f"pypdfium2 unavailable: {e}")
+    path_for = {d["doc_id"]: d["path"] for d in manifest["documents"]}
+    for q in mh:
+        hops = q["provenance"]["hops"]
+        terminal_docs = set(hops[-1]["doc_ids"])
+        for did in set(q["relevant_doc_ids"]) - terminal_docs:  # the bridge docs
+            p = tmp_path / "mh" / path_for[did]
+            if p.suffix.lower() != ".pdf":
+                continue
+            text = "\n".join(pg.get_textpage().get_text_range() for pg in pdfium.PdfDocument(str(p)))
+            assert q["answer"] not in text, f"{q['id']}: answer leaks into bridge doc {did} (not multi-hop)"
+
+
 def test_generated_corpus_validates(tmp_path):
     """A freshly generated sample passes full validation — including golden answer-grounding (#13)."""
     from generator.run import generate

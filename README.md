@@ -10,14 +10,14 @@
 document families (policy / claim / tabular / knowledge), **scanned (OCR-target) variants** of the claim
 forms/letters, **AI evidence photos + identity cards (ID scans) with synthetic portraits**, a
 **redaction ground-truth index** (every PII span catalogued), the manifest + provenance, and the
-golden-eval set (semantic + aggregation) run end-to-end today. The eval harness and the Strata-RAG
+golden-eval set (semantic + aggregation + multi-hop) run end-to-end today. The eval harness and the Strata-RAG
 adapter are scheduled (M4–M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and the **[issues](../../issues)**.
 
-### What runs today (M1–M3)
+### What runs today
 
 ```bash
 make sample     # -> committed sample/ slice + golden/golden.jsonl  (deterministic)
-make generate   # -> full corpus/ : 305 entities, 1278 documents (1118 born-digital+scanned + 160 AI images as committed prompt-specs), 367 golden Qs, 6374 PII spans  (gitignored)
+make generate   # -> full corpus/ : 305 entities, 1278 documents (1118 born-digital+scanned + 160 AI images as committed prompt-specs), 447 golden Qs, 6374 PII spans  (gitignored)
 make validate   # integrity + golden-support checks
 make stats      # corpus composition (documents by format/type, golden by class)
 make test       # determinism + referential-integrity suite
@@ -26,7 +26,7 @@ make test       # determinism + referential-integrity suite
 Full-corpus composition (`make stats OUT=corpus`): 750 PDF · 121 Word · 3 xlsx · 1 csv · 2 Markdown ·
 241 scanned JPG · 160 AI images — 80 evidence photos + 80 ID portraits (committed as seeded
 **prompt-specs** in `image-prompts.jsonl`; pixels rendered for the `sample/` slice, on-demand for the HF
-release); golden = 364 semantic + 3 aggregation; **6,374 PII spans** catalogued in `pii-index.jsonl`.
+release); golden = 364 semantic + 3 aggregation + 80 multi-hop; **6,374 PII spans** catalogued in `pii-index.jsonl`.
 The committed `sample/` slice contains at least one of every built doc type (enforced by a test), so the
 repo is fully exercisable without a full run.
 
@@ -46,10 +46,12 @@ Built: deterministic entity model + roster ([docs/data-model.md](docs/data-model
 (xlsx) and an agent commission summary (csv); and the **knowledge** family — underwriting guidelines &
 customer FAQ (Markdown) and a claims-handling manual (docx). All renderers byte-reproducible
 (`SOURCE_DATE_EPOCH` / pinned docx & xlsx packaging); `manifest.json` with per-doc provenance + sha256;
-**semantic** (cause-of-loss, premium, settlement amount, insured vehicle, national identifier, lines-of-business)
-**and aggregation** (total open reserve, total premium, open-claim count) golden-question classes, each
-**grounded in document provenance** — built from the `(entity, field, value)` facts each document asserts, so a
-golden answer is exactly what its cited documents state (enforced by `make validate`). The doc-type × format
+**semantic** (cause-of-loss, premium, settlement amount, insured vehicle, national identifier, lines-of-business),
+**aggregation** (total open reserve, total premium, open-claim count), **and multi-hop / cross-document**
+(e.g. *"the annual premium for the policy under which claim C was filed"* — a fact on no claim document, so
+it must join the FNOL to the declarations) golden-question classes, each **grounded in document provenance** — built from the
+`(entity, field, value)` facts each document asserts, so a golden answer is exactly what its cited documents
+state and a multi-hop answer's chain is explicit (enforced by `make validate`). The doc-type × format
 build-out is tracked in [docs/format-matrix.md](docs/format-matrix.md).
 
 ---
@@ -102,7 +104,7 @@ Motor · Household · Small-commercial lines, with policyholders across six Euro
 ```
 generator/   the seeded synthetic-data pipeline (model → content → render + provenance)   [M1 ✅]
 sample/      a small, committed slice of the corpus (so the repo is usable without a full run) [M1 ✅]
-golden/      the golden evaluation set (semantic now; aggregation + multi-hop in M4)        [M1 ✅]
+golden/      the golden evaluation set — semantic + aggregation + multi-hop classes (eval harness: M4 ⏳)  [classes ✅]
 adapter/     the Strata-RAG source adapter (register_adapter / register_family)             [M5 ⏳]
 docs/        the data model, the format matrix, related work                                 [M1 ✅]
 Makefile     generate / sample / validate / test targets                                     [M1 ✅]
