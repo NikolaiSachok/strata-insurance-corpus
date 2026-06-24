@@ -184,23 +184,59 @@ def test_xlsx_byte_stable(tmp_path):
     assert "xl/workbook.xml" in zipfile.ZipFile(a).namelist()
 
 
+def test_provenance_index_resolves_and_detects_contradiction():
+    """provenance_index inverts assertions; support_for returns (value, all asserting docs)."""
+    from generator.provenance import Assertion, DocRecord, provenance_index, support_for
+
+    recs = [
+        DocRecord("D1", "fnol", "pdf", "p", [], asserts=[Assertion("C-1", "cause", "theft")]),
+        DocRecord("D2", "adjuster_report", "pdf", "p", [], asserts=[Assertion("C-1", "cause", "theft")]),
+    ]
+    prov = provenance_index(recs)
+    assert support_for(prov, "C-1", "cause") == ("theft", ["D1", "D2"])  # both supporting docs, sorted
+    assert support_for(prov, "C-1", "missing") is None
+    # contradictory provenance for the same (entity, field) is a hard error (ambiguous answer)
+    bad = provenance_index([
+        DocRecord("D1", "x", "p", "p", [], asserts=[Assertion("C-1", "cause", "theft")]),
+        DocRecord("D2", "x", "p", "p", [], asserts=[Assertion("C-1", "cause", "fire")]),
+    ])
+    with pytest.raises(ValueError):
+        support_for(bad, "C-1", "cause")
+
+
+def test_generated_corpus_validates(tmp_path):
+    """A freshly generated sample passes full validation — including golden answer-grounding (#13)."""
+    from generator.run import generate
+    from generator.validate import validate
+
+    generate(42, tmp_path / "v", "sample")
+    ok, errors = validate(tmp_path / "v")
+    assert ok, errors
+
+
 def test_aggregation_golden_matches_model():
-    """Golden aggregation answers must equal the model-computed totals (single source)."""
+    """Golden aggregation answers must equal the model-computed totals (resolved via provenance)."""
     from generator import tabular
     from generator.golden import build_golden
+    from generator.provenance import Assertion, DocRecord, provenance_index
 
     m = build_model(42, "sample")
-    tab_ids = {
-        "loss_run": "D1",
-        "reserve_register": "D2",
-        "premium_register": "D3",
-        "commission_summary": "D4",
-    }
-    golden = build_golden(m, {}, {}, {}, tab_ids)
-    agg = {x["id"]: x["answer"] for x in golden if x["query_class"] == "aggregation"}
-    assert agg["Q-AGG-open-reserve"] == f"€{tabular.total_open_reserve(m):,.2f}"
-    assert agg["Q-AGG-total-premium"] == f"€{tabular.total_annual_premium(m):,.2f}"
-    assert agg["Q-AGG-open-claims"] == str(tabular.open_claim_count(m))
+    # the registers assert their corpus-level aggregates; golden resolves answers from those
+    records = [
+        DocRecord("DOC-TAB-RESERVE", "reserve_register", "xlsx", "x", [],
+                  asserts=[Assertion("CORPUS", "total_open_reserve", f"€{tabular.total_open_reserve(m):,.2f}")]),
+        DocRecord("DOC-TAB-PREMIUM", "premium_register", "xlsx", "x", [],
+                  asserts=[Assertion("CORPUS", "total_annual_premium", f"€{tabular.total_annual_premium(m):,.2f}")]),
+        DocRecord("DOC-TAB-LOSS-RUN", "loss_run", "xlsx", "x", [],
+                  asserts=[Assertion("CORPUS", "open_claim_count", str(tabular.open_claim_count(m)))]),
+    ]
+    golden = build_golden(m, provenance_index(records))
+    agg = {x["id"]: x for x in golden if x["query_class"] == "aggregation"}
+    assert agg["Q-AGG-open-reserve"]["answer"] == f"€{tabular.total_open_reserve(m):,.2f}"
+    assert agg["Q-AGG-total-premium"]["answer"] == f"€{tabular.total_annual_premium(m):,.2f}"
+    assert agg["Q-AGG-open-claims"]["answer"] == str(tabular.open_claim_count(m))
+    # relevant docs are exactly the asserting registers
+    assert agg["Q-AGG-open-reserve"]["relevant_doc_ids"] == ["DOC-TAB-RESERVE"]
 
 
 def test_knowledge_markdown_deterministic_and_grounded():

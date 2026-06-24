@@ -36,8 +36,8 @@ from .content import (
 from . import CURRENCY_SYMBOL, imageprompts, knowledge, tabular
 from .golden import build_golden, write_golden
 from .manifest import write_manifest
-from .model import ANCHOR_EPOCH, build_model, index, write_model
-from .provenance import Assertion, DocRecord, sha256_file
+from .model import ANCHOR_EPOCH, LINE_LABEL, LINES, build_model, index, write_model
+from .provenance import Assertion, DocRecord, provenance_index, sha256_file
 from .schema import write_schema
 
 
@@ -76,12 +76,6 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
     idx = index(model)
 
     records: list[DocRecord] = []
-    fnol_doc_for_claim: dict[str, str] = {}
-    decl_doc_for_policy: dict[str, str] = {}
-    settlement_doc_for_claim: dict[str, str] = {}
-    tabular_doc_ids: dict[str, str] = {}
-    kb_doc_ids: dict[str, str] = {}
-    idcard_doc_for_holder: dict[str, str] = {}
     evidence_specs: list[dict] = []
     face_specs: list[dict] = []
 
@@ -145,7 +139,14 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
             decl_id = f"DOC-{policy.id}-DEC"
             decl_rel = f"docs/policy/{policy.id}-declarations.pdf"
             write_pdf("declarations.html.j2", declarations_document(model.meta, policy, holder, agent), out / decl_rel, ANCHOR_EPOCH)
-            decl_doc_for_policy[policy.id] = decl_id
+            decl_asserts = [
+                Assertion(policy.id, "annual_premium", _money(policy.annual_premium)),
+                Assertion(policy.id, "effective_date", policy.effective_date),
+                Assertion(policy.id, "expiry_date", policy.expiry_date),
+                Assertion(policy.id, "line", policy.line),
+            ]
+            if policy.vehicle:  # the declarations page lists the insured vehicle (Motor)
+                decl_asserts.append(Assertion(policy.id, "vehicle", f"{policy.vehicle['make']} {policy.vehicle['model']}"))
             records.append(
                 DocRecord(
                     doc_id=decl_id,
@@ -153,12 +154,7 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
                     format="pdf",
                     path=decl_rel,
                     entity_ids=base_ids,
-                    asserts=[
-                        Assertion(policy.id, "annual_premium", _money(policy.annual_premium)),
-                        Assertion(policy.id, "effective_date", policy.effective_date),
-                        Assertion(policy.id, "expiry_date", policy.expiry_date),
-                        Assertion(policy.id, "line", policy.line),
-                    ],
+                    asserts=decl_asserts,
                     sha256=sha256_file(out / decl_rel),
                 )
             )
@@ -218,7 +214,6 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
 
             idc_id = f"DOC-{holder.id}-IDCARD"
             idc_rel = f"docs/identity/{holder.id}-id-card.pdf"
-            idcard_doc_for_holder[holder.id] = idc_id
             emit_pdf(
                 idc_id, "id_card", "id_card.html.j2",
                 id_card_document(model.meta, holder, _face_uri(face["path"])),
@@ -242,7 +237,6 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
 
             # FNOL
             fnol_id = f"DOC-{claim.id}-FNOL"
-            fnol_doc_for_claim[claim.id] = fnol_id
             emit_pdf(
                 fnol_id, "fnol", "fnol.html.j2",
                 fnol_document(model.meta, claim, policy, holder, adjuster),
@@ -279,7 +273,6 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
             # Settlement (closed) | denial (denied)
             if claim.status == "closed":
                 settle_id = f"DOC-{claim.id}-SETTLEMENT"
-                settlement_doc_for_claim[claim.id] = settle_id
                 emit_pdf(
                     settle_id, "settlement_letter", "settlement_letter.html.j2",
                     settlement_letter_document(model.meta, claim, policy, holder, adjuster),
@@ -314,23 +307,27 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
         # Tabular family (corpus-level): registers in xlsx + commission in csv
         from .render.sheets import write_csv, write_xlsx
 
+        # Registers carry the corpus-level aggregate facts they tabulate, so aggregation golden
+        # questions resolve to them through provenance (single source of truth).
         tab_specs = [
             ("DOC-TAB-LOSS-RUN", "loss_run", "xlsx", "docs/tabular/loss-run.xlsx",
-             lambda p: write_xlsx([tabular.loss_run(model)], p), [c.id for c in model.claims]),
+             lambda p: write_xlsx([tabular.loss_run(model)], p), [c.id for c in model.claims],
+             [Assertion("CORPUS", "open_claim_count", str(tabular.open_claim_count(model)))]),
             ("DOC-TAB-RESERVE", "reserve_register", "xlsx", "docs/tabular/reserve-register.xlsx",
-             lambda p: write_xlsx([tabular.reserve_register(model)], p), [c.id for c in model.claims if c.status == "open"]),
+             lambda p: write_xlsx([tabular.reserve_register(model)], p), [c.id for c in model.claims if c.status == "open"],
+             [Assertion("CORPUS", "total_open_reserve", _money(tabular.total_open_reserve(model)))]),
             ("DOC-TAB-PREMIUM", "premium_register", "xlsx", "docs/tabular/premium-register.xlsx",
-             lambda p: write_xlsx([tabular.premium_register(model)], p), [p.id for p in model.policies]),
+             lambda p: write_xlsx([tabular.premium_register(model)], p), [p.id for p in model.policies],
+             [Assertion("CORPUS", "total_annual_premium", _money(tabular.total_annual_premium(model)))]),
             ("DOC-TAB-COMMISSION", "commission_summary", "csv", "docs/tabular/commission-summary.csv",
-             lambda p: write_csv(tabular.commission_summary(model), p), [a.id for a in model.agents]),
+             lambda p: write_csv(tabular.commission_summary(model), p), [a.id for a in model.agents], []),
         ]
-        for doc_id, doc_type, fmt, rel, writer, entity_ids in tab_specs:
+        for doc_id, doc_type, fmt, rel, writer, entity_ids, asserts in tab_specs:
             writer(out / rel)
-            tabular_doc_ids[doc_type] = doc_id
             records.append(
                 DocRecord(
                     doc_id=doc_id, doc_type=doc_type, format=fmt, path=rel,
-                    entity_ids=entity_ids, asserts=[], sha256=sha256_file(out / rel),
+                    entity_ids=entity_ids, asserts=asserts, sha256=sha256_file(out / rel),
                 )
             )
 
@@ -340,19 +337,19 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
 
         kb_specs = [
             ("DOC-KB-UW", "underwriting_guidelines", "md", "docs/kb/underwriting-guidelines.md",
-             lambda p: write_markdown(knowledge.underwriting_guidelines(), p)),
+             lambda p: write_markdown(knowledge.underwriting_guidelines(), p),
+             [Assertion("CORPUS", "lines_of_business", ", ".join(LINE_LABEL[ln] for ln in LINES))]),
             ("DOC-KB-CLAIMS", "claims_manual", "docx", "docs/kb/claims-handling-manual.docx",
-             lambda p: write_sections_docx(knowledge.claims_manual(), p)),
+             lambda p: write_sections_docx(knowledge.claims_manual(), p), []),
             ("DOC-KB-FAQ", "customer_faq", "md", "docs/kb/customer-faq.md",
-             lambda p: write_markdown(knowledge.customer_faq(), p)),
+             lambda p: write_markdown(knowledge.customer_faq(), p), []),
         ]
-        for doc_id, doc_type, fmt, rel, writer in kb_specs:
+        for doc_id, doc_type, fmt, rel, writer, asserts in kb_specs:
             writer(out / rel)
-            kb_doc_ids[doc_type] = doc_id
             records.append(
                 DocRecord(
                     doc_id=doc_id, doc_type=doc_type, format=fmt, path=rel,
-                    entity_ids=[], asserts=[], sha256=sha256_file(out / rel),
+                    entity_ids=[], asserts=asserts, sha256=sha256_file(out / rel),
                 )
             )
 
@@ -396,11 +393,9 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
     pii_spans = build_pii_index(model, records)
     write_pii_index(out, pii_spans)
 
-    # 5. golden
-    golden = build_golden(
-        model, fnol_doc_for_claim, decl_doc_for_policy, settlement_doc_for_claim,
-        tabular_doc_ids, kb_doc_ids, idcard_doc_for_holder,
-    )
+    # 5. golden — every question resolved through the provenance index (#13): its answer is the
+    # asserted value and its relevant docs are exactly those asserting the fact.
+    golden = build_golden(model, provenance_index(records))
     write_golden(out, golden)
 
     return {

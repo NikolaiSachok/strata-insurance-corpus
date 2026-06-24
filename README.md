@@ -46,9 +46,11 @@ Built: deterministic entity model + roster ([docs/data-model.md](docs/data-model
 (xlsx) and an agent commission summary (csv); and the **knowledge** family — underwriting guidelines &
 customer FAQ (Markdown) and a claims-handling manual (docx). All renderers byte-reproducible
 (`SOURCE_DATE_EPOCH` / pinned docx & xlsx packaging); `manifest.json` with per-doc provenance + sha256;
-**semantic** (cause-of-loss, premium, settlement amount, lines-of-business) **and aggregation** (total open
-reserve, total premium, open-claim count) golden-question classes. The doc-type × format build-out is
-tracked in [docs/format-matrix.md](docs/format-matrix.md).
+**semantic** (cause-of-loss, premium, settlement amount, insured vehicle, national identifier, lines-of-business)
+**and aggregation** (total open reserve, total premium, open-claim count) golden-question classes, each
+**grounded in document provenance** — built from the `(entity, field, value)` facts each document asserts, so a
+golden answer is exactly what its cited documents state (enforced by `make validate`). The doc-type × format
+build-out is tracked in [docs/format-matrix.md](docs/format-matrix.md).
 
 ---
 

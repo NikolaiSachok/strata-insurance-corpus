@@ -1229,7 +1229,13 @@
       "format": "md",
       "is_scanned": false,
       "path": "docs/kb/underwriting-guidelines.md",
-      "provenance": [],
+      "provenance": [
+        {
+          "entity_id": "CORPUS",
+          "field": "lines_of_business",
+          "value": "Motor, Household, Commercial"
+        }
+      ],
       "sha256": "ae388165bc742767d5ef529024ac5b6c3b4f3e814bd6b890509860c4f102fb43",
       "synthetic": true
     },
@@ -1284,6 +1290,11 @@
           "entity_id": "MOT-0000002",
           "field": "line",
           "value": "personal_auto"
+        },
+        {
+          "entity_id": "MOT-0000002",
+          "field": "vehicle",
+          "value": "Volvo V40"
         }
       ],
       "sha256": "17d1e5ba9b47a352236b297e077ea7b1f6b520b86a878679536fd380d9411cdc",
@@ -1380,6 +1391,11 @@
           "entity_id": "MOT-0000005",
           "field": "line",
           "value": "personal_auto"
+        },
+        {
+          "entity_id": "MOT-0000005",
+          "field": "vehicle",
+          "value": "Opel Astra"
         }
       ],
       "sha256": "2e7e7dcb13b6e1f6559390b50fca3c15b2e4c77632b008f4c65052201247b81e",
@@ -1897,7 +1913,13 @@
       "format": "xlsx",
       "is_scanned": false,
       "path": "docs/tabular/loss-run.xlsx",
-      "provenance": [],
+      "provenance": [
+        {
+          "entity_id": "CORPUS",
+          "field": "open_claim_count",
+          "value": "1"
+        }
+      ],
       "sha256": "1ced465e11140f4cd281c6f8a74724787f089ab38a0f7c4b0b2d7eaada5e72ee",
       "synthetic": true
     },
@@ -1914,7 +1936,13 @@
       "format": "xlsx",
       "is_scanned": false,
       "path": "docs/tabular/premium-register.xlsx",
-      "provenance": [],
+      "provenance": [
+        {
+          "entity_id": "CORPUS",
+          "field": "total_annual_premium",
+          "value": "\u20ac10,920.00"
+        }
+      ],
       "sha256": "f1a089ab3ccd50cd48324592545f6b5e3ded31fcf35dd13d462d30997427e64e",
       "synthetic": true
     },
@@ -1927,7 +1955,13 @@
       "format": "xlsx",
       "is_scanned": false,
       "path": "docs/tabular/reserve-register.xlsx",
-      "provenance": [],
+      "provenance": [
+        {
+          "entity_id": "CORPUS",
+          "field": "total_open_reserve",
+          "value": "\u20ac12,850.00"
+        }
+      ],
       "sha256": "51d12ea186ce89e35087dcb509638b27e377847829c2726bd52700ec8608ef3d",
       "synthetic": true
     }

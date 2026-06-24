@@ -62,3 +62,36 @@ def sha256_file(path: Path) -> str:
     h = hashlib.sha256()
     h.update(Path(path).read_bytes())
     return h.hexdigest()
+
+
+def provenance_index(records: list) -> dict:
+    """Invert per-document assertions into a queryable ``(entity_id, field) -> [(doc_id, value)]`` map.
+
+    This is the spine the golden set is built on: a question about ``(entity, field)`` resolves to the
+    documents that assert it (its supporting/relevant docs) and to the asserted value (its answer), so a
+    golden answer is, by construction, exactly what its cited documents state. Entries are sorted by
+    ``doc_id`` for determinism.
+    """
+    idx: dict[tuple, list] = {}
+    for r in records:
+        for a in r.asserts:
+            idx.setdefault((a.entity_id, a.field), []).append((r.doc_id, a.value))
+    for key in idx:
+        idx[key].sort()
+    return idx
+
+
+def support_for(prov: dict, entity_id: str, field: str) -> tuple | None:
+    """Resolve ``(entity_id, field)`` to ``(value, [doc_ids])`` via the provenance index, or ``None``.
+
+    All documents asserting the same ``(entity, field)`` agree by construction; the shared value is the
+    golden answer and every asserting document is a relevant/supporting doc.
+    """
+    entries = prov.get((entity_id, field))
+    if not entries:
+        return None
+    values = {v for _, v in entries}
+    if len(values) != 1:  # contradictory provenance would make the answer ambiguous
+        raise ValueError(f"provenance for ({entity_id}, {field}) is not single-valued: {sorted(values)}")
+    doc_ids = sorted({d for d, _ in entries})
+    return next(iter(values)), doc_ids
