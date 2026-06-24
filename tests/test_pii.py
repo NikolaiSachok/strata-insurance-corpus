@@ -131,6 +131,37 @@ def test_pii_index_complete_for_model_values(corpus):
     assert not gaps, f"known PII present in a document but NOT catalogued (missing ground truth): {gaps[:10]}"
 
 
+def test_id_card_name_spans_contiguous_for_tricky_names(tmp_path):
+    """ID-card PERSON_NAME spans must be contiguous in the rendered card for hyphenated / multi-token /
+    accented names — the sample's six holders don't exercise these, but the full corpus does."""
+    import dataclasses
+    import types
+
+    try:
+        import pypdfium2 as pdfium
+    except Exception as e:  # pragma: no cover
+        pytest.skip(f"pypdfium2 unavailable: {e}")
+    from generator.content import id_card_document
+    from generator.model import ANCHOR_EPOCH
+    from generator.pii import _id_card_spans
+    from generator.render.pdf import write_pdf
+
+    model = build_model(42, "sample")
+    base, meta = model.policyholders[0], model.meta
+    tricky = ["Sancho Aroca-Segovia", "Paulette Vasseur-Pons", "César Guerrero Vazquez",
+              "Wouter Verwoert-Goyaerts van Waderle", "Lesley Goff", "Dr. Christof Walter B.Sc."]
+    for i, name in enumerate(tricky):
+        holder = dataclasses.replace(base, id=f"PH-9000{i}", name=name)
+        doc = types.SimpleNamespace(doc_id=f"DOC-{holder.id}-IDCARD", doc_type="id_card", is_scanned=False)
+        pdf = tmp_path / f"{holder.id}.pdf"
+        write_pdf("id_card.html.j2", id_card_document(meta, holder, None), pdf, ANCHOR_EPOCH)
+        text = "\n".join(pg.get_textpage().get_text_range() for pg in pdfium.PdfDocument(str(pdf)))
+        for s in _id_card_spans(doc, meta, holder):
+            if s["modality"] != "text":
+                continue
+            assert str(s["value"]) in text, f"{name}: catalogued {s['pii_type']}/{s['field']} {s['value']!r} not contiguous in card"
+
+
 def test_pii_index_deterministic(corpus, tmp_path):
     """Same (seed, profile) -> byte-identical pii-index.jsonl."""
     out, _, _ = corpus

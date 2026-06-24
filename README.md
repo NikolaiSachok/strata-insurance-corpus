@@ -17,7 +17,7 @@ adapter are scheduled (M4–M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** an
 
 ```bash
 make sample     # -> committed sample/ slice + golden/golden.jsonl  (deterministic)
-make generate   # -> full corpus/ : 305 entities, 1278 documents (1118 born-digital+scanned + 160 AI images as committed prompt-specs), 367 golden Qs, 6214 PII spans  (gitignored)
+make generate   # -> full corpus/ : 305 entities, 1278 documents (1118 born-digital+scanned + 160 AI images as committed prompt-specs), 367 golden Qs, 6374 PII spans  (gitignored)
 make validate   # integrity + golden-support checks
 make stats      # corpus composition (documents by format/type, golden by class)
 make test       # determinism + referential-integrity suite
@@ -26,7 +26,7 @@ make test       # determinism + referential-integrity suite
 Full-corpus composition (`make stats OUT=corpus`): 750 PDF · 121 Word · 3 xlsx · 1 csv · 2 Markdown ·
 241 scanned JPG · 160 AI images — 80 evidence photos + 80 ID portraits (committed as seeded
 **prompt-specs** in `image-prompts.jsonl`; pixels rendered for the `sample/` slice, on-demand for the HF
-release); golden = 364 semantic + 3 aggregation; **6,214 PII spans** catalogued in `pii-index.jsonl`.
+release); golden = 364 semantic + 3 aggregation; **6,374 PII spans** catalogued in `pii-index.jsonl`.
 The committed `sample/` slice contains at least one of every built doc type (enforced by a test), so the
 repo is fully exercisable without a full run.
 

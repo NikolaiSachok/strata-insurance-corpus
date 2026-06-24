@@ -105,8 +105,10 @@ def _holder_spans(doc, holder, cats):
 def _id_card_spans(doc, model_meta, holder):
     """Full PII surface of an identity card — names + DOB + address + national id + card no + MRZ."""
     vm = id_card_document(model_meta, holder, None)
+    # The card renders surname and given names in SEPARATE fields, so each is its own contiguous
+    # redaction target (a concatenated "given surname" is never a span in the rendered text layer).
     out = [
-        _span(doc, holder.id, "policyholder", PERSON_NAME, "name", f"{vm['given_names']} {vm['surname']}".strip()),
+        _span(doc, holder.id, "policyholder", PERSON_NAME, "surname", vm["surname"]),
         _span(doc, holder.id, "policyholder", DATE_OF_BIRTH, "dob", vm["dob"]),
         _span(doc, holder.id, "policyholder", ADDRESS, "street", holder.street),
         _span(doc, holder.id, "policyholder", ADDRESS, "city", holder.city),
@@ -114,6 +116,8 @@ def _id_card_spans(doc, model_meta, holder):
         _span(doc, holder.id, "policyholder", NATIONAL_ID, "national_id", holder.national_id),
         _span(doc, holder.id, "policyholder", ID_DOCUMENT_NUMBER, "card_no", vm["card_no"]),
     ]
+    if vm["given_names"]:
+        out.append(_span(doc, holder.id, "policyholder", PERSON_NAME, "given_names", vm["given_names"]))
     for i, line in enumerate(vm["mrz"]):
         out.append(_span(doc, holder.id, "policyholder", MRZ, f"mrz_line_{i + 1}", line))
     return out
