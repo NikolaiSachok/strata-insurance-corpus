@@ -158,6 +158,11 @@
           "entity_id": "C-1000",
           "field": "status",
           "value": "closed"
+        },
+        {
+          "entity_id": "C-1000",
+          "field": "policy_id",
+          "value": "COM-0000003"
         }
       ],
       "sha256": "712584b8c7fc0a1ba521058cf7ba2622cb2696d4eb7a9e5f0c3ecf13873a8b77",
@@ -338,6 +343,11 @@
           "entity_id": "C-1001",
           "field": "status",
           "value": "open"
+        },
+        {
+          "entity_id": "C-1001",
+          "field": "policy_id",
+          "value": "HH-0000001"
         }
       ],
       "sha256": "2c87248fbb9a19cbc8c6545bbad1192401ba6759361cb5272b68b2ceb8008ae6",
@@ -491,6 +501,11 @@
           "entity_id": "C-1002",
           "field": "status",
           "value": "denied"
+        },
+        {
+          "entity_id": "C-1002",
+          "field": "policy_id",
+          "value": "COM-0000003"
         }
       ],
       "sha256": "98990d7e71899e1bb33fc9a02ff98f2d2c19228dad6749a0ec3ba674dde94418",
@@ -666,6 +681,11 @@
           "entity_id": "C-1003",
           "field": "status",
           "value": "closed"
+        },
+        {
+          "entity_id": "C-1003",
+          "field": "policy_id",
+          "value": "MOT-0000005"
         }
       ],
       "sha256": "3904d8c7b12763b4a11d2079a1b000e67ab3ccdd2d54868d3c30a64280733239",
@@ -846,6 +866,11 @@
           "entity_id": "C-1004",
           "field": "status",
           "value": "closed"
+        },
+        {
+          "entity_id": "C-1004",
+          "field": "policy_id",
+          "value": "COM-0000003"
         }
       ],
       "sha256": "8a1bd7b6dfacd30ea2368c94afcb45d78300bd494e1aab4e98de50bc0376b807",

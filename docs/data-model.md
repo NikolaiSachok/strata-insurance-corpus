@@ -91,7 +91,11 @@ Every document records the `(entity_id, field, value)` facts it asserts (its `pr
 document that asserts the fact (so a "cause of loss" answer cites both the FNOL and the adjuster report).
 Corpus-level aggregates (open reserve, total premium, open-claim count) and the lines-of-business fact are
 asserted on the registers / guidelines that state them, so aggregation and KB questions are grounded the
-same way. `make validate` checks the loop: each golden answer must equal what every cited document asserts.
+same way. **Multi-hop** questions traverse the index — the FNOL asserts a claim's `policy_id` (the bridge),
+so e.g. a claim's insured vehicle/premium is reached on the declarations; their provenance records the
+explicit `hops` chain and `relevant_doc_ids` spans it. `make validate` checks the loop end-to-end: each
+single-hop answer must equal what every cited document asserts, and each multi-hop hop must be asserted by
+its cited docs with the answer equal to the terminal hop's value.
 
 ## Redaction ground truth (`pii-index.jsonl`)
 

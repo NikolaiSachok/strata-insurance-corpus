@@ -107,23 +107,41 @@ def validate(out: Path) -> tuple[bool, list[str]]:
                 continue
             n_golden += 1
             q = json.loads(raw)
+            qid = q.get("id", i)
             prov = q.get("provenance", {})
-            key = (prov.get("entity_id"), prov.get("field"))
             rel = q.get("relevant_doc_ids", [])
             if not rel:
-                errors.append(f"golden {q.get('id', i)}: no relevant_doc_ids")
+                errors.append(f"golden {qid}: no relevant_doc_ids")
             for did in rel:
                 if did not in doc_ids:
-                    errors.append(f"golden {q.get('id', i)}: relevant_doc_id {did} not in manifest")
-                    continue
-                # every cited document must actually assert the answer for this (entity, field)
-                asserted = doc_assertions.get(did, {}).get(key)
-                if asserted is None:
-                    errors.append(f"golden {q.get('id', i)}: cited doc {did} does not assert {key}")
-                elif asserted != q.get("answer"):
-                    errors.append(
-                        f"golden {q.get('id', i)}: answer {q.get('answer')!r} != doc {did} asserts {asserted!r}"
-                    )
+                    errors.append(f"golden {qid}: relevant_doc_id {did} not in manifest")
+
+            if "hops" in prov:
+                # multi-hop: each hop's docs must assert its (entity, field, value); the relevant set is
+                # exactly the union of the chain's docs; the answer is the terminal hop's value.
+                hops = prov["hops"]
+                chain_docs = sorted({d for h in hops for d in h.get("doc_ids", [])})
+                if sorted(rel) != chain_docs:
+                    errors.append(f"golden {qid}: relevant_doc_ids != union of hop docs")
+                if hops and hops[-1].get("value") != q.get("answer"):
+                    errors.append(f"golden {qid}: answer != terminal hop value")
+                for h in hops:
+                    hkey = (h.get("entity_id"), h.get("field"))
+                    for did in h.get("doc_ids", []):
+                        asserted = doc_assertions.get(did, {}).get(hkey)
+                        if asserted != h.get("value"):
+                            errors.append(f"golden {qid}: hop doc {did} does not assert {hkey}={h.get('value')!r}")
+            else:
+                # single-hop: every cited document must assert the answer for this (entity, field)
+                key = (prov.get("entity_id"), prov.get("field"))
+                for did in rel:
+                    if did not in doc_ids:
+                        continue
+                    asserted = doc_assertions.get(did, {}).get(key)
+                    if asserted is None:
+                        errors.append(f"golden {qid}: cited doc {did} does not assert {key}")
+                    elif asserted != q.get("answer"):
+                        errors.append(f"golden {qid}: answer {q.get('answer')!r} != doc {did} asserts {asserted!r}")
 
     # --- redaction PII index resolves (#12) -------------------------------- #
     n_pii = 0
