@@ -82,6 +82,17 @@ Generation scale is selected by `--profile`:
 | `sample` | 6 | 3 | 2 | 5 | 5 | the committed `sample/` slice (`make sample`) |
 | `slice` | 1 | 1 | 1 | 1 | 1 | the M1 vertical slice (1 of everything, end-to-end) |
 
+## Provenance & golden grounding (`manifest.json` → `golden.jsonl`)
+
+Every document records the `(entity_id, field, value)` facts it asserts (its `provenance` block in
+`manifest.json`). [`provenance.py`](../generator/provenance.py) inverts these into a **provenance index**
+`(entity_id, field) → [(doc_id, value)]`, and the golden set is built entirely from it: a question about
+`(entity, field)` takes its **answer** from the asserted value and its **`relevant_doc_ids`** from *every*
+document that asserts the fact (so a "cause of loss" answer cites both the FNOL and the adjuster report).
+Corpus-level aggregates (open reserve, total premium, open-claim count) and the lines-of-business fact are
+asserted on the registers / guidelines that state them, so aggregation and KB questions are grounded the
+same way. `make validate` checks the loop: each golden answer must equal what every cited document asserts.
+
 ## Redaction ground truth (`pii-index.jsonl`)
 
 The corpus carries realistic synthetic PII on purpose — it is the material a redaction/PII-detection

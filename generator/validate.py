@@ -93,7 +93,13 @@ def validate(out: Path) -> tuple[bool, list[str]]:
         if src and src not in doc_ids:
             errors.append(f"document {d['doc_id']}: scanned_of {src} not in manifest")
 
-    # --- golden questions resolve ------------------------------------------ #
+    # --- golden questions resolve + are grounded in cited-doc provenance --- #
+    # Per-doc assertions, keyed (entity_id, field) -> value, so each golden answer can be checked
+    # against what its supporting documents actually state (#13: provenance-grounded golden).
+    doc_assertions: dict[str, dict] = {}
+    for d in manifest["documents"]:
+        doc_assertions[d["doc_id"]] = {(a["entity_id"], a["field"]): a["value"] for a in d.get("provenance", [])}
+
     n_golden = 0
     if golden_path.exists():
         for i, raw in enumerate(golden_path.read_text(encoding="utf-8").splitlines()):
@@ -101,9 +107,23 @@ def validate(out: Path) -> tuple[bool, list[str]]:
                 continue
             n_golden += 1
             q = json.loads(raw)
-            for did in q.get("relevant_doc_ids", []):
+            prov = q.get("provenance", {})
+            key = (prov.get("entity_id"), prov.get("field"))
+            rel = q.get("relevant_doc_ids", [])
+            if not rel:
+                errors.append(f"golden {q.get('id', i)}: no relevant_doc_ids")
+            for did in rel:
                 if did not in doc_ids:
                     errors.append(f"golden {q.get('id', i)}: relevant_doc_id {did} not in manifest")
+                    continue
+                # every cited document must actually assert the answer for this (entity, field)
+                asserted = doc_assertions.get(did, {}).get(key)
+                if asserted is None:
+                    errors.append(f"golden {q.get('id', i)}: cited doc {did} does not assert {key}")
+                elif asserted != q.get("answer"):
+                    errors.append(
+                        f"golden {q.get('id', i)}: answer {q.get('answer')!r} != doc {did} asserts {asserted!r}"
+                    )
 
     # --- redaction PII index resolves (#12) -------------------------------- #
     n_pii = 0
