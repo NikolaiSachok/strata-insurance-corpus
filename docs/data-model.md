@@ -82,6 +82,28 @@ Generation scale is selected by `--profile`:
 | `sample` | 6 | 3 | 2 | 5 | 5 | the committed `sample/` slice (`make sample`) |
 | `slice` | 1 | 1 | 1 | 1 | 1 | the M1 vertical slice (1 of everything, end-to-end) |
 
+## Redaction ground truth (`pii-index.jsonl`)
+
+The corpus carries realistic synthetic PII on purpose — it is the material a redaction/PII-detection
+layer is benchmarked on (handling that PII is the consuming RAG layer's job, not the source corpus).
+Every PII occurrence is catalogued as one JSONL span so a detector can be **scored** against known truth:
+
+```json
+{"doc_id":"DOC-PH-00001-IDCARD","doc_type":"id_card","is_scanned":false,"modality":"text",
+ "entity_id":"PH-00001","entity_type":"policyholder","pii_type":"NATIONAL_ID","field":"national_id","value":"133890832"}
+```
+
+- **`pii_type`** ∈ `PERSON_NAME`, `ADDRESS`, `DATE_OF_BIRTH`, `EMAIL_ADDRESS`, `PHONE_NUMBER`,
+  `NATIONAL_ID`, `POLICY_NUMBER`, `CLAIM_NUMBER`, `VEHICLE_REGISTRATION`, `ID_DOCUMENT_NUMBER`, `MRZ`, `FACE`.
+- **`modality`** — `text` (born-digital), `image_text` (the same span on a scanned variant — an OCR+redact
+  target), or `image_region` (the ID portrait `FACE`, the only value-less span).
+- **`entity_type`** ties each span to its owner (`policyholder` / `agent` / `adjuster` / `policy` / `claim`,
+  or `third_party` for the doc-local other-party PII on a collision accident statement).
+- The index is a **pure function of the model** (deterministic, decoupled from render-library versions).
+  Accuracy is enforced by [`tests/test_pii.py`](../tests/test_pii.py), which extracts each rendered
+  document's text and asserts the catalogue is **accurate** (every text span appears) and **complete**
+  (every known model PII value present in a document is catalogued).
+
 ## Determinism contract
 
 Same `(seed, profile)` → byte-identical `model.json` and `roster.tsv` **across environments and processes**.

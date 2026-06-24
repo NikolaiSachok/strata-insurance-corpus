@@ -50,7 +50,7 @@ def _money(x: float) -> str:
 # `evidence/` dir (non-deterministic AI image pixels) is intentionally NOT listed — it is
 # preserved across runs and picked up if present. Anything else (e.g. a committed README.md)
 # is preserved too.
-_GENERATED = ("docs", "schema", "model.json", "roster.tsv", "manifest.json", "golden.jsonl", "image-prompts.jsonl")
+_GENERATED = ("docs", "schema", "model.json", "roster.tsv", "manifest.json", "golden.jsonl", "image-prompts.jsonl", "pii-index.jsonl")
 
 
 def _clean_generated(out: Path) -> None:
@@ -388,6 +388,14 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
     # 4. manifest
     write_manifest(out, model.meta, records)
 
+    # 4b. redaction ground-truth index (#12): every PII span in every document, so a consuming
+    # RAG redaction layer can be scored. Pure function of the model -> deterministic; empty under
+    # --no-render (no document records exist yet).
+    from .pii import build_pii_index, write_pii_index
+
+    pii_spans = build_pii_index(model, records)
+    write_pii_index(out, pii_spans)
+
     # 5. golden
     golden = build_golden(
         model, fnol_doc_for_claim, decl_doc_for_policy, settlement_doc_for_claim,
@@ -401,6 +409,7 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
         "roster": paths["roster"],
         "documents": len(records),
         "golden_questions": len(golden),
+        "pii_spans": len(pii_spans),
     }
 
 
@@ -417,7 +426,7 @@ def main(argv=None) -> int:
         f"[generate] seed={args.seed} profile={args.profile} -> {summary['out']}\n"
         f"           model={summary['model']}\n"
         f"           roster={summary['roster']}\n"
-        f"           documents={summary['documents']} golden_questions={summary['golden_questions']}"
+        f"           documents={summary['documents']} golden_questions={summary['golden_questions']} pii_spans={summary['pii_spans']}"
     )
     return 0
 

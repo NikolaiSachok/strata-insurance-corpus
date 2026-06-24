@@ -6,17 +6,18 @@
 > exercise and benchmark document-RAG systems on *enterprise-shaped* data. Usable standalone with any
 > RAG stack, or as a drop-in corpus for [Strata-RAG](https://github.com/NikolaiSachok/Strata-RAG).
 
-**Status: 🚧 M1 + M2 complete; M3 in progress.** The seeded generator and entity model, all born-digital
+**Status: 🚧 M1–M3 complete; M4 in progress.** The seeded generator and entity model, all born-digital
 document families (policy / claim / tabular / knowledge), **scanned (OCR-target) variants** of the claim
-forms/letters, the manifest + provenance, and the golden-eval set (semantic + aggregation) run end-to-end
-today. Generated images, synthetic-PII injection, the eval harness, and the Strata-RAG adapter are
-scheduled (M3–M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and the **[issues](../../issues)**.
+forms/letters, **AI evidence photos + identity cards (ID scans) with synthetic portraits**, a
+**redaction ground-truth index** (every PII span catalogued), the manifest + provenance, and the
+golden-eval set (semantic + aggregation) run end-to-end today. The eval harness and the Strata-RAG
+adapter are scheduled (M4–M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and the **[issues](../../issues)**.
 
-### What runs today (M1–M2)
+### What runs today (M1–M3)
 
 ```bash
 make sample     # -> committed sample/ slice + golden/golden.jsonl  (deterministic)
-make generate   # -> full corpus/ : 305 entities, 1278 documents (1118 born-digital+scanned + 160 AI images as committed prompt-specs), 367 golden Qs  (gitignored)
+make generate   # -> full corpus/ : 305 entities, 1278 documents (1118 born-digital+scanned + 160 AI images as committed prompt-specs), 367 golden Qs, 6214 PII spans  (gitignored)
 make validate   # integrity + golden-support checks
 make stats      # corpus composition (documents by format/type, golden by class)
 make test       # determinism + referential-integrity suite
@@ -25,9 +26,18 @@ make test       # determinism + referential-integrity suite
 Full-corpus composition (`make stats OUT=corpus`): 750 PDF · 121 Word · 3 xlsx · 1 csv · 2 Markdown ·
 241 scanned JPG · 160 AI images — 80 evidence photos + 80 ID portraits (committed as seeded
 **prompt-specs** in `image-prompts.jsonl`; pixels rendered for the `sample/` slice, on-demand for the HF
-release); golden = 364 semantic + 3 aggregation.
+release); golden = 364 semantic + 3 aggregation; **6,214 PII spans** catalogued in `pii-index.jsonl`.
 The committed `sample/` slice contains at least one of every built doc type (enforced by a test), so the
 repo is fully exercisable without a full run.
+
+**Redaction ground truth (`pii-index.jsonl`).** The corpus deliberately contains realistic synthetic
+PII — names, addresses, dates of birth, phone/email, national identifiers, vehicle plates, ID-card
+numbers + machine-readable zones, and synthetic faces (PII *handling* is the consuming RAG layer's job,
+not the source corpus). So every PII occurrence is published as a machine-readable span — `doc_id`,
+`pii_type`, source `field`, exact `value`, and `modality` (text / image_text / image_region) — letting a
+redaction/PII-detection system be **scored** against known ground truth. It is a pure function of the
+model (deterministic), and a test extracts each rendered document's text to prove the catalogue is both
+accurate (no false spans) and complete (no missed model PII).
 
 Built: deterministic entity model + roster ([docs/data-model.md](docs/data-model.md)); the **policy** family
 — declarations / endorsements / coverage-schedule (born-digital PDF, WeasyPrint) + full **contract in Word

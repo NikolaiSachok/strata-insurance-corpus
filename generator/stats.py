@@ -32,7 +32,18 @@ def summarize(out: Path) -> dict:
                 n_golden += 1
                 by_class[json.loads(raw).get("query_class", "?")] += 1
 
+    pii_path = out / "pii-index.jsonl"
+    by_pii: Counter = Counter()
+    n_pii = 0
+    if pii_path.exists():
+        for raw in pii_path.read_text(encoding="utf-8").splitlines():
+            if raw.strip():
+                n_pii += 1
+                by_pii[json.loads(raw).get("pii_type", "?")] += 1
+
     return {
+        "pii_spans": n_pii,
+        "pii_by_type": dict(sorted(by_pii.items())),
         "out": str(out),
         "seed": manifest.get("seed"),
         "profile": manifest.get("profile"),
@@ -60,6 +71,9 @@ def render(s: dict) -> str:
         "",
         f"Golden questions: {s['golden']}",
         *[_row("  " + k, v) for k, v in s["golden_by_class"].items()],
+        "",
+        f"PII spans (redaction ground truth): {s['pii_spans']}",
+        *[_row("  " + k, v) for k, v in s["pii_by_type"].items()],
     ]
     return "\n".join(lines)
 
