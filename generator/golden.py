@@ -16,6 +16,7 @@ from pathlib import Path
 
 from . import CURRENCY_SYMBOL, tabular
 from .content import cause_label
+from .identity import COUNTRY_BY_CODE
 from .model import LINE_LABEL, LINES, Model
 
 
@@ -26,6 +27,7 @@ def build_golden(
     settlement_doc_for_claim: dict | None = None,
     tabular_doc_ids: dict | None = None,
     kb_doc_ids: dict | None = None,
+    idcard_doc_for_holder: dict | None = None,
 ) -> list[dict]:
     """Build golden items.
 
@@ -37,6 +39,7 @@ def build_golden(
     settlement_doc_for_claim = settlement_doc_for_claim or {}
     tabular_doc_ids = tabular_doc_ids or {}
     kb_doc_ids = kb_doc_ids or {}
+    idcard_doc_for_holder = idcard_doc_for_holder or {}
     items: list[dict] = []
     for claim in model.claims:
         doc_id = fnol_doc_for_claim.get(claim.id)
@@ -123,6 +126,24 @@ def build_golden(
                 "relevant_doc_ids": [tabular_doc_ids["loss_run"]],
                 "query_class": "aggregation",
                 "provenance": {"entity_id": "CORPUS", "field": "count(claims) where status=open"},
+            }
+        )
+    # Identity semantic class — the policyholder's (synthetic) national identifier, supported
+    # by their on-file ID card. A precise-extraction / redaction-relevant retrieval target.
+    for holder in model.policyholders:
+        doc_id = idcard_doc_for_holder.get(holder.id)
+        if not doc_id:
+            continue
+        country = COUNTRY_BY_CODE.get(holder.country)
+        label = country.id_label if country else "national identifier"
+        items.append(
+            {
+                "id": f"Q-{holder.id}-national-id",
+                "question": f"What is the {label} recorded for policyholder {holder.name} ({holder.id})?",
+                "answer": holder.national_id,
+                "relevant_doc_ids": [doc_id],
+                "query_class": "semantic",
+                "provenance": {"entity_id": holder.id, "field": "national_id"},
             }
         )
     # Knowledge-base semantic question (answer is a model-grounded fact stated in the KB).

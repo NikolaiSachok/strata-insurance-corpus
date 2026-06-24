@@ -225,9 +225,10 @@ BUILT_DOC_TYPES = {
     "fnol", "adjuster_report", "estimate", "settlement_letter", "denial_letter",
     "fnol_scanned", "settlement_letter_scanned", "denial_letter_scanned",
     "accident_statement", "accident_statement_scanned",
+    "id_card", "id_card_scanned",
     "loss_run", "reserve_register", "premium_register", "commission_summary",
     "underwriting_guidelines", "claims_manual", "customer_faq",
-    "evidence_photo",
+    "evidence_photo", "id_photo",
 }
 
 
@@ -280,6 +281,43 @@ def test_evidence_spec_deterministic_and_grounded():
     assert a["path"] == f"evidence/{claim.id}-evidence.jpg"
     assert a["claim_id"] == claim.id and a["country"] == holder.country
     assert a["prompt"] and a["caption"] and a["model"]
+
+
+def test_face_spec_deterministic_and_grounded():
+    """ID-portrait prompt-specs are deterministic and tie to the policyholder."""
+    from generator.imageprompts import face_spec
+
+    m = build_model(42, "sample")
+    holder = m.policyholders[0]
+    a = face_spec(holder, 42)
+    b = face_spec(holder, 42)
+    assert a == b
+    assert a["doc_id"] == f"DOC-{holder.id}-FACE"
+    assert a["path"] == f"faces/{holder.id}-face.jpg"
+    assert a["holder_id"] == holder.id and a["country"] == holder.country
+    assert a["kind"] == "id_portrait" and a["prompt"] and a["caption"]
+
+
+def test_id_card_document_mrz_well_formed():
+    """The ID card carries the holder's synthetic PII and a structurally valid ICAO TD1 MRZ."""
+    from generator.content import _mrz_check, id_card_document
+
+    m = build_model(42, "sample")
+    for holder in m.policyholders:
+        doc = id_card_document(m.meta, holder, face_uri=None)
+        assert doc["national_id"] == holder.national_id  # real (synthetic) PII on the card
+        assert doc["dob"]  # formatted
+        mrz = doc["mrz"]
+        assert len(mrz) == 3 and all(len(line) == 30 for line in mrz)
+        assert mrz[0].startswith("I<")  # TD1 identity document code
+        # line 1 document-number check digit (chars 6-14 -> digit at 15)
+        docno = mrz[0][5:14]
+        assert mrz[0][14] == _mrz_check(docno)
+        # honorifics/academic suffixes are stripped from the legal name
+        assert doc["surname"].rstrip(".").lower() not in {"mr", "mrs", "ms", "dr", "prof", "b.sc", "phd"}
+        assert not doc["given_names"].lower().startswith(("mr.", "mrs.", "dr.", "prof.", "miss "))
+        # deterministic
+        assert id_card_document(m.meta, holder, None)["mrz"] == mrz
 
 
 def test_synthetic_markers_present():

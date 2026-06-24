@@ -53,7 +53,7 @@ document expresses) is recorded for the golden eval.
 |---|---|---|---|
 | **Policy** | policy contract, declarations page, endorsements, coverage schedule | PDF (born-digital), docx | semantic + structured extraction |
 | **Claim** | FNOL form, adjuster report, damage/repair estimate, settlement letter, denial letter | PDF + **scanned variant** | **OCR**, layout-aware chunking |
-| **Evidence** | vehicle/property damage photos, ID/license scans, police report (scanned) | **JPG/PNG** (`/generate-image`) | **vision caption / multimodal**; PII on IDs |
+| **Evidence** | vehicle/property damage photos, ID/license scans, police report (scanned, _planned_) | **JPG/PNG** (`/generate-image`) | **vision caption / multimodal**; PII on IDs |
 | **Tabular** | loss run, reserve report, premium register, agent commission sheet | XLSX/CSV | **aggregation / metadata queries** |
 | **Knowledge** | underwriting guidelines, claims handling manual, customer FAQ/KB | Markdown, docx | semantic KB retrieval |
 | **Correspondence** | customer letters/emails, status notices | docx/txt/eml | retrieval over informal text |

@@ -33,6 +33,9 @@ COUNTRIES = (
 )
 COUNTRY_BY_CODE = {c.code: c for c in COUNTRIES}
 
+# ISO-3166 alpha-3 (issuing-state / nationality code for the ID-card MRZ).
+ALPHA3 = {"DE": "DEU", "FR": "FRA", "ES": "ESP", "IT": "ITA", "NL": "NLD", "IE": "IRL"}
+
 _DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE"  # ES DNI control letters
 _PPS_LETTERS = "WABCDEFGHIJKLMNOPQRSTUV"  # IE PPS check letters
 _CF_MONTHS = "ABCDEHLMPRST"  # valid Italian Codice Fiscale month letters (we use a non-member)

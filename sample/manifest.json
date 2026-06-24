@@ -16,6 +16,9 @@
       "evidence_photo": 5,
       "fnol": 5,
       "fnol_scanned": 5,
+      "id_card": 6,
+      "id_card_scanned": 6,
+      "id_photo": 6,
       "loss_run": 1,
       "policy_contract": 5,
       "policy_declarations": 5,
@@ -30,13 +33,13 @@
     "by_format": {
       "csv": 1,
       "docx": 6,
-      "jpg": 15,
+      "jpg": 27,
       "md": 2,
-      "pdf": 34,
+      "pdf": 40,
       "xlsx": 3
     },
     "claims": 5,
-    "documents": 61,
+    "documents": 79,
     "policies": 5,
     "policyholders": 6
   },
@@ -1420,6 +1423,450 @@
         }
       ],
       "sha256": "c9632299376d5a06ef7fe7724ca060eb33c86cbc69914cb2a0f45e6d093fb35d",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00001-FACE",
+      "doc_type": "id_photo",
+      "entity_ids": [
+        "PH-00001"
+      ],
+      "format": "jpg",
+      "is_generated": true,
+      "is_scanned": false,
+      "path": "faces/PH-00001-face.jpg",
+      "prompt_spec": {
+        "caption": "Synthetic ID portrait for policyholder PH-00001 (Netherlands).",
+        "country": "NL",
+        "doc_id": "DOC-PH-00001-FACE",
+        "holder_id": "PH-00001",
+        "kind": "id_portrait",
+        "model": "gemini-3.1-flash-image",
+        "negative_prompt": "not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border",
+        "params": {
+          "aspect_ratio": "4:5",
+          "resolution": "512",
+          "seed": 4201811
+        },
+        "path": "faces/PH-00001-face.jpg",
+        "prompt": "A neutral passport-style identity portrait of a fictional Netherlands resident (an older man with short hair): head and shoulders, facing the camera, plain light-grey background, even studio lighting, neutral expression. Photorealistic but an entirely invented, non-existent person. not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border."
+      },
+      "provenance": [],
+      "rendered": true,
+      "sha256": "1206a3cac000df77b913a1184b0ed4f15308169b08a96a3f9e3f9014c6bd7dd2",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00001-IDCARD",
+      "doc_type": "id_card",
+      "entity_ids": [
+        "PH-00001"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/identity/PH-00001-id-card.pdf",
+      "provenance": [
+        {
+          "entity_id": "PH-00001",
+          "field": "national_id",
+          "value": "133890832"
+        },
+        {
+          "entity_id": "PH-00001",
+          "field": "dob",
+          "value": "1974-01-01"
+        },
+        {
+          "entity_id": "PH-00001",
+          "field": "country",
+          "value": "NL"
+        }
+      ],
+      "sha256": "fa2cafc9c2faca3a70d42307822054ed34956fae2f0a1de782c3960fa260e408",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00001-IDCARD-SCAN",
+      "doc_type": "id_card_scanned",
+      "entity_ids": [
+        "PH-00001"
+      ],
+      "format": "jpg",
+      "is_scanned": true,
+      "path": "docs/identity/PH-00001-id-card-scanned.jpg",
+      "provenance": [],
+      "scanned_of": "DOC-PH-00001-IDCARD",
+      "sha256": "0ea3f3151332d5d6f30678dde1c2ecc03413c15b84ffeb9319c95ea2dd62b80f",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00002-FACE",
+      "doc_type": "id_photo",
+      "entity_ids": [
+        "PH-00002"
+      ],
+      "format": "jpg",
+      "is_generated": true,
+      "is_scanned": false,
+      "path": "faces/PH-00002-face.jpg",
+      "prompt_spec": {
+        "caption": "Synthetic ID portrait for policyholder PH-00002 (Ireland).",
+        "country": "IE",
+        "doc_id": "DOC-PH-00002-FACE",
+        "holder_id": "PH-00002",
+        "kind": "id_portrait",
+        "model": "gemini-3.1-flash-image",
+        "negative_prompt": "not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border",
+        "params": {
+          "aspect_ratio": "4:5",
+          "resolution": "512",
+          "seed": 4201812
+        },
+        "path": "faces/PH-00002-face.jpg",
+        "prompt": "A neutral passport-style identity portrait of a fictional Ireland resident (an older man with curly hair): head and shoulders, facing the camera, plain light-grey background, even studio lighting, neutral expression. Photorealistic but an entirely invented, non-existent person. not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border."
+      },
+      "provenance": [],
+      "rendered": true,
+      "sha256": "c4f0758f0de3faace8e68b77301966d2a70694d5358a53f12742db35cbb5e60b",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00002-IDCARD",
+      "doc_type": "id_card",
+      "entity_ids": [
+        "PH-00002"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/identity/PH-00002-id-card.pdf",
+      "provenance": [
+        {
+          "entity_id": "PH-00002",
+          "field": "national_id",
+          "value": "7038374GA"
+        },
+        {
+          "entity_id": "PH-00002",
+          "field": "dob",
+          "value": "1960-12-18"
+        },
+        {
+          "entity_id": "PH-00002",
+          "field": "country",
+          "value": "IE"
+        }
+      ],
+      "sha256": "8fe2d341b1d00c4bc34a114537df2e5bf4ff521feac292ce19e76fee9d9af709",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00002-IDCARD-SCAN",
+      "doc_type": "id_card_scanned",
+      "entity_ids": [
+        "PH-00002"
+      ],
+      "format": "jpg",
+      "is_scanned": true,
+      "path": "docs/identity/PH-00002-id-card-scanned.jpg",
+      "provenance": [],
+      "scanned_of": "DOC-PH-00002-IDCARD",
+      "sha256": "df7ac4339ee2a60f8fdf2ac158d9786f51bd75827e16f3be4c355903f393a027",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00003-FACE",
+      "doc_type": "id_photo",
+      "entity_ids": [
+        "PH-00003"
+      ],
+      "format": "jpg",
+      "is_generated": true,
+      "is_scanned": false,
+      "path": "faces/PH-00003-face.jpg",
+      "prompt_spec": {
+        "caption": "Synthetic ID portrait for policyholder PH-00003 (France).",
+        "country": "FR",
+        "doc_id": "DOC-PH-00003-FACE",
+        "holder_id": "PH-00003",
+        "kind": "id_portrait",
+        "model": "gemini-3.1-flash-image",
+        "negative_prompt": "not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border",
+        "params": {
+          "aspect_ratio": "4:5",
+          "resolution": "512",
+          "seed": 4201813
+        },
+        "path": "faces/PH-00003-face.jpg",
+        "prompt": "A neutral passport-style identity portrait of a fictional France resident (a middle-aged man with shoulder-length hair): head and shoulders, facing the camera, plain light-grey background, even studio lighting, neutral expression. Photorealistic but an entirely invented, non-existent person. not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border."
+      },
+      "provenance": [],
+      "rendered": true,
+      "sha256": "96fd0ada59a9490b14e324be91cc955ba75b9bf1e0297490a359b49b75df1bd4",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00003-IDCARD",
+      "doc_type": "id_card",
+      "entity_ids": [
+        "PH-00003"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/identity/PH-00003-id-card.pdf",
+      "provenance": [
+        {
+          "entity_id": "PH-00003",
+          "field": "national_id",
+          "value": "002654235116155"
+        },
+        {
+          "entity_id": "PH-00003",
+          "field": "dob",
+          "value": "1973-10-09"
+        },
+        {
+          "entity_id": "PH-00003",
+          "field": "country",
+          "value": "FR"
+        }
+      ],
+      "sha256": "602677399f37f88bd6da2393a608ded1e31aec8da4678248c780c978b605a32e",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00003-IDCARD-SCAN",
+      "doc_type": "id_card_scanned",
+      "entity_ids": [
+        "PH-00003"
+      ],
+      "format": "jpg",
+      "is_scanned": true,
+      "path": "docs/identity/PH-00003-id-card-scanned.jpg",
+      "provenance": [],
+      "scanned_of": "DOC-PH-00003-IDCARD",
+      "sha256": "9d95c7b7af8bb8849a380644f922dcb983ad25b44550e4d75ea89db5bf0bc779",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00004-FACE",
+      "doc_type": "id_photo",
+      "entity_ids": [
+        "PH-00004"
+      ],
+      "format": "jpg",
+      "is_generated": true,
+      "is_scanned": false,
+      "path": "faces/PH-00004-face.jpg",
+      "prompt_spec": {
+        "caption": "Synthetic ID portrait for policyholder PH-00004 (Netherlands).",
+        "country": "NL",
+        "doc_id": "DOC-PH-00004-FACE",
+        "holder_id": "PH-00004",
+        "kind": "id_portrait",
+        "model": "gemini-3.1-flash-image",
+        "negative_prompt": "not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border",
+        "params": {
+          "aspect_ratio": "4:5",
+          "resolution": "512",
+          "seed": 4201814
+        },
+        "path": "faces/PH-00004-face.jpg",
+        "prompt": "A neutral passport-style identity portrait of a fictional Netherlands resident (a young man with curly hair): head and shoulders, facing the camera, plain light-grey background, even studio lighting, neutral expression. Photorealistic but an entirely invented, non-existent person. not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border."
+      },
+      "provenance": [],
+      "rendered": true,
+      "sha256": "87f3c24a74616ab4268c422a0c77df42fee576a3e5c4b7389efff5000acf635b",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00004-IDCARD",
+      "doc_type": "id_card",
+      "entity_ids": [
+        "PH-00004"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/identity/PH-00004-id-card.pdf",
+      "provenance": [
+        {
+          "entity_id": "PH-00004",
+          "field": "national_id",
+          "value": "781618497"
+        },
+        {
+          "entity_id": "PH-00004",
+          "field": "dob",
+          "value": "1985-01-24"
+        },
+        {
+          "entity_id": "PH-00004",
+          "field": "country",
+          "value": "NL"
+        }
+      ],
+      "sha256": "ecb7d3c205632e97e6c6caebe1cc078a635e119bde8e91b636b80a503dd3ffd8",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00004-IDCARD-SCAN",
+      "doc_type": "id_card_scanned",
+      "entity_ids": [
+        "PH-00004"
+      ],
+      "format": "jpg",
+      "is_scanned": true,
+      "path": "docs/identity/PH-00004-id-card-scanned.jpg",
+      "provenance": [],
+      "scanned_of": "DOC-PH-00004-IDCARD",
+      "sha256": "57230616c77e8bddf397bfbae2a2bbaf66c09d5356cd4b6409f58c887a928c2f",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00005-FACE",
+      "doc_type": "id_photo",
+      "entity_ids": [
+        "PH-00005"
+      ],
+      "format": "jpg",
+      "is_generated": true,
+      "is_scanned": false,
+      "path": "faces/PH-00005-face.jpg",
+      "prompt_spec": {
+        "caption": "Synthetic ID portrait for policyholder PH-00005 (Spain).",
+        "country": "ES",
+        "doc_id": "DOC-PH-00005-FACE",
+        "holder_id": "PH-00005",
+        "kind": "id_portrait",
+        "model": "gemini-3.1-flash-image",
+        "negative_prompt": "not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border",
+        "params": {
+          "aspect_ratio": "4:5",
+          "resolution": "512",
+          "seed": 4201815
+        },
+        "path": "faces/PH-00005-face.jpg",
+        "prompt": "A neutral passport-style identity portrait of a fictional Spain resident (a middle-aged man with light hair): head and shoulders, facing the camera, plain light-grey background, even studio lighting, neutral expression. Photorealistic but an entirely invented, non-existent person. not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border."
+      },
+      "provenance": [],
+      "rendered": true,
+      "sha256": "67fcb49b632b5df1568b872f16d997cd935950d3025bfa04a6621fe4b5579b78",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00005-IDCARD",
+      "doc_type": "id_card",
+      "entity_ids": [
+        "PH-00005"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/identity/PH-00005-id-card.pdf",
+      "provenance": [
+        {
+          "entity_id": "PH-00005",
+          "field": "national_id",
+          "value": "09335534-L"
+        },
+        {
+          "entity_id": "PH-00005",
+          "field": "dob",
+          "value": "1965-04-23"
+        },
+        {
+          "entity_id": "PH-00005",
+          "field": "country",
+          "value": "ES"
+        }
+      ],
+      "sha256": "599e6766dfcbc70d74a29ff23ad37a49769a643cf0083239306245a00da4bf46",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00005-IDCARD-SCAN",
+      "doc_type": "id_card_scanned",
+      "entity_ids": [
+        "PH-00005"
+      ],
+      "format": "jpg",
+      "is_scanned": true,
+      "path": "docs/identity/PH-00005-id-card-scanned.jpg",
+      "provenance": [],
+      "scanned_of": "DOC-PH-00005-IDCARD",
+      "sha256": "831bb9d3d7f66fdac337f030bcca1028bb6ee275f5efa385dca278266dd8fa56",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00006-FACE",
+      "doc_type": "id_photo",
+      "entity_ids": [
+        "PH-00006"
+      ],
+      "format": "jpg",
+      "is_generated": true,
+      "is_scanned": false,
+      "path": "faces/PH-00006-face.jpg",
+      "prompt_spec": {
+        "caption": "Synthetic ID portrait for policyholder PH-00006 (Germany).",
+        "country": "DE",
+        "doc_id": "DOC-PH-00006-FACE",
+        "holder_id": "PH-00006",
+        "kind": "id_portrait",
+        "model": "gemini-3.1-flash-image",
+        "negative_prompt": "not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border",
+        "params": {
+          "aspect_ratio": "4:5",
+          "resolution": "512",
+          "seed": 4201816
+        },
+        "path": "faces/PH-00006-face.jpg",
+        "prompt": "A neutral passport-style identity portrait of a fictional Germany resident (a man in their thirties with shoulder-length hair): head and shoulders, facing the camera, plain light-grey background, even studio lighting, neutral expression. Photorealistic but an entirely invented, non-existent person. not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border."
+      },
+      "provenance": [],
+      "rendered": true,
+      "sha256": "d7f5af79289c3145c74e1c4423e5b98cc33cb07a1f94bcd9ce94588cac596d21",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00006-IDCARD",
+      "doc_type": "id_card",
+      "entity_ids": [
+        "PH-00006"
+      ],
+      "format": "pdf",
+      "is_scanned": false,
+      "path": "docs/identity/PH-00006-id-card.pdf",
+      "provenance": [
+        {
+          "entity_id": "PH-00006",
+          "field": "national_id",
+          "value": "04131647525"
+        },
+        {
+          "entity_id": "PH-00006",
+          "field": "dob",
+          "value": "1959-04-25"
+        },
+        {
+          "entity_id": "PH-00006",
+          "field": "country",
+          "value": "DE"
+        }
+      ],
+      "sha256": "ce79cdaeae5f0bc8d096af6871edefb075a064d8b49b0f9439c492d465be8178",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-PH-00006-IDCARD-SCAN",
+      "doc_type": "id_card_scanned",
+      "entity_ids": [
+        "PH-00006"
+      ],
+      "format": "jpg",
+      "is_scanned": true,
+      "path": "docs/identity/PH-00006-id-card-scanned.jpg",
+      "provenance": [],
+      "scanned_of": "DOC-PH-00006-IDCARD",
+      "sha256": "a47017aeda69d93736db549d33a567f3f1f5a8c477d9bef28e0cd2e73242ef92",
       "synthetic": true
     },
     {

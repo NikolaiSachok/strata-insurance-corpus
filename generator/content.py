@@ -13,7 +13,7 @@ import datetime as dt
 import random
 
 from . import COMPANY_NAME, CURRENCY_SYMBOL, SYNTHETIC_MARKER
-from .identity import COUNTRY_BY_CODE
+from .identity import ALPHA3, COUNTRY_BY_CODE
 from .model import MAKES_MODELS, VEHICLE_COLOURS, LINE_LABEL, Adjuster, Agent, Claim, Policy, Policyholder
 
 
@@ -483,6 +483,142 @@ def accident_statement_document(model_meta: dict, claim: Claim, policy: Policy, 
         "sketch_collision": collision,
         "sig_a": holder.name,
         "sig_b": other["driver"] if other else "—",
+    }
+
+
+# --------------------------------------------------------------------------- #
+# Identity-verification card (KYC ID scan, issue #11).
+#
+# An insurer holds an on-file copy of each policyholder's identity document. We render a
+# generic European-style ID card carrying realistic synthetic PII (name, document number,
+# national identifier, date of birth, address, portrait) plus an ICAO-9303 TD1 machine-
+# readable zone — exactly the redaction-test material a consuming RAG layer must catch.
+# Everything is deterministic from the holder; the card is marked SYNTHETIC/SPECIMEN.
+# --------------------------------------------------------------------------- #
+
+_MRZ_WEIGHTS = (7, 3, 1)
+
+# Faker occasionally decorates a name with an honorific or an academic suffix
+# ("Dr. Christof Walter B.Sc."). An ID document carries the bare legal name, so we strip
+# these before splitting into surname / given names (and before building the MRZ name line).
+# Honorifics across our six locales (Faker decorates ~5% of names). Matched case-insensitively
+# on the token with dots stripped; compound dotted abbreviations (Dipl.-Ing., Univ.Prof.) are also
+# caught by the dotted-token rule below.
+_NAME_TITLES = {
+    "mr", "mrs", "ms", "miss", "mx", "dr", "prof", "sir", "madam", "rev",  # en
+    "herr", "frau", "fr", "dipl", "ing", "dipl-ing", "univprof", "univ",   # de
+    "sig", "sigra", "dott", "dottssa", "rag", "geom", "avv",               # it
+    "dhr", "mevr", "mw",                                                    # nl
+}
+_NAME_SUFFIXES = {"jr", "sr", "ii", "iii", "iv", "v", "md", "phd", "dds", "dvm", "esq", "do", "edd"}
+
+
+def _is_dotted_abbrev(tok: str) -> bool:
+    """A short, dotted/hyphenated alphabetic token like 'B.Sc.', 'Dipl.-Ing.', 'Univ.Prof.'."""
+    core = tok.replace(".", "").replace("-", "")
+    return "." in tok and core.isalpha() and len(core) <= 8
+
+
+def _strip_name(name: str) -> str:
+    """Drop honorific prefixes and academic suffixes, leaving the bare personal name."""
+    toks = name.split()
+    # leading: explicit titles or dotted abbreviations (a given name never starts dotted)
+    while toks and (toks[0].replace(".", "").replace("-", "").lower() in _NAME_TITLES or _is_dotted_abbrev(toks[0])):
+        toks.pop(0)
+    # trailing: explicit suffixes or dotted academic abbreviations like "B.Sc." / "M.A."
+    while toks and (toks[-1].rstrip(".").lower() in _NAME_SUFFIXES or _is_dotted_abbrev(toks[-1])):
+        toks.pop()
+    return " ".join(toks) if toks else name
+
+
+def _mrz_val(ch: str) -> int:
+    if ch == "<":
+        return 0
+    if ch.isdigit():
+        return int(ch)
+    return ord(ch) - 55  # A=10 .. Z=35
+
+
+def _mrz_check(s: str) -> str:
+    """ICAO 9303 check digit (7-3-1 weighting)."""
+    total = sum(_mrz_val(c) * _MRZ_WEIGHTS[i % 3] for i, c in enumerate(s))
+    return str(total % 10)
+
+
+def _mrz_field(s: str, n: int) -> str:
+    """Uppercase, keep [A-Z0-9], map the rest to filler '<', pad/truncate to n."""
+    out = "".join(c if (c.isalnum()) else "<" for c in s.upper())
+    out = "".join(c if (c.isascii() and (c.isdigit() or "A" <= c <= "Z" or c == "<")) else "<" for c in out)
+    return (out[:n]).ljust(n, "<")
+
+
+def _mrz_name(surname: str, given: str, n: int = 30) -> str:
+    sur = _mrz_field(surname.replace(" ", "<"), n)
+    giv = _mrz_field(given.replace(" ", "<"), n)
+    name = f"{sur.rstrip('<')}<<{giv.rstrip('<')}"
+    return (name[:n]).ljust(n, "<")
+
+
+def _yymmdd(iso_date: str) -> str:
+    d = dt.date.fromisoformat(iso_date)
+    return f"{d.year % 100:02d}{d.month:02d}{d.day:02d}"
+
+
+def id_card_document(model_meta: dict, holder: Policyholder, face_uri: str | None = None) -> dict:
+    """View-model for the policyholder identity card (PDF) + its MRZ.
+
+    ``face_uri`` is an (already-encoded) image source for the portrait, or ``None`` — when the
+    AI face pixels aren't materialised in this corpus the template shows a neutral placeholder.
+    """
+    country = COUNTRY_BY_CODE.get(holder.country)
+    country_name = country.name if country else holder.country
+    nat3 = ALPHA3.get(holder.country, "XXX")
+
+    rng = random.Random(sum(ord(c) for c in holder.id) + 4093)
+    # Physical card/document number (distinct from the national identifier), deterministic.
+    card_no = f"{rng.choice('XYZ')}{rng.randint(0, 9999999):07d}"
+    issue_year = 2016 + rng.randint(0, 5)
+    issue = dt.date(issue_year, rng.randint(1, 12), rng.randint(1, 28))
+    expiry = dt.date(issue.year + 10, issue.month, issue.day)
+
+    # Surname / given split from the bare legal name (last token = surname).
+    parts = _strip_name(holder.name).split()
+    given = " ".join(parts[:-1]) if len(parts) > 1 else (parts[0] if parts else holder.name)
+    surname = parts[-1] if len(parts) > 1 else ""
+
+    # ICAO 9303 TD1 machine-readable zone (3 lines × 30). Sex unspecified ('<').
+    doc_no9 = _mrz_field(card_no, 9)
+    line1 = f"I<{nat3}{doc_no9}{_mrz_check(doc_no9)}" + "<" * 15
+    line1 = (line1[:30]).ljust(30, "<")
+    dob6 = _yymmdd(holder.dob)
+    exp6 = _yymmdd(expiry.isoformat())
+    optional = "<" * 11
+    composite = _mrz_check(doc_no9 + _mrz_check(doc_no9) + dob6 + _mrz_check(dob6) + exp6 + _mrz_check(exp6) + optional)
+    line2 = f"{dob6}{_mrz_check(dob6)}<{exp6}{_mrz_check(exp6)}{nat3}{optional}{composite}"
+    line2 = (line2[:30]).ljust(30, "<")
+    line3 = _mrz_name(surname, given)
+
+    return {
+        "marker": SYNTHETIC_MARKER,
+        "company": COMPANY_NAME,
+        "doc_title": "Identity Verification — On-File Document Copy",
+        "country_name": country_name,
+        "card_title": f"{country_name} — Identity Card".upper(),
+        "holder_id": holder.id,
+        "surname": surname or holder.name,
+        "given_names": given,
+        "full_name": holder.name,
+        "dob": _eu_date(holder.dob),
+        "nationality": country_name,
+        "nat3": nat3,
+        "id_label": country.id_label if country else "National ID",
+        "national_id": holder.national_id,
+        "card_no": card_no,
+        "address": _address(holder),
+        "issue_date": _eu_date(issue.isoformat()),
+        "expiry_date": _eu_date(expiry.isoformat()),
+        "face_uri": face_uri,
+        "mrz": [line1, line2, line3],
     }
 
 
