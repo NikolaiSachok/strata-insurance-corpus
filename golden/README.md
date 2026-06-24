@@ -35,9 +35,10 @@ provenance is the explicit **chain** and `relevant_doc_ids` spans the whole chai
                          {"entity_id": "MOT-0000005", "field": "vehicle", "value": "Opel Astra", "doc_ids": ["DOC-MOT-0000005-DEC"]}]}}
 ```
 
-The FNOL ties the claim to its policy (the bridge); the declarations hold the policy's vehicle/premium. A
-third pattern is a filtered lookup — identify a closed claim by its cause (FNOL/adjuster report) then read
-its settlement amount (settlement letter). The answer is the terminal hop's value.
+The FNOL ties the claim to its policy (the bridge); the declarations hold the policy's vehicle/premium —
+facts that appear on **no** claim document, so the join is genuinely required. The answer is the terminal
+hop's value. (Joins whose answer fact already co-occurs with the bridge on one document — e.g. a settlement
+letter stating both the cause and the amount — are single-doc and are *not* emitted as multi-hop.)
 
 ## Grounded by construction (#13)
 
@@ -53,7 +54,7 @@ asserted by each of its cited documents, or validation fails.
   policyholder national identifier, lines of business.
 - ✅ **`aggregation`** — corpus-level totals/counts (open reserve, total premium, open-claim count),
   asserted on the registers that tabulate them.
-- ✅ **`multi_hop`** — cross-document joins (claim→policy→declarations for vehicle/premium; cause→settlement
-  filtered lookup), each with an explicit, grounded hop chain.
+- ✅ **`multi_hop`** — cross-document joins (claim→policy→declarations for the insured vehicle / annual
+  premium — facts that live on no claim document), each with an explicit, grounded hop chain.
 - ⏳ An `eval.py` harness computing Recall@K / nDCG / answer-correctness (reuses Strata-RAG metrics where
   practical) — #15.

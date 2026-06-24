@@ -13,7 +13,6 @@ Output format is aligned with general enterprise-RAG benchmarks:
 from __future__ import annotations
 
 import json
-from collections import Counter
 from pathlib import Path
 
 from .identity import COUNTRY_BY_CODE
@@ -100,8 +99,11 @@ def build_golden(model: Model, prov: dict) -> list[dict]:
 
     # --- multi-hop / cross-document --------------------------------------- #
     # The answer lives on a document you reach only by traversing from another: the FNOL ties a claim
-    # to its policy (the bridge), and the policy's facts live on the declarations. Each hop is grounded,
-    # and relevant_doc_ids spans the whole chain.
+    # to its policy (the bridge), but the policy's facts (vehicle, premium) live on the *declarations* and
+    # appear on no claim document — so answering genuinely requires both. Each hop is grounded, and
+    # relevant_doc_ids spans the whole chain. (We deliberately avoid "joins" whose answer fact already
+    # co-occurs with the bridge fact on one document, e.g. a settlement letter that states both cause and
+    # amount — those are single-doc, not multi-hop.)
     for claim in model.claims:
         bridge = _hop(prov, claim.id, "policy_id")  # claim -> policy (FNOL)
         if bridge is None:
@@ -119,21 +121,6 @@ def build_golden(model: Model, prov: dict) -> list[dict]:
                 f"Q-MH-{claim.id}-premium",
                 f"What is the annual premium on the policy under which claim {claim.id} was filed?",
                 [bridge, prem]))
-
-    # Filtered lookup: identify a closed claim by its cause on a policy (FNOL/adjuster report), then read
-    # its settlement amount (settlement letter). Emitted only where (policy, cause) is unambiguous.
-    closed = [c for c in model.claims if c.status == "closed"]
-    cause_key = Counter((c.policy_id, c.cause) for c in closed)
-    for claim in closed:
-        if cause_key[(claim.policy_id, claim.cause)] != 1:
-            continue
-        cause_hop = _hop(prov, claim.id, "cause")
-        paid_hop = _hop(prov, claim.id, "paid")
-        if cause_hop and paid_hop:
-            items.append(_multihop(
-                f"Q-MH-{claim.id}-settlement",
-                f"How much did Meridian Mutual pay to settle the {cause_hop['value']} claim on policy {claim.policy_id}?",
-                [cause_hop, paid_hop]))
 
     items.sort(key=lambda x: x["id"])
     return items
