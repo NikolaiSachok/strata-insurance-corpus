@@ -41,6 +41,15 @@ def _doc_text(path):
         parts = [p.text for p in d.paragraphs]
         parts += [c.text for t in d.tables for r in t.rows for c in r.cells]
         return "\n".join(parts)
+    if ext == ".xlsx":
+        import openpyxl
+
+        wb = openpyxl.load_workbook(str(path), read_only=True, data_only=True)
+        cells = []
+        for ws in wb.worksheets:
+            for row in ws.iter_rows(values_only=True):
+                cells += [str(c) for c in row if c is not None]
+        return "\n".join(cells)
     if ext in (".md", ".csv"):
         return path.read_text(encoding="utf-8")
     return None
