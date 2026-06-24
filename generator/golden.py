@@ -98,24 +98,17 @@ def build_golden(model: Model, prov: dict) -> list[dict]:
         "Which lines of business does Meridian Mutual underwrite?", "semantic")
 
     # --- multi-hop / cross-document --------------------------------------- #
-    # The answer lives on a document you reach only by traversing from another: the FNOL ties a claim
-    # to its policy (the bridge), but the policy's facts (vehicle, premium) live on the *declarations* and
-    # appear on no claim document — so answering genuinely requires both. Each hop is grounded, and
-    # relevant_doc_ids spans the whole chain. (We deliberately avoid "joins" whose answer fact already
-    # co-occurs with the bridge fact on one document, e.g. a settlement letter that states both cause and
-    # amount — those are single-doc, not multi-hop.)
+    # The answer lives on a document you reach only by traversing from another: the FNOL ties a claim to
+    # its policy (the bridge), but the policy's *premium* lives on the declarations and appears on no claim
+    # document — so answering genuinely requires both hops. Each hop is grounded and relevant_doc_ids spans
+    # the chain. We deliberately avoid "joins" whose answer fact already co-occurs with the bridge on one
+    # document — e.g. the settlement letter states both the cause and the amount, and the FNOL already names
+    # the insured vehicle — those are single-doc answerable, not multi-hop (enforced by a test).
     for claim in model.claims:
         bridge = _hop(prov, claim.id, "policy_id")  # claim -> policy (FNOL)
         if bridge is None:
             continue
-        policy_id = bridge["value"]
-        veh = _hop(prov, policy_id, "vehicle")  # policy -> insured vehicle (declarations)
-        if veh is not None:
-            items.append(_multihop(
-                f"Q-MH-{claim.id}-vehicle",
-                f"What make and model of vehicle was involved in claim {claim.id}?",
-                [bridge, veh]))
-        prem = _hop(prov, policy_id, "annual_premium")  # policy -> premium (declarations)
+        prem = _hop(prov, bridge["value"], "annual_premium")  # policy -> premium (declarations)
         if prem is not None:
             items.append(_multihop(
                 f"Q-MH-{claim.id}-premium",

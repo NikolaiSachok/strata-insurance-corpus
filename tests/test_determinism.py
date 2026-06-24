@@ -228,6 +228,23 @@ def test_multihop_golden_is_grounded_cross_document(tmp_path):
             for did in h["doc_ids"]:
                 assert doc_assert[did][(h["entity_id"], h["field"])] == h["value"], (q["id"], did)
 
+    # Genuinely cross-document: the answer must NOT be readable in the bridge (non-terminal) documents,
+    # otherwise the question is single-doc answerable (the trap that sank the vehicle/settlement joins).
+    try:
+        import pypdfium2 as pdfium
+    except Exception as e:  # pragma: no cover
+        pytest.skip(f"pypdfium2 unavailable: {e}")
+    path_for = {d["doc_id"]: d["path"] for d in manifest["documents"]}
+    for q in mh:
+        hops = q["provenance"]["hops"]
+        terminal_docs = set(hops[-1]["doc_ids"])
+        for did in set(q["relevant_doc_ids"]) - terminal_docs:  # the bridge docs
+            p = tmp_path / "mh" / path_for[did]
+            if p.suffix.lower() != ".pdf":
+                continue
+            text = "\n".join(pg.get_textpage().get_text_range() for pg in pdfium.PdfDocument(str(p)))
+            assert q["answer"] not in text, f"{q['id']}: answer leaks into bridge doc {did} (not multi-hop)"
+
 
 def test_generated_corpus_validates(tmp_path):
     """A freshly generated sample passes full validation — including golden answer-grounding (#13)."""

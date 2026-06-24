@@ -28,17 +28,19 @@ A `multi_hop` question's answer lives on a document you reach only by traversing
 provenance is the explicit **chain** and `relevant_doc_ids` spans the whole chain:
 
 ```json
-{"id": "Q-MH-C-1003-vehicle", "question": "What make and model of vehicle was involved in claim C-1003?",
- "answer": "Opel Astra", "relevant_doc_ids": ["DOC-C-1003-FNOL", "DOC-MOT-0000005-DEC"],
+{"id": "Q-MH-C-1000-premium", "question": "What is the annual premium on the policy under which claim C-1000 was filed?",
+ "answer": "€3,525.00", "relevant_doc_ids": ["DOC-C-1000-FNOL", "DOC-COM-0000003-DEC"],
  "query_class": "multi_hop",
- "provenance": {"hops": [{"entity_id": "C-1003", "field": "policy_id", "value": "MOT-0000005", "doc_ids": ["DOC-C-1003-FNOL"]},
-                         {"entity_id": "MOT-0000005", "field": "vehicle", "value": "Opel Astra", "doc_ids": ["DOC-MOT-0000005-DEC"]}]}}
+ "provenance": {"hops": [{"entity_id": "C-1000", "field": "policy_id", "value": "COM-0000003", "doc_ids": ["DOC-C-1000-FNOL"]},
+                         {"entity_id": "COM-0000003", "field": "annual_premium", "value": "€3,525.00", "doc_ids": ["DOC-COM-0000003-DEC"]}]}}
 ```
 
-The FNOL ties the claim to its policy (the bridge); the declarations hold the policy's vehicle/premium —
-facts that appear on **no** claim document, so the join is genuinely required. The answer is the terminal
-hop's value. (Joins whose answer fact already co-occurs with the bridge on one document — e.g. a settlement
-letter stating both the cause and the amount — are single-doc and are *not* emitted as multi-hop.)
+The FNOL ties the claim to its policy (the bridge); the policy's **annual premium** lives on the
+declarations and appears on **no** claim document, so the join is genuinely required. The answer is the
+terminal hop's value. Joins whose answer fact already co-occurs with the bridge on one document are
+single-doc and are *not* emitted as multi-hop — e.g. a settlement letter stating both the cause and the
+amount, or the FNOL, which already names the insured vehicle. (A test enforces that a multi-hop answer is
+not readable in its bridge document.)
 
 ## Grounded by construction (#13)
 
@@ -54,7 +56,7 @@ asserted by each of its cited documents, or validation fails.
   policyholder national identifier, lines of business.
 - ✅ **`aggregation`** — corpus-level totals/counts (open reserve, total premium, open-claim count),
   asserted on the registers that tabulate them.
-- ✅ **`multi_hop`** — cross-document joins (claim→policy→declarations for the insured vehicle / annual
-  premium — facts that live on no claim document), each with an explicit, grounded hop chain.
+- ✅ **`multi_hop`** — cross-document joins (claim→policy→declarations for the policy's annual premium — a
+  fact that lives on no claim document), each with an explicit, grounded hop chain.
 - ⏳ An `eval.py` harness computing Recall@K / nDCG / answer-correctness (reuses Strata-RAG metrics where
   practical) — #15.
