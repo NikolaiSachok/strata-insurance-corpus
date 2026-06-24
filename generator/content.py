@@ -501,20 +501,32 @@ _MRZ_WEIGHTS = (7, 3, 1)
 # Faker occasionally decorates a name with an honorific or an academic suffix
 # ("Dr. Christof Walter B.Sc."). An ID document carries the bare legal name, so we strip
 # these before splitting into surname / given names (and before building the MRZ name line).
-_NAME_TITLES = {"mr", "mrs", "ms", "miss", "mx", "dr", "prof", "sir", "madam", "rev"}
-_NAME_SUFFIXES = {"jr", "sr", "ii", "iii", "iv", "v", "md", "phd", "dds", "dvm", "esq", "do"}
+# Honorifics across our six locales (Faker decorates ~5% of names). Matched case-insensitively
+# on the token with dots stripped; compound dotted abbreviations (Dipl.-Ing., Univ.Prof.) are also
+# caught by the dotted-token rule below.
+_NAME_TITLES = {
+    "mr", "mrs", "ms", "miss", "mx", "dr", "prof", "sir", "madam", "rev",  # en
+    "herr", "frau", "fr", "dipl", "ing", "dipl-ing", "univprof", "univ",   # de
+    "sig", "sigra", "dott", "dottssa", "rag", "geom", "avv",               # it
+    "dhr", "mevr", "mw",                                                    # nl
+}
+_NAME_SUFFIXES = {"jr", "sr", "ii", "iii", "iv", "v", "md", "phd", "dds", "dvm", "esq", "do", "edd"}
+
+
+def _is_dotted_abbrev(tok: str) -> bool:
+    """A short, dotted/hyphenated alphabetic token like 'B.Sc.', 'Dipl.-Ing.', 'Univ.Prof.'."""
+    core = tok.replace(".", "").replace("-", "")
+    return "." in tok and core.isalpha() and len(core) <= 8
 
 
 def _strip_name(name: str) -> str:
     """Drop honorific prefixes and academic suffixes, leaving the bare personal name."""
     toks = name.split()
-    while toks and toks[0].rstrip(".").lower() in _NAME_TITLES:
+    # leading: explicit titles or dotted abbreviations (a given name never starts dotted)
+    while toks and (toks[0].replace(".", "").replace("-", "").lower() in _NAME_TITLES or _is_dotted_abbrev(toks[0])):
         toks.pop(0)
-    # trailing: explicit suffixes, or dotted academic abbreviations like "B.Sc." / "M.A."
-    while toks and (
-        toks[-1].rstrip(".").lower() in _NAME_SUFFIXES
-        or ("." in toks[-1] and toks[-1].replace(".", "").isalpha() and len(toks[-1].replace(".", "")) <= 4)
-    ):
+    # trailing: explicit suffixes or dotted academic abbreviations like "B.Sc." / "M.A."
+    while toks and (toks[-1].rstrip(".").lower() in _NAME_SUFFIXES or _is_dotted_abbrev(toks[-1])):
         toks.pop()
     return " ".join(toks) if toks else name
 

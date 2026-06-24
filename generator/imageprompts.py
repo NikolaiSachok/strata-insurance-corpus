@@ -69,8 +69,8 @@ _FACE_NEGATIVE = (
 
 # Deterministic appearance descriptors so each policyholder's synthetic portrait is a distinct
 # person (the recipe stays reproducible — derived from the holder id, not wall-clock/RNG). Gender
-# is intentionally NOT asserted: policyholder gender is not a modelled attribute (see backlog),
-# so a portrait's apparent gender is incidental and may not track the name's typical gender.
+# is NOT a modelled attribute (see backlog #34), but the portrait's apparent gender is inferred
+# best-effort from the given name (_infer_gender) so the photo tracks the name where unambiguous.
 _FACE_AGES = ("a young {who}", "a {who} in their thirties", "a middle-aged {who}", "an older {who}")
 _FACE_HAIR = ("with short hair", "with glasses", "with shoulder-length hair", "with greying hair",
               "with curly hair", "with straight dark hair", "with light hair", "with a shaved head")
