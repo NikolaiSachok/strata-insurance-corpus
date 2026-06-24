@@ -16,15 +16,16 @@ scheduled (M3–M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and the **[iss
 
 ```bash
 make sample     # -> committed sample/ slice + golden/golden.jsonl  (deterministic)
-make generate   # -> full corpus/ : 305 entities, 1038 documents (958 born-digital+scanned + 80 AI evidence images as committed prompt-specs), 287 golden Qs  (gitignored)
+make generate   # -> full corpus/ : 305 entities, 1278 documents (1118 born-digital+scanned + 160 AI images as committed prompt-specs), 367 golden Qs  (gitignored)
 make validate   # integrity + golden-support checks
 make stats      # corpus composition (documents by format/type, golden by class)
 make test       # determinism + referential-integrity suite
 ```
 
-Full-corpus composition (`make stats OUT=corpus`): 670 PDF · 121 Word · 3 xlsx · 1 csv · 2 Markdown ·
-161 scanned JPG · 80 AI evidence images (committed as seeded **prompt-specs** in `image-prompts.jsonl`;
-pixels rendered for the `sample/` slice, on-demand for the HF release); golden = 284 semantic + 3 aggregation.
+Full-corpus composition (`make stats OUT=corpus`): 750 PDF · 121 Word · 3 xlsx · 1 csv · 2 Markdown ·
+241 scanned JPG · 160 AI images — 80 evidence photos + 80 ID portraits (committed as seeded
+**prompt-specs** in `image-prompts.jsonl`; pixels rendered for the `sample/` slice, on-demand for the HF
+release); golden = 364 semantic + 3 aggregation.
 The committed `sample/` slice contains at least one of every built doc type (enforced by a test), so the
 repo is fully exercisable without a full run.
 

@@ -29,6 +29,7 @@ from .content import (
     estimate_base,
     estimate_document,
     fnol_document,
+    id_card_document,
     schedule_document,
     settlement_letter_document,
 )
@@ -80,7 +81,9 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
     settlement_doc_for_claim: dict[str, str] = {}
     tabular_doc_ids: dict[str, str] = {}
     kb_doc_ids: dict[str, str] = {}
+    idcard_doc_for_holder: dict[str, str] = {}
     evidence_specs: list[dict] = []
+    face_specs: list[dict] = []
 
     if render:
         from .render.docx import write_contract_docx  # lazy imports
@@ -118,6 +121,19 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
                     source_doc_id=source_doc_id,
                 )
             )
+
+        def _face_uri(rel: str) -> str | None:
+            """Base64 data-URI for a face image if its pixels exist in this corpus, else None.
+
+            A data-URI keeps the PDF self-contained and byte-stable (no absolute path leaks in,
+            no real local filesystem path embedded) and lets the same template render with a
+            neutral placeholder when only the prompt-spec (not the pixels) is present."""
+            import base64
+
+            p = out / rel
+            if not p.exists():
+                return None
+            return "data:image/jpeg;base64," + base64.b64encode(p.read_bytes()).decode("ascii")
 
         # 2+3. policy family: declarations (PDF), contract (docx), endorsements (PDF), schedule (PDF)
         for policy in model.policies:
@@ -191,6 +207,29 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
                     sha256=sha256_file(out / sched_rel),
                 )
             )
+
+        # Identity family (#11): one on-file ID card per policyholder (real synthetic PII +
+        # ICAO MRZ + synthetic portrait) + a scanned variant. The portrait is a separate
+        # non-deterministic image tier (prompt-spec committed; pixels for sample/, on-demand
+        # for the full set) — the card embeds it when present, else a neutral placeholder.
+        for holder in model.policyholders:
+            face = imageprompts.face_spec(holder, seed)
+            face_specs.append(face)
+
+            idc_id = f"DOC-{holder.id}-IDCARD"
+            idc_rel = f"docs/identity/{holder.id}-id-card.pdf"
+            idcard_doc_for_holder[holder.id] = idc_id
+            emit_pdf(
+                idc_id, "id_card", "id_card.html.j2",
+                id_card_document(model.meta, holder, _face_uri(face["path"])),
+                idc_rel, [holder.id],
+                [
+                    Assertion(holder.id, "national_id", holder.national_id),
+                    Assertion(holder.id, "dob", holder.dob),
+                    Assertion(holder.id, "country", holder.country),
+                ],
+            )
+            emit_scan(idc_rel, idc_id, "id_card_scanned", [holder.id])
 
         # Claim family: FNOL (all) + adjuster report (all) + estimate (open/closed)
         # + settlement letter (closed) | denial letter (denied)
@@ -317,26 +356,28 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
                 )
             )
 
-        # Evidence images (#11): commit the deterministic prompt-spec for every claim;
-        # the pixels are a separate non-deterministic tier (rendered for sample/, on-demand
-        # for the HF release). A manifest record always exists; rendered=True only if the
-        # pixel file is already present in evidence/.
-        evidence_specs.sort(key=lambda s: s["doc_id"])
+        # Generated-image tier (#11): commit the deterministic prompt-spec for every claim
+        # evidence photo and every policyholder ID portrait; the pixels are a separate
+        # non-deterministic tier (rendered for sample/, on-demand for the HF release). A manifest
+        # record always exists; rendered=True only if the pixel file is already present.
+        image_specs = [(s, "evidence_photo", s["claim_id"]) for s in evidence_specs]
+        image_specs += [(s, "id_photo", s["holder_id"]) for s in face_specs]
+        image_specs.sort(key=lambda t: t[0]["doc_id"])
         (out / "image-prompts.jsonl").write_bytes(
-            ("\n".join(json.dumps(s, sort_keys=True, ensure_ascii=False) for s in evidence_specs) + "\n").encode("utf-8")
-            if evidence_specs
+            ("\n".join(json.dumps(s, sort_keys=True, ensure_ascii=False) for s, _, _ in image_specs) + "\n").encode("utf-8")
+            if image_specs
             else b""
         )
-        for spec in evidence_specs:
+        for spec, doc_type, entity_id in image_specs:
             pixel = out / spec["path"]
             rendered = pixel.exists()
             records.append(
                 DocRecord(
                     doc_id=spec["doc_id"],
-                    doc_type="evidence_photo",
+                    doc_type=doc_type,
                     format="jpg",
                     path=spec["path"],
-                    entity_ids=[spec["claim_id"]],
+                    entity_ids=[entity_id],
                     is_generated=True,
                     rendered=rendered,
                     sha256=sha256_file(pixel) if rendered else "",
@@ -349,7 +390,8 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
 
     # 5. golden
     golden = build_golden(
-        model, fnol_doc_for_claim, decl_doc_for_policy, settlement_doc_for_claim, tabular_doc_ids, kb_doc_ids
+        model, fnol_doc_for_claim, decl_doc_for_policy, settlement_doc_for_claim,
+        tabular_doc_ids, kb_doc_ids, idcard_doc_for_holder,
     )
     write_golden(out, golden)
 

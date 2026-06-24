@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>{{ holder_id }} — Identity Card</title>
+<style>
+.card { position: relative; width: 86mm; height: 60mm; margin: 6px 0 14px; border: 1px solid #6b7c93;
+        border-radius: 10px; padding: 7px 9px 16px; background: linear-gradient(135deg, #eef3fa 0%, #e3ecf6 60%, #dfe9f4 100%);
+        overflow: hidden; }
+.card .cardhead { display: flex; justify-content: space-between; align-items: baseline;
+        border-bottom: 1px solid #9bb0c9; padding-bottom: 2px; margin-bottom: 5px; }
+.card .ctitle { font-size: 8pt; font-weight: 700; color: #16335c; letter-spacing: 0.4px; }
+.card .specimen { font-size: 6.5pt; font-weight: 700; color: #c0392b; border: 1px solid #c0392b;
+        padding: 0 3px; border-radius: 2px; }
+.card .body { display: flex; gap: 8px; }
+.card .photo { width: 22mm; height: 28mm; border: 1px solid #6b7c93; border-radius: 3px; background: #cdd7e3;
+        object-fit: cover; display: flex; align-items: center; justify-content: center; }
+.card .photo .ph { font-size: 6pt; color: #6b7c93; text-align: center; line-height: 1.3; }
+.card .fields { flex: 1; }
+.card .f { margin-bottom: 1.5px; }
+.card .fl { font-size: 5.6pt; text-transform: uppercase; color: #50627c; letter-spacing: 0.3px; line-height: 1.1; }
+.card .fv { font-size: 8pt; font-weight: 600; color: #14223a; line-height: 1.05; }
+.card .addr { font-size: 6.4pt; color: #2c3e57; margin-top: 3px; }
+.card .mrz { position: absolute; left: 0; right: 0; bottom: 0; background: #f7f9fc; border-top: 1px solid #9bb0c9;
+        font-family: "Courier New", monospace; font-size: 7.4pt; letter-spacing: 0.6px; color: #11203a;
+        padding: 2px 9px 3px; white-space: pre; }
+.card .wm { position: absolute; top: 46%; left: -6%; right: -6%; text-align: center; transform: rotate(-18deg);
+        font-size: 26pt; font-weight: 800; color: rgba(192, 57, 43, 0.16); letter-spacing: 4px; pointer-events: none; }
+.idnote { font-size: 8pt; color: #444; margin-top: 4px; }
+.idnote .lbl { color: #555; }
+</style></head>
+<body>
+  <div class="synthetic-banner">{{ marker }}</div>
+  <div class="masthead">
+    <div class="company">{{ company }}</div>
+    <div class="doc-title">{{ doc_title }}</div>
+  </div>
+
+  <h2>Policyholder identity document — {{ holder_id }}</h2>
+
+  <div class="card">
+    <div class="wm">SPECIMEN</div>
+    <div class="cardhead">
+      <span class="ctitle">{{ card_title }}</span>
+      <span class="specimen">SPECIMEN</span>
+    </div>
+    <div class="body">
+      {% if face_uri %}
+      <img class="photo" src="{{ face_uri }}" alt="portrait">
+      {% else %}
+      <div class="photo"><span class="ph">PHOTO<br>(synthetic<br>portrait)</span></div>
+      {% endif %}
+      <div class="fields">
+        <div class="f"><div class="fl">Surname</div><div class="fv">{{ surname }}</div></div>
+        <div class="f"><div class="fl">Given names</div><div class="fv">{{ given_names }}</div></div>
+        <div class="f"><div class="fl">Nationality</div><div class="fv">{{ nationality }} ({{ nat3 }})</div></div>
+        <div class="f"><div class="fl">Date of birth</div><div class="fv">{{ dob }}</div></div>
+        <div class="f"><div class="fl">Document No.</div><div class="fv">{{ card_no }}</div></div>
+        <div class="f"><div class="fl">Expiry</div><div class="fv">{{ expiry_date }}</div></div>
+      </div>
+    </div>
+    <div class="addr">{{ address }}</div>
+    <div class="mrz">{{ mrz[0] }}
+{{ mrz[1] }}
+{{ mrz[2] }}</div>
+  </div>
+
+  <table class="kv">
+    <tr><td class="k">{{ id_label }} (national identifier)</td><td class="v">{{ national_id }}</td></tr>
+    <tr><td class="k">Card document number</td><td class="v">{{ card_no }}</td></tr>
+    <tr><td class="k">Date of issue</td><td class="v">{{ issue_date }}</td></tr>
+    <tr><td class="k">Date of expiry</td><td class="v">{{ expiry_date }}</td></tr>
+    <tr><td class="k">Residential address</td><td class="v">{{ address }}</td></tr>
+  </table>
+
+  <p class="idnote">Retained by {{ company }} as an on-file identity-verification copy (KYC). The
+  national identifier is <span class="lbl">synthetic and format-shaped but deliberately invalid</span>;
+  the portrait depicts a fully synthetic, non-existent person.</p>
+
+  <p class="meta-foot">This document is synthetic and generated for retrieval/benchmark testing.
+  No real person, document, or identifier is described. SPECIMEN — not a valid identity document.</p>
+</body>
+</html>

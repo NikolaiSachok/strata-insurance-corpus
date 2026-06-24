@@ -3,6 +3,10 @@
 /corpus/
 *.qdrant/
 
+# Raw AI-image generation outputs (the /generate-image skill writes here). Finalized,
+# committed pixels live under sample/ (faces/, evidence/); these working originals do not.
+/generated_images/
+
 # LLM content cache (keyed by seed+doc_id; reproducible, not source)
 .cache/
 .llm-cache/

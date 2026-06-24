@@ -41,6 +41,11 @@ window around the anchor; each claim's date-of-loss falls inside its policy term
 - **Limits** are line-shaped (amounts in €): Motor carries BI-per-person / BI-per-accident / PD; Household
   carries dwelling / personal-property / personal-liability; Commercial carries building / BPP /
   general-liability.
+- **Identity document (#11):** every policyholder has an on-file **ID card** (KYC copy) surfacing their
+  real synthetic PII — `name`, `national_id`, `dob`, address — plus an ICAO-9303 TD1 **machine-readable
+  zone** and a synthetic AI portrait. This drives an *identity* semantic golden class (`Q-PH-*-national-id`:
+  the policyholder's national identifier, supported by their ID card). Gender is **not** modelled — the
+  portrait's apparent gender is inferred best-effort from the given name for realism, not a stored fact.
 
 ## `model.json`
 
