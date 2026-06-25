@@ -11,7 +11,7 @@ OUT   ?= corpus
 # processes. run.py re-execs with this too, so direct invocation is covered.
 export PYTHONHASHSEED := 0
 
-.PHONY: help generate sample validate stats test clean
+.PHONY: help generate sample validate stats eval test clean
 
 help:
 	@echo "Targets (see BRIEF.md):"
@@ -19,6 +19,7 @@ help:
 	@echo "  sample             - regenerate the committed sample/ slice (+ golden/golden.jsonl)"
 	@echo "  validate OUT=<dir> - validate manifest/schema + that every golden Q has a supporting doc (default: corpus/)"
 	@echo "  stats OUT=<dir>    - print corpus composition (documents by format/type, golden by class)"
+	@echo "  eval [PRED=<file>] - score predictions vs golden/ (Recall@K/nDCG/EM/F1); no PRED -> oracle self-check"
 	@echo "  test               - run the generator test suite (determinism, etc.)"
 	@echo "  clean              - remove generated corpus/ + caches"
 
@@ -37,6 +38,16 @@ validate:
 
 stats:
 	$(RUN) python -m generator.stats --out $(OUT)
+
+# Score a predictions file against the committed golden set. With no PRED, run the oracle
+# self-check (a perfect run -> 1.0 on every metric except recall@1 for multi-doc questions).
+GOLDEN ?= golden/golden.jsonl
+eval:
+ifdef PRED
+	$(RUN) python -m generator.eval --golden $(GOLDEN) --predictions $(PRED)
+else
+	$(RUN) python -m generator.eval --golden $(GOLDEN) --oracle
+endif
 
 test:
 	$(RUN) --extra dev pytest -q

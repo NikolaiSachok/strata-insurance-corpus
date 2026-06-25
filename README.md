@@ -6,12 +6,13 @@
 > exercise and benchmark document-RAG systems on *enterprise-shaped* data. Usable standalone with any
 > RAG stack, or as a drop-in corpus for [Strata-RAG](https://github.com/NikolaiSachok/Strata-RAG).
 
-**Status: 🚧 M1–M3 complete; M4 in progress.** The seeded generator and entity model, all born-digital
+**Status: 🚧 M1–M4 complete; M5 in progress.** The seeded generator and entity model, all born-digital
 document families (policy / claim / tabular / knowledge), **scanned (OCR-target) variants** of the claim
 forms/letters, **AI evidence photos + identity cards (ID scans) with synthetic portraits**, a
-**redaction ground-truth index** (every PII span catalogued), the manifest + provenance, and the
-golden-eval set (semantic + aggregation + multi-hop) run end-to-end today. The eval harness and the Strata-RAG
-adapter are scheduled (M4–M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and the **[issues](../../issues)**.
+**redaction ground-truth index** (every PII span catalogued), the manifest + provenance, the
+golden-eval set (semantic + aggregation + multi-hop), and a **reference eval harness**
+(Recall@K / nDCG / EM / F1) run end-to-end today. The Strata-RAG adapter + HuggingFace release are
+scheduled (M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and the **[issues](../../issues)**.
 
 ### What runs today
 
@@ -20,6 +21,7 @@ make sample     # -> committed sample/ slice + golden/golden.jsonl  (determinist
 make generate   # -> full corpus/ : 305 entities, 1278 documents (1118 born-digital+scanned + 160 AI images as committed prompt-specs), 447 golden Qs, 6374 PII spans  (gitignored)
 make validate   # integrity + golden-support checks
 make stats      # corpus composition (documents by format/type, golden by class)
+make eval       # score predictions vs golden (Recall@K/nDCG/EM/F1); no PRED -> oracle self-check
 make test       # determinism + referential-integrity suite
 ```
 
@@ -51,8 +53,10 @@ customer FAQ (Markdown) and a claims-handling manual (docx). All renderers byte-
 (e.g. *"the annual premium for the policy under which claim C was filed"* — a fact on no claim document, so
 it must join the FNOL to the declarations) golden-question classes, each **grounded in document provenance** — built from the
 `(entity, field, value)` facts each document asserts, so a golden answer is exactly what its cited documents
-state and a multi-hop answer's chain is explicit (enforced by `make validate`). The doc-type × format
-build-out is tracked in [docs/format-matrix.md](docs/format-matrix.md).
+state and a multi-hop answer's chain is explicit (enforced by `make validate`). A dependency-free **reference
+eval harness** (`generator/eval.py`, `make eval`) scores a system's predictions against the golden set —
+Recall@K / nDCG@K / exact-match / token-F1, broken down by query class — so the corpus is usable standalone
+with any RAG stack. The doc-type × format build-out is tracked in [docs/format-matrix.md](docs/format-matrix.md).
 
 ---
 
@@ -104,7 +108,7 @@ Motor · Household · Small-commercial lines, with policyholders across six Euro
 ```
 generator/   the seeded synthetic-data pipeline (model → content → render + provenance)   [M1 ✅]
 sample/      a small, committed slice of the corpus (so the repo is usable without a full run) [M1 ✅]
-golden/      the golden evaluation set — semantic + aggregation + multi-hop classes (eval harness: M4 ⏳)  [classes ✅]
+golden/      the golden evaluation set (semantic + aggregation + multi-hop) + reference eval harness   [M4 ✅]
 adapter/     the Strata-RAG source adapter (register_adapter / register_family)             [M5 ⏳]
 docs/        the data model, the format matrix, related work                                 [M1 ✅]
 Makefile     generate / sample / validate / test targets                                     [M1 ✅]
