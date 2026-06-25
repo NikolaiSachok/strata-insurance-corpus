@@ -38,6 +38,9 @@ def test_ndcg_at_k():
     assert abs(ndcg_at_k({"a", "b"}, ["a", "c", "b"], 3) - dcg / idcg) < 1e-9
     assert ndcg_at_k({"a"}, ["a"], 5) == 1.0  # perfect rank
     assert ndcg_at_k({"a"}, ["x", "y"], 5) == 0.0  # not retrieved
+    # a repeated doc is one ranked result — metrics must never exceed 1.0 (textbook dedup)
+    assert ndcg_at_k({"a"}, ["a", "a", "a"], 5) == 1.0
+    assert recall_at_k({"a", "b"}, ["a", "a", "b"], 2) == 1.0  # distinct ranking [a,b] fits top-2
 
 
 def test_token_f1():

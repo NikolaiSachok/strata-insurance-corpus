@@ -40,16 +40,22 @@ def normalize(s) -> str:
     return _WS.sub(" ", str(s).strip().lower())
 
 
+def _rank(retrieved: list) -> list:
+    """A ranking of DISTINCT docs (first occurrence wins) — a doc repeated by the system (e.g. from two
+    chunks) is one ranked result, so it can't inflate retrieval metrics."""
+    return list(dict.fromkeys(retrieved))
+
+
 def recall_at_k(relevant, retrieved: list, k: int) -> float:
     rel = set(relevant)
     if not rel:
         return 0.0
-    return len(rel & set(retrieved[:k])) / len(rel)
+    return len(rel & set(_rank(retrieved)[:k])) / len(rel)
 
 
 def ndcg_at_k(relevant, retrieved: list, k: int) -> float:
     rel = set(relevant)
-    dcg = sum(1.0 / math.log2(i + 2) for i, d in enumerate(retrieved[:k]) if d in rel)
+    dcg = sum(1.0 / math.log2(i + 2) for i, d in enumerate(_rank(retrieved)[:k]) if d in rel)
     ideal = sum(1.0 / math.log2(i + 2) for i in range(min(len(rel), k)))
     return dcg / ideal if ideal else 0.0
 
@@ -91,6 +97,9 @@ def evaluate(golden: list, predictions: dict, ks=(1, 5, 10)) -> dict:
     """Score ``predictions`` (id -> {retrieved_doc_ids, answer}) against ``golden``."""
     rows, by_class, answered = [], defaultdict(list), 0
     for q in golden:
+        missing = [f for f in ("id", "answer", "relevant_doc_ids", "query_class") if f not in q]
+        if missing:
+            raise ValueError(f"golden question {q.get('id', '<no id>')!r} is missing field(s): {missing}")
         pred = predictions.get(q["id"], {})
         if q["id"] in predictions:
             answered += 1
