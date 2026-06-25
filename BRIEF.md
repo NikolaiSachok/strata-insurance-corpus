@@ -97,8 +97,9 @@ two-query-class design) + ground truth + provenance:
   forces image + document fusion.
 
 Ship the golden set in a format **aligned with general enterprise-RAG benchmarks** (RAG-Multi-Corpus
-style: `{question, answer, relevant_doc_ids, query_class}`) for comparability. Include a small eval
-harness (Recall@K / nDCG / answer-correctness) that reuses Strata-RAG's metrics where practical.
+style: `{question, answer, relevant_doc_ids, query_class}`) for comparability. Ship a small, **dependency-free
+reference** eval harness (Recall@K / nDCG@K / exact-match / token-F1); Strata-RAG's own metrics are used via the
+M5 adapter, not reimplemented here.
 
 ## Repo layout
 

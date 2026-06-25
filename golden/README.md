@@ -58,5 +58,35 @@ asserted by each of its cited documents, or validation fails.
   asserted on the registers that tabulate them.
 - ✅ **`multi_hop`** — cross-document joins (claim→policy→declarations for the policy's annual premium — a
   fact that lives on no claim document), each with an explicit, grounded hop chain.
-- ⏳ An `eval.py` harness computing Recall@K / nDCG / answer-correctness (reuses Strata-RAG metrics where
-  practical) — #15.
+- ✅ A reference **eval harness** ([`generator/eval.py`](../generator/eval.py)) computing
+  Recall@K / nDCG@K / exact-match / token-F1.
+
+## Eval harness
+
+A small, dependency-free reference scorer so the corpus is usable **standalone with any RAG stack** (the
+full engine is [Strata-RAG](https://github.com/NikolaiSachok/Strata-RAG); the M5 adapter mounts this corpus
+into it). Feed it your system's predictions and it reports retrieval + answer metrics, broken down by query
+class.
+
+**Predictions file** — JSONL, one object per answered question (see
+[`../sample/predictions.example.jsonl`](../sample/predictions.example.jsonl)):
+
+```json
+{"id": "Q-C-1000-cause", "retrieved_doc_ids": ["DOC-C-1000-FNOL", "DOC-C-1000-ADJ"], "answer": "burglary"}
+```
+
+`retrieved_doc_ids` is your ranked retrieval (best first); `answer` is your generated answer. A golden
+question with **no** prediction scores 0 on every metric (coverage gaps count against the system).
+
+| Metric | Meaning |
+|---|---|
+| `recall@K` | fraction of the relevant docs found in the top-K (so a 2-relevant-doc question caps `recall@1` at 0.5). |
+| `ndcg@K` | rank-weighted retrieval quality (binary relevance). |
+| `exact_match` | normalized exact answer match. |
+| `token_f1` | token-overlap F1 (partial credit). |
+
+```bash
+make eval                                   # oracle self-check (perfect run -> 1.0)
+make eval PRED=path/to/predictions.jsonl    # score your run against golden/golden.jsonl
+python -m generator.eval --golden golden/golden.jsonl --predictions preds.jsonl --out metrics.json
+```
