@@ -30,6 +30,7 @@ from .content import (
     estimate_document,
     fnol_document,
     id_card_document,
+    police_report_document,
     schedule_document,
     settlement_letter_document,
 )
@@ -113,6 +114,31 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
                     is_scanned=True,
                     sha256=sha256_file(out / rel),
                     source_doc_id=source_doc_id,
+                )
+            )
+
+        def emit_police_report(claim, policy, holder, entity_ids):
+            """A SCAN-ONLY Motor police report: render a PDF intermediate, degrade it to a scan, and
+            record ONLY the scan — the born-digital PDF is deleted, so its report-reference number
+            (the OCR golden answer) exists on no born-digital page. It carries no ``source_doc_id``:
+            there is no in-corpus twin, by design."""
+            vm = police_report_document(model.meta, claim, policy, holder)
+            doc_id = f"DOC-{claim.id}-POLICE"
+            tmp_pdf = out / f"docs/claim/{claim.id}-police-report.pdf"  # render intermediate, not a corpus doc
+            write_pdf("police_report.html.j2", vm, tmp_pdf, ANCHOR_EPOCH)
+            rel = f"docs/claim/{claim.id}-police-report-scanned.jpg"
+            scan_pdf(tmp_pdf, out / rel, doc_seed(doc_id, seed))
+            tmp_pdf.unlink()
+            records.append(
+                DocRecord(
+                    doc_id=doc_id,
+                    doc_type="police_report",
+                    format="jpg",
+                    path=rel,
+                    entity_ids=entity_ids,
+                    asserts=[Assertion(claim.id, "police_report_ref", vm["report_ref"])],
+                    is_scanned=True,
+                    sha256=sha256_file(out / rel),
                 )
             )
 
@@ -306,6 +332,9 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
                 )
                 emit_scan(f"docs/claim/{claim.id}-accident-statement.pdf", acc_id, "accident_statement_scanned", claim_ids)
 
+                # Scan-only police report — the OCR ground-truth doc (no born-digital twin).
+                emit_police_report(claim, policy, holder, claim_ids)
+
         # Tabular family (corpus-level): registers in xlsx + commission in csv
         from .render.sheets import write_csv, write_xlsx
 
@@ -370,6 +399,13 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
         for spec, doc_type, entity_id in image_specs:
             pixel = out / spec["path"]
             rendered = pixel.exists()
+            # The seeded prompt-spec is the image's by-construction label, so each image asserts a fact
+            # that lives only in its pixels: an evidence photo asserts the visibly-damaged area (grounds a
+            # `vision` question); an ID portrait asserts its caption (a `multimodal_retrieval` target).
+            if doc_type == "evidence_photo":
+                asserts = [Assertion(spec["claim_id"], "evidence_damage", spec["damage_area"])]
+            else:  # id_photo
+                asserts = [Assertion(spec["holder_id"], "portrait", spec["caption"])]
             records.append(
                 DocRecord(
                     doc_id=spec["doc_id"],
@@ -377,6 +413,7 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
                     format="jpg",
                     path=spec["path"],
                     entity_ids=[entity_id],
+                    asserts=asserts,
                     is_generated=True,
                     rendered=rendered,
                     sha256=sha256_file(pixel) if rendered else "",

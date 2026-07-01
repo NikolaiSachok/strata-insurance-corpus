@@ -11,7 +11,7 @@ line, aligned with general enterprise-RAG benchmark formats:
 ```json
 {"id": "Q-C-1000-cause", "question": "What cause of loss was recorded for claim C-1000?",
  "answer": "burglary", "relevant_doc_ids": ["DOC-C-1000-ADJ", "DOC-C-1000-FNOL"],
- "query_class": "semantic", "provenance": {"entity_id": "C-1000", "field": "cause"}}
+ "query_class": "semantic", "modality": "text", "provenance": {"entity_id": "C-1000", "field": "cause"}}
 ```
 
 | Field | Meaning |
@@ -19,8 +19,26 @@ line, aligned with general enterprise-RAG benchmark formats:
 | `id` | Stable question id. |
 | `question` / `answer` | The query and its ground-truth answer. |
 | `relevant_doc_ids` | **Every** document that asserts the answer (resolve via `manifest.json`). |
-| `query_class` | `semantic` · `aggregation` · `multi_hop`. |
+| `query_class` | `semantic` · `aggregation` · `multi_hop` (the reasoning shape). |
+| `modality` | The input a system must read to answer: `text` · `ocr` · `vision` · `multimodal_retrieval` · `cross_modal`. |
 | `provenance` | Single-hop: `{entity_id, field}`. Multi-hop: `{hops: [{entity_id, field, value, doc_ids}, …]}`. |
+
+### Multimodal (OCR / vision / retrieval / cross-modal)
+
+`query_class` describes the reasoning shape; `modality` describes the **input a system must read**. Beyond
+`text`, four modalities have answers that live only in a scanned or image document, so answering genuinely
+requires the modality — the seeded image **prompt-spec** (or the rendered scan) is the by-construction label:
+
+| `modality` | Answer lives in | Example |
+|---|---|---|
+| `ocr` | a **scan-only** police report (no born-digital twin) | *"police report reference number for claim C-1000?"* |
+| `vision` | an evidence photo's visible content | *"which part is visibly damaged in the photo for C-1000?"* |
+| `multimodal_retrieval` | an on-file ID portrait (retrieve the image) | *"retrieve the ID portrait of policyholder PH-00006"* |
+| `cross_modal` | a text→image chain | *"what is damaged in the photo for the claim under policy P?"* |
+
+A **leak-guard** test asserts every `ocr` / `vision` / `cross_modal` answer appears on **no** born-digital
+page — otherwise the question would be answerable by text retrieval alone (the same discipline as the
+multi-hop bridge guard). `multimodal_retrieval` answers are descriptive captions and are exempt.
 
 ### Multi-hop (cross-document)
 
@@ -58,6 +76,9 @@ asserted by each of its cited documents, or validation fails.
   asserted on the registers that tabulate them.
 - ✅ **`multi_hop`** — cross-document joins (claim→policy→declarations for the policy's annual premium — a
   fact that lives on no claim document), each with an explicit, grounded hop chain.
+- ✅ **multimodal** (`modality`: `ocr` · `vision` · `multimodal_retrieval` · `cross_modal`) — answers that
+  live only in a scanned or image document, grounded on scan-only / image-only ground truth, with a
+  leak-guard test.
 - ✅ A reference **eval harness** ([`generator/eval.py`](../generator/eval.py)) computing
   Recall@K / nDCG@K / exact-match / token-F1.
 
@@ -67,7 +88,8 @@ A small, dependency-free reference scorer so the corpus is usable **standalone w
 scores *predictions* against the labels so every consumer scores identically; it does not do retrieval, and
 this repo ships no engine adapter (ingestion is the consuming system's job — see
 [docs/data-card.md](../docs/data-card.md)). Feed it your system's predictions and it reports retrieval +
-answer metrics, broken down by query class.
+answer metrics, broken down by query class **and by modality** (so OCR / vision / retrieval capability is
+scored on its own).
 
 **Predictions file** — JSONL, one object per answered question (see
 [`../sample/predictions.example.jsonl`](../sample/predictions.example.jsonl)):

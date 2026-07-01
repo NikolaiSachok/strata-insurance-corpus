@@ -55,7 +55,7 @@ document expresses) is recorded for the golden eval.
 |---|---|---|---|
 | **Policy** | policy contract, declarations page, endorsements, coverage schedule | PDF (born-digital), docx | semantic + structured extraction |
 | **Claim** | FNOL form, adjuster report, damage/repair estimate, settlement letter, denial letter | PDF + **scanned variant** | **OCR**, layout-aware chunking |
-| **Evidence** | vehicle/property damage photos, ID/license scans, police report (scanned, _planned_) | **JPG/PNG** (`/generate-image`) | **vision caption / multimodal**; PII on IDs |
+| **Evidence** | vehicle/property damage photos, ID/license scans, police report (**scan-only**, built #41) | **JPG/PNG** (`/generate-image`), scan-only JPG | **vision caption / multimodal**; OCR; PII on IDs |
 | **Tabular** | loss run, reserve report, premium register, agent commission sheet | XLSX/CSV | **aggregation / metadata queries** |
 | **Knowledge** | underwriting guidelines, claims handling manual, customer FAQ/KB | Markdown, docx | semantic KB retrieval |
 | **Correspondence** | customer letters/emails, status notices | docx/txt/eml | retrieval over informal text |
@@ -101,9 +101,11 @@ two-query-class design) + ground truth + provenance:
 Ship the golden set in a format **aligned with general enterprise-RAG benchmarks** (RAG-Multi-Corpus
 style: `{question, answer, relevant_doc_ids, query_class}`) for comparability. Ship a small, **dependency-free
 reference** eval harness (Recall@K / nDCG@K / exact-match / token-F1) so every consumer scores identically
-against the labels; a consuming engine is free to use its own metrics too. **Planned (M5):** a `modality` tag
-and multimodal questions (OCR / vision / multimodal-retrieval / cross-modal) grounded on scan-only and
-image-only documents, so a consumer can verify those capabilities and not just text retrieval.
+against the labels; a consuming engine is free to use its own metrics too. Every row also carries a
+`modality` tag (`text` · `ocr` · `vision` · `multimodal_retrieval` · `cross_modal`): the **multimodal**
+classes have answers that live only in a scan-only or image-only document (labelled by the seeded image
+prompt-spec / rendered scan), with a leak-guard test proving the answer is on no born-digital page — so a
+consumer can verify OCR / vision / multimodal-retrieval capability, not just text retrieval.
 
 ## Repo layout
 
@@ -129,11 +131,11 @@ pyproject.toml   the generator package + deps (faker, jinja2/reportlab, python-d
   `/generate-image`) + captions/manifest; synthetic PII injection for the redaction showcase.
 - **M4 — Golden eval set:** provenance capture; semantic + aggregation + multi-hop questions with answers;
   eval harness + metrics; benchmark-aligned format.
-- **M5 — Data-vendor packaging & release:** data card / ingestion contract (`docs/data-card.md`);
-  **multimodal golden extension** (OCR / vision / multimodal-retrieval / cross-modal, on scan-only and
-  image-only ground truth); HuggingFace dataset release + dataset card; CI (regenerate sample + validate);
-  README/wiki polish. (The Strata-RAG adapter + `examples/insurance` live in the Strata-RAG repo, not here —
-  this corpus prescribes no engine glue.)
+- **M5 — Data-vendor packaging & release:** ✅ data card / ingestion contract (`docs/data-card.md`);
+  ✅ **multimodal golden extension** (OCR / vision / multimodal-retrieval / cross-modal, on scan-only and
+  image-only ground truth, leak-guarded); ⏳ HuggingFace dataset release + dataset card; ⏳ CI (regenerate
+  sample + validate); README/wiki polish. (The Strata-RAG adapter + `examples/insurance` live in the
+  Strata-RAG repo, not here — this corpus prescribes no engine glue.)
 
 ## Hard rules
 

@@ -123,6 +123,22 @@ def _id_card_spans(doc, model_meta, holder):
     return out
 
 
+def _police_report_spans(doc, claim, policy, holder):
+    """Image-text PII on the scan-only Motor police report (a document with no born-digital twin, so
+    its spans are computed directly rather than inherited). The report reference number is a document
+    identifier, not PII, and is deliberately not catalogued."""
+    out = [
+        _span(doc, holder.id, "policyholder", PERSON_NAME, "name", holder.name, modality="image_text"),
+        _span(doc, holder.id, "policyholder", ADDRESS, "city", holder.city, modality="image_text"),
+        _span(doc, policy.id, "policy", POLICY_NUMBER, "id", policy.id, modality="image_text"),
+        _span(doc, claim.id, "claim", CLAIM_NUMBER, "id", claim.id, modality="image_text"),
+    ]
+    veh = policy.vehicle
+    if veh and veh.get("registration"):
+        out.append(_span(doc, policy.id, "policy", VEHICLE_REGISTRATION, "registration", veh["registration"], modality="image_text"))
+    return out
+
+
 def _other_party_spans(doc, model_meta, claim, policy, holder):
     """The synthetic 'other party' on a collision accident statement (doc-local PII — a third
     party's name + plate, not a Meridian entity, so scoped to the claim)."""
@@ -169,7 +185,19 @@ def build_pii_index(model: Model, records: list) -> list[dict]:
 
     for doc in records:
         if doc.is_scanned:
-            scanned.append(doc)
+            # Scan-only docs with no born-digital twin carry their OWN image-text spans (computed
+            # here); ordinary scanned variants inherit their source document's spans below.
+            if doc.doc_type == "police_report":
+                cid = _find(doc.entity_ids, "claim")
+                claim = idx["claims"].get(cid) if cid else None
+                if claim:
+                    policy = idx["policies"][claim.policy_id]
+                    holder = idx["policyholders"][claim.holder_id]
+                    by_doc[doc.doc_id] = _police_report_spans(doc, claim, policy, holder)
+                else:
+                    by_doc[doc.doc_id] = []
+            else:
+                scanned.append(doc)
             continue
         spans: list[dict] = []
         t = doc.doc_type
@@ -213,6 +241,10 @@ def build_pii_index(model: Model, records: list) -> list[dict]:
         by_doc[doc.doc_id] = spans
 
     all_spans = [s for doc in records if not doc.is_scanned for s in by_doc.get(doc.doc_id, [])]
+    # Scan-only docs (no born-digital twin) contribute their own directly-computed image-text spans.
+    for doc in records:
+        if doc.is_scanned and doc.doc_type == "police_report":
+            all_spans.extend(by_doc.get(doc.doc_id, []))
 
     # Scanned variants inherit their source document's spans as image-text redaction targets.
     for doc in scanned:

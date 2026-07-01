@@ -2,7 +2,8 @@
 
 A small, self-contained scorer so the corpus is usable **standalone with any RAG stack**: feed it a
 predictions file and it reports retrieval and answer metrics against ``golden.jsonl``, broken down by
-query class. It scores *labels* — it is not ingestion glue and this repo ships no engine adapter; a
+query class **and by modality** (so OCR / vision / multimodal-retrieval capability is scored on its own).
+It scores *labels* — it is not ingestion glue and this repo ships no engine adapter; a
 consuming engine (e.g. [Strata-RAG](https://github.com/NikolaiSachok/Strata-RAG)) owns ingestion and may
 use its own metrics too. This harness is the dependency-free reference so everyone scores identically.
 
@@ -96,7 +97,7 @@ def _aggregate(metric_rows: list) -> dict:
 
 def evaluate(golden: list, predictions: dict, ks=(1, 5, 10)) -> dict:
     """Score ``predictions`` (id -> {retrieved_doc_ids, answer}) against ``golden``."""
-    rows, by_class, answered = [], defaultdict(list), 0
+    rows, by_class, by_modality, answered = [], defaultdict(list), defaultdict(list), 0
     for q in golden:
         missing = [f for f in ("id", "answer", "relevant_doc_ids", "query_class") if f not in q]
         if missing:
@@ -107,28 +108,42 @@ def evaluate(golden: list, predictions: dict, ks=(1, 5, 10)) -> dict:
         m = _per_question(q, pred, ks)
         rows.append(m)
         by_class[q["query_class"]].append(m)
+        by_modality[q.get("modality", "text")].append(m)  # per-capability view (text / ocr / vision / …)
     return {
         "n_questions": len(golden),
         "n_with_prediction": answered,
         "k_values": list(ks),
         "overall": _aggregate(rows) if rows else {},
         "by_class": {c: _aggregate(ms) for c, ms in sorted(by_class.items())},
+        "by_modality": {c: _aggregate(ms) for c, ms in sorted(by_modality.items())},
     }
 
 
 def format_report(metrics: dict) -> str:
     overall = metrics["overall"]
     cols = list(overall.keys())
+
+    def _section(label, groups):
+        out = [
+            "  " + f"{label:<20}" + "".join(f"{c:>13}" for c in cols),
+            "  " + "-" * (20 + 13 * len(cols)),
+        ]
+        for name, m in groups.items():
+            out.append("  " + f"{name:<20}" + "".join(f"{m[c]:>13.4f}" for c in cols))
+        return out
+
     lines = [
         f"Eval — {metrics['n_with_prediction']}/{metrics['n_questions']} questions answered "
         f"(K={metrics['k_values']})",
         "",
-        "  " + f"{'class':<14}" + "".join(f"{c:>13}" for c in cols),
-        "  " + "-" * (14 + 13 * len(cols)),
+        "by query_class",
+        *_section("class", metrics["by_class"]),
+        "",
+        "by modality",
+        *_section("modality", metrics.get("by_modality", {})),
+        "",
+        "  " + f"{'OVERALL':<20}" + "".join(f"{overall[c]:>13.4f}" for c in cols),
     ]
-    for cls, m in metrics["by_class"].items():
-        lines.append("  " + f"{cls:<14}" + "".join(f"{m[c]:>13.4f}" for c in cols))
-    lines.append("  " + f"{'OVERALL':<14}" + "".join(f"{overall[c]:>13.4f}" for c in cols))
     return "\n".join(lines)
 
 

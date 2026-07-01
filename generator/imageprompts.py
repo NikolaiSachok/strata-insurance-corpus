@@ -45,6 +45,31 @@ _SCENES = {
 }
 _KIND = {"personal_auto": "vehicle_damage", "homeowners": "property_damage", "bop": "commercial_damage"}
 
+# The visibly-damaged part/area in each scene — a purely VISUAL fact (readable only from the photo,
+# stated on no text document), so it grounds a genuine `vision` golden question by construction. Kept
+# deliberately distinct from the cause label (which the text docs DO state); a leak-guard test asserts
+# each value is absent from every born-digital document's text.
+_DAMAGE_AREA = {
+    ("personal_auto", "rear_end_collision"): "rear bumper and boot",
+    ("personal_auto", "single_vehicle"): "front end",
+    ("personal_auto", "theft"): "side window and door lock",
+    ("personal_auto", "hail"): "bonnet and roof",
+    ("personal_auto", "vandalism"): "paintwork and a door panel",
+    ("personal_auto", "animal_strike"): "front bumper and a headlight",
+    ("homeowners", "water_damage"): "ceiling and a wall",
+    ("homeowners", "kitchen_fire"): "kitchen cabinets",
+    ("homeowners", "wind"): "roof",
+    ("homeowners", "hail"): "roof tiles and gutters",
+    ("homeowners", "theft"): "front door lock",
+    ("homeowners", "liability_slip"): "hallway floor",
+    ("bop", "fire"): "walls and stock",
+    ("bop", "burglary"): "shop shutter",
+    ("bop", "water_damage"): "storeroom floor and goods",
+    ("bop", "slip_and_fall"): "shop entrance floor",
+    ("bop", "business_interruption"): "shopfront",
+    ("bop", "equipment_breakdown"): "an industrial machine",
+}
+
 # The corpus is synthetic-but-realistic: incidental product/vehicle branding, synthetic faces, and
 # (invented) plates are fine — they are the realistic PII a redaction system is benchmarked on, and
 # PII handling belongs in the consuming RAG layer, not the source documents. The only guardrails are
@@ -161,6 +186,7 @@ def evidence_spec(claim: Claim, policy: Policy, holder: Policyholder, corpus_see
     country = COUNTRY_BY_CODE.get(holder.country)
     country_name = country.name if country else holder.country
     scene = _SCENES.get((policy.line, claim.cause), f"insurance claim damage from {claim.cause.replace('_', ' ')}")
+    damage_area = _DAMAGE_AREA.get((policy.line, claim.cause), "the damaged area")
     doc_id = f"DOC-{claim.id}-EVIDENCE"
     prompt = (
         f"A candid amateur smartphone photo submitted as insurance claim evidence in {country_name}: "
@@ -174,6 +200,7 @@ def evidence_spec(claim: Claim, policy: Policy, holder: Policyholder, corpus_see
         "cause": claim.cause,
         "country": holder.country,
         "kind": _KIND[policy.line],
+        "damage_area": damage_area,  # by-construction label for the `vision` golden question
         "path": f"evidence/{claim.id}-evidence.jpg",
         "model": MODEL,
         "params": {"aspect_ratio": "4:3", "resolution": "1K", "seed": _image_seed(doc_id, corpus_seed)},

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>{{ claim_id }} — Police Report</title></head>
+<body>
+  <div class="synthetic-banner">{{ marker }}</div>
+  <div class="masthead">
+    <div class="company">{{ authority }}</div>
+    <div class="doc-title">{{ doc_title }}</div>
+  </div>
+
+  <table class="kv" style="margin-top:8px">
+    <tr><td class="k">Report reference</td>
+        <td class="v" style="font-family:monospace;font-size:15pt;letter-spacing:1px">{{ report_ref }}</td></tr>
+    <tr><td class="k">Date of incident</td><td class="v">{{ report_date }}</td></tr>
+    <tr><td class="k">Location</td><td class="v">{{ location }}</td></tr>
+    <tr><td class="k">Recorded cause</td><td class="v">{{ cause_label }}</td></tr>
+  </table>
+
+  <h2>Vehicle &amp; Driver</h2>
+  <table class="kv">
+    <tr><td class="k">Driver</td><td class="v">{{ driver_name }}</td></tr>
+    <tr><td class="k">Vehicle</td><td class="v">{{ vehicle }}</td></tr>
+    <tr><td class="k">Registration</td><td class="v" style="white-space:nowrap">{{ registration }}</td></tr>
+    <tr><td class="k">Insurer / policy</td><td class="v">{{ insurer }} — {{ policy_id }}</td></tr>
+    <tr><td class="k">Insurer claim ref</td><td class="v">{{ claim_id }}</td></tr>
+  </table>
+
+  <h2>Officer Narrative</h2>
+  <p class="narrative">{{ narrative }}</p>
+
+  <p class="meta-foot">This is a synthetic document from a fictional authority, generated for
+  retrieval/OCR benchmark testing. No real person, vehicle, authority, or incident is described.</p>
+</body>
+</html>

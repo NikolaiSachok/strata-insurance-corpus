@@ -101,6 +101,7 @@ def validate(out: Path) -> tuple[bool, list[str]]:
         doc_assertions[d["doc_id"]] = {(a["entity_id"], a["field"]): a["value"] for a in d.get("provenance", [])}
 
     n_golden = 0
+    seen_questions: dict[str, str] = {}  # question text -> first qid; each question must be uniquely answerable
     if golden_path.exists():
         for i, raw in enumerate(golden_path.read_text(encoding="utf-8").splitlines()):
             if not raw.strip():
@@ -108,10 +109,17 @@ def validate(out: Path) -> tuple[bool, list[str]]:
             n_golden += 1
             q = json.loads(raw)
             qid = q.get("id", i)
+            qtext = q.get("question")
+            if qtext in seen_questions:
+                errors.append(f"golden {qid}: duplicate question text (also {seen_questions[qtext]}) — ambiguous ground truth")
+            else:
+                seen_questions[qtext] = qid
             prov = q.get("provenance", {})
             rel = q.get("relevant_doc_ids", [])
             if not rel:
                 errors.append(f"golden {qid}: no relevant_doc_ids")
+            if q.get("modality") not in {"text", "ocr", "vision", "multimodal_retrieval", "cross_modal"}:
+                errors.append(f"golden {qid}: bad or missing modality {q.get('modality')!r}")
             for did in rel:
                 if did not in doc_ids:
                     errors.append(f"golden {qid}: relevant_doc_id {did} not in manifest")

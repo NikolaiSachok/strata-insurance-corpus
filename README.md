@@ -10,18 +10,18 @@
 document families (policy / claim / tabular / knowledge), **scanned (OCR-target) variants** of the claim
 forms/letters, **AI evidence photos + identity cards (ID scans) with synthetic portraits**, a
 **redaction ground-truth index** (every PII span catalogued), the manifest + provenance, the
-golden-eval set (semantic + aggregation + multi-hop), and a **reference eval harness**
-(Recall@K / nDCG / EM / F1) run end-to-end today. **This is a data vendor** — it ships the data + ground
-truth and is engine-agnostic (see [docs/data-card.md](docs/data-card.md), the ingestion contract);
-consuming RAG systems own ingestion. A multimodal golden extension (OCR / vision / multimodal retrieval)
-and a HuggingFace release are scheduled (M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and the
+golden-eval set (semantic + aggregation + multi-hop **+ multimodal: OCR / vision / multimodal-retrieval /
+cross-modal**), and a **reference eval harness** (Recall@K / nDCG / EM / F1) run end-to-end today. **This
+is a data vendor** — it ships the data + ground truth and is engine-agnostic (see
+[docs/data-card.md](docs/data-card.md), the ingestion contract); consuming RAG systems own ingestion. A
+HuggingFace release + CI remain (M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and the
 **[issues](../../issues)**.
 
 ### What runs today
 
 ```bash
 make sample     # -> committed sample/ slice + golden/golden.jsonl  (deterministic)
-make generate   # -> full corpus/ : 305 entities, 1278 documents (1118 born-digital+scanned + 160 AI images as committed prompt-specs), 447 golden Qs, 6374 PII spans  (gitignored)
+make generate   # -> full corpus/ : 305 entities, 1297 documents (1137 born-digital+scanned + 160 AI images as committed prompt-specs), 671 golden Qs, 6469 PII spans  (gitignored)
 make validate   # integrity + golden-support checks
 make stats      # corpus composition (documents by format/type, golden by class)
 make eval       # score predictions vs golden (Recall@K/nDCG/EM/F1); no PRED -> oracle self-check
@@ -29,11 +29,14 @@ make test       # determinism + referential-integrity suite
 ```
 
 Full-corpus composition (`make stats OUT=corpus`): 750 PDF · 121 Word · 3 xlsx · 1 csv · 2 Markdown ·
-241 scanned JPG · 160 AI images — 80 evidence photos + 80 ID portraits (committed as seeded
+260 scanned JPG · 160 AI images — 80 evidence photos + 80 ID portraits (committed as seeded
 **prompt-specs** in `image-prompts.jsonl`; pixels rendered for the `sample/` slice, on-demand for the HF
-release); golden = 364 semantic + 3 aggregation + 80 multi-hop; **6,374 PII spans** catalogued in `pii-index.jsonl`.
-The committed `sample/` slice contains at least one of every built doc type (enforced by a test), so the
-repo is fully exercisable without a full run.
+release). The 260 scans include 19 **scan-only** police reports (no born-digital twin — genuine OCR
+targets). Golden = **671 questions**: 447 text (364 semantic + 3 aggregation + 80 multi-hop) + 224
+**multimodal** (19 OCR + 80 vision + 80 multimodal-retrieval + 45 cross-modal — cross-modal is emitted only
+for single-claim policies, so its policy-keyed question stays unambiguous); **6,469 PII spans**
+catalogued in `pii-index.jsonl`. The committed `sample/` slice contains at least one of every built doc
+type and every golden modality (enforced by tests), so the repo is fully exercisable without a full run.
 
 **Redaction ground truth (`pii-index.jsonl`).** The corpus deliberately contains realistic synthetic
 PII — names, addresses, dates of birth, phone/email, national identifiers, vehicle plates, ID-card
@@ -52,13 +55,19 @@ Built: deterministic entity model + roster ([docs/data-model.md](docs/data-model
 customer FAQ (Markdown) and a claims-handling manual (docx). All renderers byte-reproducible
 (`SOURCE_DATE_EPOCH` / pinned docx & xlsx packaging); `manifest.json` with per-doc provenance + sha256;
 **semantic** (cause-of-loss, premium, settlement amount, insured vehicle, national identifier, lines-of-business),
-**aggregation** (total open reserve, total premium, open-claim count), **and multi-hop / cross-document**
+**aggregation** (total open reserve, total premium, open-claim count), **multi-hop / cross-document**
 (e.g. *"the annual premium for the policy under which claim C was filed"* — a fact on no claim document, so
-it must join the FNOL to the declarations) golden-question classes, each **grounded in document provenance** — built from the
-`(entity, field, value)` facts each document asserts, so a golden answer is exactly what its cited documents
-state and a multi-hop answer's chain is explicit (enforced by `make validate`). A dependency-free **reference
+it must join the FNOL to the declarations), **and multimodal** — **OCR** (a police-report reference on a
+**scan-only** document), **vision** (the visibly-damaged area in an evidence photo), **multimodal-retrieval**
+(an on-file ID portrait), and **cross-modal** (join a claim document to its photo) — golden-question classes,
+each **grounded in document provenance** — built from the `(entity, field, value)` facts each document asserts
+(the seeded image prompt-spec is the by-construction label), so a golden answer is exactly what its cited
+documents state and a multi-hop answer's chain is explicit (enforced by `make validate`). A leak-guard test
+proves each OCR/vision answer lives on **no** born-digital page, so those questions genuinely require the
+modality. A dependency-free **reference
 eval harness** (`generator/eval.py`, `make eval`) scores a system's predictions against the golden set —
-Recall@K / nDCG@K / exact-match / token-F1, broken down by query class — so the corpus is usable standalone
+Recall@K / nDCG@K / exact-match / token-F1, broken down by query class **and modality** (so OCR / vision /
+retrieval capability is scored separately) — so the corpus is usable standalone
 with any RAG stack. The doc-type × format build-out is tracked in [docs/format-matrix.md](docs/format-matrix.md).
 
 ---
