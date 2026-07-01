@@ -76,7 +76,10 @@ _DAMAGE_AREA = {
 # against depicting a REAL identifiable individual or naming a REAL company as the claim party.
 _NEGATIVE = (
     "no real, identifiable public figures or celebrities; any business or premises depicted is generic "
-    "and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks"
+    "and fictional, not a real named chain or brand; storefronts, shopfronts, signs, and premises carry "
+    "no legible business names, shop signage, brand logos, or readable lettering (blank, blurred, or "
+    "illegible signage only); no text overlays or stock-photo watermarks. "
+    "(synthetic vehicle number plates on cars may remain visible)"
 )
 
 
