@@ -13,6 +13,7 @@ Output format is aligned with general enterprise-RAG benchmarks:
 from __future__ import annotations
 
 import json
+from collections import Counter
 from pathlib import Path
 
 from .identity import COUNTRY_BY_CODE
@@ -20,13 +21,14 @@ from .model import Model
 from .provenance import support_for
 
 
-def _q(qid, question, value, doc_ids, query_class, entity_id, field):
+def _q(qid, question, value, doc_ids, query_class, entity_id, field, modality="text"):
     return {
         "id": qid,
         "question": question,
         "answer": value,
         "relevant_doc_ids": doc_ids,
         "query_class": query_class,
+        "modality": modality,
         "provenance": {"entity_id": entity_id, "field": field},
     }
 
@@ -40,7 +42,7 @@ def _hop(prov, entity_id, field):
     return {"entity_id": entity_id, "field": field, "value": value, "doc_ids": doc_ids}
 
 
-def _multihop(qid, question, hops):
+def _multihop(qid, question, hops, modality="text"):
     """A cross-document question: answer is the terminal hop's value; relevant docs span the whole chain."""
     relevant = sorted({d for h in hops for d in h["doc_ids"]})
     return {
@@ -49,6 +51,7 @@ def _multihop(qid, question, hops):
         "answer": hops[-1]["value"],
         "relevant_doc_ids": relevant,
         "query_class": "multi_hop",
+        "modality": modality,
         "provenance": {"hops": hops},
     }
 
@@ -61,12 +64,12 @@ def build_golden(model: Model, prov: dict) -> list[dict]:
     """
     items: list[dict] = []
 
-    def add(entity_id, field, qid, question, query_class):
+    def add(entity_id, field, qid, question, query_class, modality="text"):
         support = support_for(prov, entity_id, field)
         if support is None:
             return
         value, doc_ids = support
-        items.append(_q(qid, question, value, doc_ids, query_class, entity_id, field))
+        items.append(_q(qid, question, value, doc_ids, query_class, entity_id, field, modality))
 
     # --- semantic / extractive -------------------------------------------- #
     for claim in model.claims:
@@ -114,6 +117,42 @@ def build_golden(model: Model, prov: dict) -> list[dict]:
                 f"Q-MH-{claim.id}-premium",
                 f"What is the annual premium on the policy under which claim {claim.id} was filed?",
                 [bridge, prem]))
+
+    # --- multimodal (grounded on scan-only / image-only documents) -------- #
+    # Each answer lives ONLY in a scanned or generated-image document (its born-digital text does not
+    # exist / does not state it), so answering genuinely requires the modality — OCR, vision, or
+    # image retrieval. The seeded prompt-spec / rendered scan is the by-construction label; a leak-guard
+    # test asserts these answers appear on no born-digital page.
+    claims_per_policy = Counter(c.policy_id for c in model.claims)  # for unambiguous cross-modal keying
+    for claim in model.claims:
+        # OCR — the police-report reference number, readable only off the scanned report.
+        add(claim.id, "police_report_ref", f"Q-OCR-{claim.id}-police-ref",
+            f"What is the police report reference number recorded for claim {claim.id}?",
+            "semantic", modality="ocr")
+        # Vision — the visibly-damaged area in the on-scene evidence photograph.
+        add(claim.id, "evidence_damage", f"Q-VIS-{claim.id}-damage",
+            f"In the on-scene evidence photograph for claim {claim.id}, which part or area is visibly damaged?",
+            "semantic", modality="vision")
+        # Cross-modal — join a claim document (text) to its evidence photo (image): find the claim
+        # filed under a policy, then read the damage off the photo. The answer is on no text document.
+        # Emitted ONLY when the policy has exactly ONE claim, so "the claim filed under policy P"
+        # identifies the claim unambiguously (a multi-claim policy would give several rows the same
+        # question text with conflicting answers). For multi-claim policies the per-claim `vision`
+        # question already covers the photo.
+        bridge = _hop(prov, claim.id, "policy_id")          # claim -> policy (FNOL, text bridge)
+        dmg = _hop(prov, claim.id, "evidence_damage")       # claim -> damage (evidence photo, image)
+        if bridge is not None and dmg is not None and claims_per_policy[bridge["value"]] == 1:
+            items.append(_multihop(
+                f"Q-XM-{claim.id}-photo-damage",
+                f"What is visibly damaged in the on-scene evidence photograph for the claim filed under "
+                f"policy {bridge['value']}?",
+                [bridge, dmg], modality="cross_modal"))
+
+    # Multimodal retrieval — retrieve a policyholder's on-file ID portrait (an image) by identity.
+    for holder in model.policyholders:
+        add(holder.id, "portrait", f"Q-MMR-{holder.id}-portrait",
+            f"Retrieve the on-file identity portrait photograph of policyholder {holder.name} ({holder.id}).",
+            "semantic", modality="multimodal_retrieval")
 
     items.sort(key=lambda x: x["id"])
     return items

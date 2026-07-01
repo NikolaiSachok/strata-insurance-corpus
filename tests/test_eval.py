@@ -67,6 +67,9 @@ def test_evaluate_missing_prediction_scores_zero_and_breaks_down_by_class():
     assert m["by_class"]["aggregation"]["exact_match"] == 0.0
     # overall recall@1 = mean(1.0, 0.0) = 0.5
     assert m["overall"]["recall@1"] == 0.5
+    # rows without a modality group under "text"; the breakdown is a partition of the same questions
+    assert set(m["by_modality"]) == {"text"}
+    assert m["by_modality"]["text"]["recall@1"] == m["overall"]["recall@1"]
 
 
 def test_oracle_scores_perfectly_on_sample_golden():

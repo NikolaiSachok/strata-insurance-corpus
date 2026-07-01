@@ -16,7 +16,7 @@ documents render.
 |---|---|---|---|---|---|
 | **Policy** | policy contract, declarations page, endorsements, coverage schedule | PDF (born-digital), docx | semantic + structured extraction | M1 / M2 | ✅ declarations / endorsements / coverage-schedule (PDF) + full contract (**docx**) — all built (#5) |
 | **Claim** | FNOL form, adjuster report, damage/repair estimate, settlement letter, denial letter | PDF + **scanned variant** | OCR, layout-aware chunking | M1 / M2 / M3 | ✅ FNOL (M1) + adjuster report / estimate / settlement & denial letters (PDF, #6); **scanned variants** of FNOL + letters (JPG, #10) |
-| **Evidence** | vehicle/property/commercial damage photos, accident statement | JPG / PNG (`/generate-image`), PDF | vision caption / multimodal; OCR | M3 | ✅ damage photos — committed **prompt-spec** (`image-prompts.jsonl`) + rendered **sample** pixels (#11); ✅ **accident statement** — own EAS-inspired Motor form (bundled handwriting font + checkmarks + inline-SVG schematic, born-digital + scanned variant) (#11) |
+| **Evidence** | vehicle/property/commercial damage photos, accident statement, police report | JPG / PNG (`/generate-image`), PDF, **scan-only JPG** | vision caption / multimodal; OCR | M3 / M5 | ✅ damage photos — committed **prompt-spec** (`image-prompts.jsonl`) + rendered **sample** pixels (#11); ✅ **accident statement** — own EAS-inspired Motor form (bundled handwriting font + checkmarks + inline-SVG schematic, born-digital + scanned variant) (#11); ✅ **police report** — **scan-only** Motor OCR target with no born-digital twin (#41) |
 | **Identity** | policyholder ID card (KYC on-file copy) | PDF + **scanned variant**; embedded JPG portrait | OCR + MRZ parsing, face/PII redaction, layout | M3 | ✅ born-digital card with name / document no. / national identifier / DOB / address + ICAO-9303 TD1 **MRZ**; portrait is a committed **prompt-spec** + rendered **sample** pixels; **scanned variant** for OCR (#11) |
 | **Tabular** | loss run, reserve register, premium register, agent commission summary | XLSX / CSV | aggregation / metadata queries | M2 | ✅ loss run / reserve register / premium register (**xlsx**) + commission summary (**csv**) — built (#7) |
 | **Knowledge** | underwriting guidelines, claims handling manual, customer FAQ/KB | Markdown, docx | semantic KB retrieval | M2 | ✅ underwriting guidelines + customer FAQ (**Markdown**) + claims handling manual (**docx**) — built (#8) |
@@ -36,6 +36,10 @@ describes only what is built plus what is explicitly scheduled.
   clean ground-truth document and the degraded JPG are kept; the scanned record carries `is_scanned: true`
   and `scanned_of: <clean doc_id>`, so OCR output can be scored against the known text. Effects are seeded,
   so the scan is byte-reproducible.
+- **Scan-only variant** (#41) — a stronger OCR target: the born-digital PDF is a *render intermediate* that
+  is **deleted** after rasterization, so the document exists in the corpus **only** as a scan (`is_scanned:
+  true`, **no** `scanned_of`). Its facts therefore appear on no born-digital page — used for the police
+  report, whose reference number grounds an `ocr` golden question that genuinely requires reading the image.
 - **docx** — `python-docx` (policy contract, #5). Reproducibility: core-property dates are pinned and the
   package zip is re-packed with normalized member timestamps, so the same content yields a byte-identical
   `.docx`. **xlsx** — `openpyxl` (#7); reproducible via the same normalized-zip path, plus a pin of the

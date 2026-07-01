@@ -10,6 +10,7 @@ without changing callers.
 from __future__ import annotations
 
 import datetime as dt
+import hashlib
 import random
 
 from . import COMPANY_NAME, CURRENCY_SYMBOL, SYNTHETIC_MARKER
@@ -488,6 +489,56 @@ def accident_statement_document(model_meta: dict, claim: Claim, policy: Policy, 
         "sketch_collision": collision,
         "sig_a": holder.name,
         "sig_b": other["driver"] if other else "—",
+    }
+
+
+# --------------------------------------------------------------------------- #
+# Police report (scan-only, Motor claims) — the OCR ground-truth document.
+#
+# A traffic-incident report from a (fictional) police authority, filed as claim evidence. It is
+# emitted ONLY as a degraded scan: the born-digital PDF is a render intermediate and is never
+# recorded as a corpus document, so its facts exist on no born-digital page. Its report reference
+# number therefore grounds an `ocr` golden question that genuinely requires reading the image
+# (a leak-guard test asserts the reference appears on no born-digital document).
+# --------------------------------------------------------------------------- #
+
+
+def police_report_ref(claim: Claim) -> str:
+    """Deterministic police-report reference number (the OCR golden answer).
+
+    Derived from the claim id via a stable hash (hashlib, so it is independent of PYTHONHASHSEED)
+    and the loss year — a 6-digit case number that is unique per claim and appears on no other
+    document. This is a document identifier, not personal PII.
+    """
+    year = dt.date.fromisoformat(claim.date_of_loss).year
+    n = int(hashlib.md5(claim.id.encode()).hexdigest()[:8], 16) % 900000 + 100000
+    return f"PR-{year}-{n:06d}"
+
+
+def police_report_document(model_meta: dict, claim: Claim, policy: Policy, holder: Policyholder) -> dict:
+    """View-model for the scan-only Motor police report. Deterministic; clearly a synthetic authority."""
+    country = COUNTRY_BY_CODE.get(holder.country)
+    country_name = country.name if country else holder.country
+    veh = policy.vehicle
+    return {
+        "marker": SYNTHETIC_MARKER,
+        "authority": "Regional Road-Traffic Police — Incident Recording Unit",
+        "doc_title": "Road Traffic Incident Report",
+        "report_ref": police_report_ref(claim),
+        "report_date": _eu_date(claim.date_of_loss),
+        "location": f"{holder.city}, {country_name}",
+        "cause_label": cause_label(claim.cause),
+        "driver_name": holder.name,
+        "vehicle": (f"{veh['make']} {veh['model']} ({veh['year']}, {veh['colour']})" if veh else "—"),
+        "registration": veh["registration"] if veh else "—",
+        "insurer": COMPANY_NAME,
+        "policy_id": policy.id,
+        "claim_id": claim.id,
+        "narrative": (
+            f"Attending officers recorded a road-traffic incident involving the above vehicle, consistent "
+            f"with {cause_label(claim.cause)}. Details were logged under the reference number shown above "
+            f"and released to the insurer for claim processing."
+        ),
     }
 
 

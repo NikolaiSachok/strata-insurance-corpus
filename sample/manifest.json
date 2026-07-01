@@ -20,6 +20,7 @@
       "id_card_scanned": 6,
       "id_photo": 6,
       "loss_run": 1,
+      "police_report": 1,
       "policy_contract": 5,
       "policy_declarations": 5,
       "policy_endorsements": 5,
@@ -33,13 +34,13 @@
     "by_format": {
       "csv": 1,
       "docx": 6,
-      "jpg": 27,
+      "jpg": 28,
       "md": 2,
       "pdf": 40,
       "xlsx": 3
     },
     "claims": 5,
-    "documents": 79,
+    "documents": 80,
     "policies": 5,
     "policyholders": 6
   },
@@ -113,6 +114,7 @@
         "cause": "burglary",
         "claim_id": "C-1000",
         "country": "DE",
+        "damage_area": "shop shutter",
         "doc_id": "DOC-C-1000-EVIDENCE",
         "kind": "commercial_damage",
         "line": "bop",
@@ -126,7 +128,13 @@
         "path": "evidence/C-1000-evidence.jpg",
         "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Germany: a forced-open shop shutter and a ransacked retail interior after a burglary. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks."
       },
-      "provenance": [],
+      "provenance": [
+        {
+          "entity_id": "C-1000",
+          "field": "evidence_damage",
+          "value": "shop shutter"
+        }
+      ],
       "rendered": true,
       "sha256": "eee85b527ecb796bfc24962132a10a83eb2b14ad922bc8ddbe3898e36efb3de6",
       "synthetic": true
@@ -298,6 +306,7 @@
         "cause": "theft",
         "claim_id": "C-1001",
         "country": "IE",
+        "damage_area": "front door lock",
         "doc_id": "DOC-C-1001-EVIDENCE",
         "kind": "property_damage",
         "line": "homeowners",
@@ -311,7 +320,13 @@
         "path": "evidence/C-1001-evidence.jpg",
         "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Ireland: a forced-open residential door with a damaged lock after a burglary. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks."
       },
-      "provenance": [],
+      "provenance": [
+        {
+          "entity_id": "C-1001",
+          "field": "evidence_damage",
+          "value": "front door lock"
+        }
+      ],
       "rendered": true,
       "sha256": "a970e08bd41e4dd307b0ca1d474de325ed42985e865e0bd1f7bdcf7d47d5f179",
       "synthetic": true
@@ -456,6 +471,7 @@
         "cause": "burglary",
         "claim_id": "C-1002",
         "country": "DE",
+        "damage_area": "shop shutter",
         "doc_id": "DOC-C-1002-EVIDENCE",
         "kind": "commercial_damage",
         "line": "bop",
@@ -469,7 +485,13 @@
         "path": "evidence/C-1002-evidence.jpg",
         "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Germany: a forced-open shop shutter and a ransacked retail interior after a burglary. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks."
       },
-      "provenance": [],
+      "provenance": [
+        {
+          "entity_id": "C-1002",
+          "field": "evidence_damage",
+          "value": "shop shutter"
+        }
+      ],
       "rendered": true,
       "sha256": "01e15baa47b09f561cc247867bba9ce57522b46c1144ab300b7c3ef9291a26e0",
       "synthetic": true
@@ -636,6 +658,7 @@
         "cause": "rear_end_collision",
         "claim_id": "C-1003",
         "country": "DE",
+        "damage_area": "rear bumper and boot",
         "doc_id": "DOC-C-1003-EVIDENCE",
         "kind": "vehicle_damage",
         "line": "personal_auto",
@@ -649,7 +672,13 @@
         "path": "evidence/C-1003-evidence.jpg",
         "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Germany: a car with rear-end collision damage \u2014 crumpled rear bumper and dented boot. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks."
       },
-      "provenance": [],
+      "provenance": [
+        {
+          "entity_id": "C-1003",
+          "field": "evidence_damage",
+          "value": "rear bumper and boot"
+        }
+      ],
       "rendered": true,
       "sha256": "3ba1b2c59f9311ddba5353f2fa165a477db4f3ebc234c50f8a355237c9478566",
       "synthetic": true
@@ -706,6 +735,28 @@
       "provenance": [],
       "scanned_of": "DOC-C-1003-FNOL",
       "sha256": "15b6b24e2b2d48dcc603ecc85953d30974c65e4ec075f960089a6c031c65e89c",
+      "synthetic": true
+    },
+    {
+      "doc_id": "DOC-C-1003-POLICE",
+      "doc_type": "police_report",
+      "entity_ids": [
+        "C-1003",
+        "MOT-0000005",
+        "PH-00006",
+        "AD-001"
+      ],
+      "format": "jpg",
+      "is_scanned": true,
+      "path": "docs/claim/C-1003-police-report-scanned.jpg",
+      "provenance": [
+        {
+          "entity_id": "C-1003",
+          "field": "police_report_ref",
+          "value": "PR-2025-813499"
+        }
+      ],
+      "sha256": "5dc3d144f6393fc3808c64227ed3f095d389e741ef401784ef64b30e2aa33460",
       "synthetic": true
     },
     {
@@ -821,6 +872,7 @@
         "cause": "business_interruption",
         "claim_id": "C-1004",
         "country": "DE",
+        "damage_area": "shopfront",
         "doc_id": "DOC-C-1004-EVIDENCE",
         "kind": "commercial_damage",
         "line": "bop",
@@ -834,7 +886,13 @@
         "path": "evidence/C-1004-evidence.jpg",
         "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Germany: a closed small business with shutters down and a temporary-closure notice. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks."
       },
-      "provenance": [],
+      "provenance": [
+        {
+          "entity_id": "C-1004",
+          "field": "evidence_damage",
+          "value": "shopfront"
+        }
+      ],
       "rendered": true,
       "sha256": "7702e15ae2374008c0ef1aa56a5d33564f1f63f4b0be32c9254a70ee16f51938",
       "synthetic": true
@@ -1492,7 +1550,13 @@
         "path": "faces/PH-00001-face.jpg",
         "prompt": "A neutral passport-style identity portrait of a fictional Netherlands resident (an older man with short hair): head and shoulders, facing the camera, plain light-grey background, even studio lighting, neutral expression. Photorealistic but an entirely invented, non-existent person. not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border."
       },
-      "provenance": [],
+      "provenance": [
+        {
+          "entity_id": "PH-00001",
+          "field": "portrait",
+          "value": "Synthetic ID portrait for policyholder PH-00001 (Netherlands)."
+        }
+      ],
       "rendered": true,
       "sha256": "1206a3cac000df77b913a1184b0ed4f15308169b08a96a3f9e3f9014c6bd7dd2",
       "synthetic": true
@@ -1566,7 +1630,13 @@
         "path": "faces/PH-00002-face.jpg",
         "prompt": "A neutral passport-style identity portrait of a fictional Ireland resident (an older man with curly hair): head and shoulders, facing the camera, plain light-grey background, even studio lighting, neutral expression. Photorealistic but an entirely invented, non-existent person. not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border."
       },
-      "provenance": [],
+      "provenance": [
+        {
+          "entity_id": "PH-00002",
+          "field": "portrait",
+          "value": "Synthetic ID portrait for policyholder PH-00002 (Ireland)."
+        }
+      ],
       "rendered": true,
       "sha256": "c4f0758f0de3faace8e68b77301966d2a70694d5358a53f12742db35cbb5e60b",
       "synthetic": true
@@ -1640,7 +1710,13 @@
         "path": "faces/PH-00003-face.jpg",
         "prompt": "A neutral passport-style identity portrait of a fictional France resident (a middle-aged man with shoulder-length hair): head and shoulders, facing the camera, plain light-grey background, even studio lighting, neutral expression. Photorealistic but an entirely invented, non-existent person. not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border."
       },
-      "provenance": [],
+      "provenance": [
+        {
+          "entity_id": "PH-00003",
+          "field": "portrait",
+          "value": "Synthetic ID portrait for policyholder PH-00003 (France)."
+        }
+      ],
       "rendered": true,
       "sha256": "96fd0ada59a9490b14e324be91cc955ba75b9bf1e0297490a359b49b75df1bd4",
       "synthetic": true
@@ -1714,7 +1790,13 @@
         "path": "faces/PH-00004-face.jpg",
         "prompt": "A neutral passport-style identity portrait of a fictional Netherlands resident (a young man with curly hair): head and shoulders, facing the camera, plain light-grey background, even studio lighting, neutral expression. Photorealistic but an entirely invented, non-existent person. not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border."
       },
-      "provenance": [],
+      "provenance": [
+        {
+          "entity_id": "PH-00004",
+          "field": "portrait",
+          "value": "Synthetic ID portrait for policyholder PH-00004 (Netherlands)."
+        }
+      ],
       "rendered": true,
       "sha256": "87f3c24a74616ab4268c422a0c77df42fee576a3e5c4b7389efff5000acf635b",
       "synthetic": true
@@ -1788,7 +1870,13 @@
         "path": "faces/PH-00005-face.jpg",
         "prompt": "A neutral passport-style identity portrait of a fictional Spain resident (a middle-aged man with light hair): head and shoulders, facing the camera, plain light-grey background, even studio lighting, neutral expression. Photorealistic but an entirely invented, non-existent person. not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border."
       },
-      "provenance": [],
+      "provenance": [
+        {
+          "entity_id": "PH-00005",
+          "field": "portrait",
+          "value": "Synthetic ID portrait for policyholder PH-00005 (Spain)."
+        }
+      ],
       "rendered": true,
       "sha256": "67fcb49b632b5df1568b872f16d997cd935950d3025bfa04a6621fe4b5579b78",
       "synthetic": true
@@ -1862,7 +1950,13 @@
         "path": "faces/PH-00006-face.jpg",
         "prompt": "A neutral passport-style identity portrait of a fictional Germany resident (a man in their thirties with shoulder-length hair): head and shoulders, facing the camera, plain light-grey background, even studio lighting, neutral expression. Photorealistic but an entirely invented, non-existent person. not a real or identifiable person, not a celebrity or public figure, not a likeness of any existing individual; no text, no watermark, no document border."
       },
-      "provenance": [],
+      "provenance": [
+        {
+          "entity_id": "PH-00006",
+          "field": "portrait",
+          "value": "Synthetic ID portrait for policyholder PH-00006 (Germany)."
+        }
+      ],
       "rendered": true,
       "sha256": "d7f5af79289c3145c74e1c4423e5b98cc33cb07a1f94bcd9ce94588cac596d21",
       "synthetic": true

@@ -246,6 +246,127 @@ def test_multihop_golden_is_grounded_cross_document(tmp_path):
             assert q["answer"] not in text, f"{q['id']}: answer leaks into bridge doc {did} (not multi-hop)"
 
 
+def _born_digital_text(out, manifest):
+    """Concatenated rendered text of every born-digital document (skips scans + generated images)."""
+    import pypdfium2 as pdfium
+
+    parts = []
+    for d in manifest["documents"]:
+        if d.get("is_scanned") or d.get("is_generated"):
+            continue
+        p = out / d["path"]
+        ext = p.suffix.lower()
+        if ext == ".pdf":
+            parts += [pg.get_textpage().get_text_range() for pg in pdfium.PdfDocument(str(p))]
+        elif ext == ".docx":
+            import docx
+
+            doc = docx.Document(str(p))
+            parts += [x.text for x in doc.paragraphs]
+            parts += [c.text for t in doc.tables for r in t.rows for c in r.cells]
+        elif ext == ".xlsx":
+            import openpyxl
+
+            wb = openpyxl.load_workbook(str(p), read_only=True, data_only=True)
+            for ws in wb.worksheets:
+                for row in ws.iter_rows(values_only=True):
+                    parts += [str(c) for c in row if c is not None]
+        elif ext in (".md", ".csv"):
+            parts.append(p.read_text(encoding="utf-8"))
+    return "\n".join(parts)
+
+
+def test_multimodal_golden_grounded_on_image_documents(tmp_path):
+    """The multimodal classes exist, each answer is provenance-grounded, and every cited doc for an
+    ocr/vision/multimodal_retrieval question is an image/scan (not a born-digital text doc)."""
+    import json
+
+    from generator.run import generate
+
+    generate(42, tmp_path / "mm", "sample")
+    manifest = json.loads((tmp_path / "mm" / "manifest.json").read_text())
+    doc = {d["doc_id"]: d for d in manifest["documents"]}
+    doc_assert = {d["doc_id"]: {(a["entity_id"], a["field"]): a["value"] for a in d.get("provenance", [])}
+                  for d in manifest["documents"]}
+    golden = [json.loads(l) for l in (tmp_path / "mm" / "golden.jsonl").read_text().splitlines() if l.strip()]
+    by_mod = {}
+    for q in golden:
+        by_mod.setdefault(q["modality"], []).append(q)
+
+    for mod in ("ocr", "vision", "multimodal_retrieval", "cross_modal"):
+        assert by_mod.get(mod), f"no {mod} golden questions emitted"
+
+    # every question must be uniquely answerable — no two rows share question text (the cross-modal
+    # trap: keying a per-claim question on a policy that hosts several claims). Consumers see only the
+    # question string, so identical text with differing answers is corrupt ground truth.
+    qtexts = [q["question"] for q in golden]
+    assert len(qtexts) == len(set(qtexts)), "duplicate golden question text (ambiguous ground truth)"
+
+    def is_image(did):  # image = generated pixels or a scanned raster
+        return doc[did].get("is_generated") or doc[did].get("is_scanned")
+
+    # single-hop multimodal: answer grounded, and every cited doc is an image/scan
+    for mod in ("ocr", "vision", "multimodal_retrieval"):
+        for q in by_mod[mod]:
+            key = (q["provenance"]["entity_id"], q["provenance"]["field"])
+            for did in q["relevant_doc_ids"]:
+                assert is_image(did), f"{q['id']}: cited born-digital doc {did} for {mod} question"
+                assert doc_assert[did].get(key) == q["answer"], f"{q['id']}: {did} does not assert the answer"
+
+    # cross-modal: the chain joins a text bridge to an image, and the answer lives on the image hop
+    for q in by_mod["cross_modal"]:
+        hops = q["provenance"]["hops"]
+        assert any(not is_image(d) for h in hops for d in h["doc_ids"]), f"{q['id']}: no text bridge"
+        assert all(is_image(d) for d in hops[-1]["doc_ids"]), f"{q['id']}: terminal hop is not an image"
+        assert q["answer"] == hops[-1]["value"]
+
+
+def test_multimodal_answers_do_not_leak_into_born_digital_text(tmp_path):
+    """OCR / vision / cross-modal answers must be readable ONLY in their image — never on a born-digital
+    page — else the question is answerable without the modality (the same integrity guard as multi-hop)."""
+    import json
+
+    from generator.run import generate
+
+    try:
+        import pypdfium2  # noqa: F401
+    except Exception as e:  # pragma: no cover
+        pytest.skip(f"pypdfium2 unavailable: {e}")
+
+    generate(42, tmp_path / "leak", "sample")
+    manifest = json.loads((tmp_path / "leak" / "manifest.json").read_text())
+    text = _born_digital_text(tmp_path / "leak", manifest).lower()
+    golden = [json.loads(l) for l in (tmp_path / "leak" / "golden.jsonl").read_text().splitlines() if l.strip()]
+
+    leaks = []
+    for q in golden:
+        if q["modality"] not in ("ocr", "vision", "cross_modal"):
+            continue  # multimodal_retrieval answers are descriptive captions, not modality-only facts
+        if str(q["answer"]).lower() in text:
+            leaks.append((q["id"], q["modality"], q["answer"]))
+    assert not leaks, f"modality-only answers leak into born-digital text: {leaks[:10]}"
+
+
+def test_police_report_is_scan_only(tmp_path):
+    """The police report is emitted ONLY as a scan: no born-digital PDF is left in the corpus, and its
+    manifest record is a scan with no in-corpus source twin."""
+    import json
+
+    from generator.run import generate
+
+    out = tmp_path / "pr"
+    generate(42, out, "sample")
+    manifest = json.loads((out / "manifest.json").read_text())
+    police = [d for d in manifest["documents"] if d["doc_type"] == "police_report"]
+    assert police, "no police_report emitted in sample"
+    for d in police:
+        assert d["is_scanned"] and d["format"] == "jpg"
+        assert "scanned_of" not in d, "scan-only police report must have no in-corpus source twin"
+        assert (out / d["path"]).exists()
+    # the render-intermediate PDF must not be present anywhere in the corpus
+    assert not list(out.glob("**/*-police-report.pdf")), "born-digital police-report PDF leaked into corpus"
+
+
 def test_generated_corpus_validates(tmp_path):
     """A freshly generated sample passes full validation — including golden answer-grounding (#13)."""
     from generator.run import generate
@@ -304,6 +425,7 @@ BUILT_DOC_TYPES = {
     "fnol_scanned", "settlement_letter_scanned", "denial_letter_scanned",
     "accident_statement", "accident_statement_scanned",
     "id_card", "id_card_scanned",
+    "police_report",
     "loss_run", "reserve_register", "premium_register", "commission_summary",
     "underwriting_guidelines", "claims_manual", "customer_faq",
     "evidence_photo", "id_photo",

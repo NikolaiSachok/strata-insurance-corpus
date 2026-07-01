@@ -46,7 +46,7 @@ One JSON object per line, aligned with general enterprise-RAG benchmark formats:
 ```json
 {"id": "Q-C-1000-cause", "question": "What cause of loss was recorded for claim C-1000?",
  "answer": "burglary", "relevant_doc_ids": ["DOC-C-1000-ADJ", "DOC-C-1000-FNOL"],
- "query_class": "semantic", "provenance": {"entity_id": "C-1000", "field": "cause"}}
+ "query_class": "semantic", "modality": "text", "provenance": {"entity_id": "C-1000", "field": "cause"}}
 ```
 
 | Field | Meaning |
@@ -54,16 +54,26 @@ One JSON object per line, aligned with general enterprise-RAG benchmark formats:
 | `id` | Stable question id. |
 | `question` / `answer` | The query and its by-construction ground-truth answer. |
 | `relevant_doc_ids` | **Every** document that asserts the answer (resolve via `manifest.json`). |
-| `query_class` | `semantic` · `aggregation` · `multi_hop`. |
+| `query_class` | `semantic` · `aggregation` · `multi_hop` (the reasoning shape). |
+| `modality` | The input a system must read: `text` · `ocr` · `vision` · `multimodal_retrieval` · `cross_modal`. |
 | `provenance` | Single-hop: `{entity_id, field}`. Multi-hop: `{hops: […]}` (the explicit chain). |
 
 Every answer is grounded in document provenance: it is *exactly* what its cited documents state, and
 `relevant_doc_ids` is *exactly* the set that asserts it (`make validate` enforces this). See
 [golden/README.md](../golden/README.md).
 
-> **Planned (M5):** a `modality` tag (`text` · `ocr` · `vision` · `multimodal_retrieval` · `cross_modal`)
-> and multimodal questions whose answers live only in scanned or image documents — so a consumer can
-> verify OCR / vision / multimodal-retrieval capability, not just text retrieval. Tracked in the issues.
+**Multimodal coverage.** Beyond `text`, four modalities have answers that live only in a scanned or image
+document, so they verify OCR / vision / multimodal-retrieval capability rather than text retrieval:
+
+- **`ocr`** — a police-report reference number on a **scan-only** document (rendered → scanned → born-digital
+  PDF *never* emitted, so its facts exist on no born-digital page).
+- **`vision`** — the visibly-damaged area in an evidence photo (labelled by the seeded image prompt-spec).
+- **`multimodal_retrieval`** — an on-file ID portrait, retrieved by policyholder identity.
+- **`cross_modal`** — a text→image chain (find a claim from its document, then read its photo).
+
+A leak-guard test asserts every `ocr` / `vision` / `cross_modal` answer appears on **no** born-digital page,
+so those questions genuinely require the modality. Because the corpus ships **no clean-text sidecar for
+scans**, a consumer must actually OCR / interpret the images — that is what keeps this a real multimodal test.
 
 ## How to score
 
@@ -71,7 +81,7 @@ A dependency-free reference scorer ships with the corpus so every consumer score
 the labels — it scores *predictions*, it does not do retrieval:
 
 ```bash
-make eval PRED=your-predictions.jsonl        # Recall@K / nDCG@K / exact-match / token-F1, by query class
+make eval PRED=your-predictions.jsonl        # Recall@K / nDCG@K / EM / F1, broken down by query_class AND modality
 python -m generator.eval --golden golden/golden.jsonl --predictions preds.jsonl --out metrics.json
 ```
 
