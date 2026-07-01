@@ -1,5 +1,7 @@
 # strata-insurance-corpus
 
+[![CI](https://github.com/NikolaiSachok/strata-insurance-corpus/actions/workflows/ci.yml/badge.svg)](https://github.com/NikolaiSachok/strata-insurance-corpus/actions/workflows/ci.yml)
+
 > A **reproducible, synthetic, multi-format insurance document corpus** — born-digital **and** scanned
 > PDFs, Word documents, spreadsheets, and photos from a fictional property-&-casualty insurer,
 > **Meridian Mutual** — shipped with a **golden evaluation set produced by construction**. Built to
@@ -13,9 +15,9 @@ forms/letters, **AI evidence photos + identity cards (ID scans) with synthetic p
 golden-eval set (semantic + aggregation + multi-hop **+ multimodal: OCR / vision / multimodal-retrieval /
 cross-modal**), and a **reference eval harness** (Recall@K / nDCG / EM / F1) run end-to-end today. **This
 is a data vendor** — it ships the data + ground truth and is engine-agnostic (see
-[docs/data-card.md](docs/data-card.md), the ingestion contract); consuming RAG systems own ingestion. A
-HuggingFace release + CI remain (M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and the
-**[issues](../../issues)**.
+[docs/data-card.md](docs/data-card.md), the ingestion contract); consuming RAG systems own ingestion.
+**CI** (reproducibility + a committed-sample drift-check + full validate) runs on every PR and on pushes to
+`main`; a HuggingFace release remains (M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and the **[issues](../../issues)**.
 
 ### What runs today
 
@@ -125,6 +127,7 @@ sample/      a small, committed slice of the corpus (so the repo is usable witho
 golden/      the golden evaluation set (semantic + aggregation + multi-hop) + reference eval harness   [M4 ✅]
 docs/        the data card (ingestion contract), data model, format matrix, related work     [M1 ✅]
 Makefile     generate / sample / validate / test targets                                     [M1 ✅]
+.github/     CI: test suite + committed-sample drift-check + full generate/validate           [M5 ✅]
 ```
 
 The **full corpus** (hundreds of documents + images) is reproducible locally and will be published as a

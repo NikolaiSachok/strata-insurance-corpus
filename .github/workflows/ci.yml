@@ -1,0 +1,80 @@
+name: CI
+
+# Guards the two non-negotiables on every push/PR: the generator is reproducible, and the committed
+# sample is exactly what the generator produces. See docs/data-card.md and BRIEF.md.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      UV_LOCKED: "1"          # assert the committed uv.lock is current for every uv command; never mutate it
+      UV_PYTHON: "3.12"       # pin the interpreter for every uv run/sync (drift-check reproducibility)
+      PYTHONHASHSEED: "0"      # pin hash order (Faker locale providers) — mirrors the Makefile
+    steps:
+      # SHA-pinned per the repo's "Require actions to be pinned to a full-length commit SHA" policy
+      # (supply-chain hardening — a mutable tag can be repointed). 9c091bb = actions/checkout v7.0.0
+      # (Node 24 runtime; avoids the deprecated-Node-20 warning).
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+
+      # WeasyPrint (>=62) renders PDFs via pango/harfbuzz/fontconfig — not bundled in the runner.
+      # Liberation/DejaVu cover the Helvetica/Arial CSS stack (the exact glyph bytes are irrelevant:
+      # rendered files are never cross-diffed; only the platform-independent data layer is).
+      - name: Install WeasyPrint system libraries + fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz0b libffi-dev \
+            fonts-liberation fonts-dejavu-core
+
+      # Install uv via its official script rather than a third-party action, so this workflow depends
+      # on no non-GitHub action (works even under a restrictive "allowed actions" policy).
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Set up Python + sync the locked environment
+        run: |
+          uv python install 3.12
+          uv sync --extra dev   # UV_LOCKED asserts the lockfile is current
+
+      # The real reproducibility + integrity guard: in-runner byte-stability, referential integrity,
+      # golden answer-grounding, the multimodal leak-guard, PII text-grounding, and the oracle self-check.
+      - name: Test suite
+        run: make test
+
+      # Drift check: the committed sample is a build artifact of the generator, so it must still match
+      # today's code. Rendered bytes (PDF/docx/xlsx/jpg + their manifest sha256) depend on native
+      # libraries/fonts and are platform-dependent, so they are NOT diffed. The pure-data layer
+      # (model/roster/golden/pii/prompt-specs) is byte-stable across machines and MUST match — this is
+      # what makes eval changes reviewable in the diff and catches a forgotten `make sample`.
+      - name: Sample drift check (data layer)
+        run: |
+          make sample
+          if ! git diff --exit-code -- \
+            sample/model.json sample/roster.tsv sample/golden.jsonl \
+            sample/pii-index.jsonl sample/image-prompts.jsonl golden/golden.jsonl; then
+            echo "::error::Committed sample data is stale or non-reproducible — run 'make sample' and commit the result."
+            exit 1
+          fi
+
+      # Full end-to-end integrity: generate the whole corpus and validate it (all doc types, provenance,
+      # golden grounding, question-uniqueness). Retry wraps the known intermittent WeasyPrint native
+      # crash (#33) so it doesn't flake the build.
+      - name: Full corpus generate + validate
+        run: |
+          ok=0
+          for i in 1 2 3 4 5; do
+            if make generate SEED=42; then ok=1; break; fi
+            echo "generate attempt $i failed, retrying"
+          done
+          [ "$ok" = 1 ] || { echo "::error::generate failed after 5 attempts"; exit 1; }
+          make validate OUT=corpus

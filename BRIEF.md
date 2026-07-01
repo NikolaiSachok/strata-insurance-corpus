@@ -133,8 +133,9 @@ pyproject.toml   the generator package + deps (faker, jinja2/reportlab, python-d
   eval harness + metrics; benchmark-aligned format.
 - **M5 — Data-vendor packaging & release:** ✅ data card / ingestion contract (`docs/data-card.md`);
   ✅ **multimodal golden extension** (OCR / vision / multimodal-retrieval / cross-modal, on scan-only and
-  image-only ground truth, leak-guarded); ⏳ HuggingFace dataset release + dataset card; ⏳ CI (regenerate
-  sample + validate); README/wiki polish. (The Strata-RAG adapter + `examples/insurance` live in the
+  image-only ground truth, leak-guarded); ✅ CI (GitHub Actions: test suite + committed-sample drift-check
+  + full generate/validate, with the deps pinned via `uv.lock`); ⏳ HuggingFace dataset release + dataset
+  card; README/wiki polish. (The Strata-RAG adapter + `examples/insurance` live in the
   Strata-RAG repo, not here — this corpus prescribes no engine glue.)
 
 ## Hard rules
