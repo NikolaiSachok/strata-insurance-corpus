@@ -119,14 +119,14 @@
         "kind": "commercial_damage",
         "line": "bop",
         "model": "gemini-3.1-flash-image",
-        "negative_prompt": "no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks",
+        "negative_prompt": "no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; storefronts, shopfronts, signs, and premises carry no legible business names, shop signage, brand logos, or readable lettering (blank, blurred, or illegible signage only); no text overlays or stock-photo watermarks. (synthetic vehicle number plates on cars may remain visible)",
         "params": {
           "aspect_ratio": "4:3",
           "resolution": "1K",
           "seed": 4201986
         },
         "path": "evidence/C-1000-evidence.jpg",
-        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Germany: a forced-open shop shutter and a ransacked retail interior after a burglary. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks."
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Germany: a forced-open shop shutter and a ransacked retail interior after a burglary. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; storefronts, shopfronts, signs, and premises carry no legible business names, shop signage, brand logos, or readable lettering (blank, blurred, or illegible signage only); no text overlays or stock-photo watermarks. (synthetic vehicle number plates on cars may remain visible)."
       },
       "provenance": [
         {
@@ -136,7 +136,7 @@
         }
       ],
       "rendered": true,
-      "sha256": "eee85b527ecb796bfc24962132a10a83eb2b14ad922bc8ddbe3898e36efb3de6",
+      "sha256": "e2cf624a7fd696bd2f2ddda104157f378e504769fd5b9cf6726ab9c4773aba58",
       "synthetic": true
     },
     {
@@ -311,14 +311,14 @@
         "kind": "property_damage",
         "line": "homeowners",
         "model": "gemini-3.1-flash-image",
-        "negative_prompt": "no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks",
+        "negative_prompt": "no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; storefronts, shopfronts, signs, and premises carry no legible business names, shop signage, brand logos, or readable lettering (blank, blurred, or illegible signage only); no text overlays or stock-photo watermarks. (synthetic vehicle number plates on cars may remain visible)",
         "params": {
           "aspect_ratio": "4:3",
           "resolution": "1K",
           "seed": 4201987
         },
         "path": "evidence/C-1001-evidence.jpg",
-        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Ireland: a forced-open residential door with a damaged lock after a burglary. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks."
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Ireland: a forced-open residential door with a damaged lock after a burglary. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; storefronts, shopfronts, signs, and premises carry no legible business names, shop signage, brand logos, or readable lettering (blank, blurred, or illegible signage only); no text overlays or stock-photo watermarks. (synthetic vehicle number plates on cars may remain visible)."
       },
       "provenance": [
         {
@@ -328,7 +328,7 @@
         }
       ],
       "rendered": true,
-      "sha256": "a970e08bd41e4dd307b0ca1d474de325ed42985e865e0bd1f7bdcf7d47d5f179",
+      "sha256": "d8879ae0afa47646bd0afdc6a8f82f65ffacc0d86852e18febcf21feb16c2145",
       "synthetic": true
     },
     {
@@ -476,14 +476,14 @@
         "kind": "commercial_damage",
         "line": "bop",
         "model": "gemini-3.1-flash-image",
-        "negative_prompt": "no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks",
+        "negative_prompt": "no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; storefronts, shopfronts, signs, and premises carry no legible business names, shop signage, brand logos, or readable lettering (blank, blurred, or illegible signage only); no text overlays or stock-photo watermarks. (synthetic vehicle number plates on cars may remain visible)",
         "params": {
           "aspect_ratio": "4:3",
           "resolution": "1K",
           "seed": 4201988
         },
         "path": "evidence/C-1002-evidence.jpg",
-        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Germany: a forced-open shop shutter and a ransacked retail interior after a burglary. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks."
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Germany: a forced-open shop shutter and a ransacked retail interior after a burglary. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; storefronts, shopfronts, signs, and premises carry no legible business names, shop signage, brand logos, or readable lettering (blank, blurred, or illegible signage only); no text overlays or stock-photo watermarks. (synthetic vehicle number plates on cars may remain visible)."
       },
       "provenance": [
         {
@@ -493,7 +493,7 @@
         }
       ],
       "rendered": true,
-      "sha256": "01e15baa47b09f561cc247867bba9ce57522b46c1144ab300b7c3ef9291a26e0",
+      "sha256": "78feac6871552aefa10c2da6af42f8d4e932879561f70ffedc2145c3b482ffaf",
       "synthetic": true
     },
     {
@@ -663,14 +663,14 @@
         "kind": "vehicle_damage",
         "line": "personal_auto",
         "model": "gemini-3.1-flash-image",
-        "negative_prompt": "no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks",
+        "negative_prompt": "no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; storefronts, shopfronts, signs, and premises carry no legible business names, shop signage, brand logos, or readable lettering (blank, blurred, or illegible signage only); no text overlays or stock-photo watermarks. (synthetic vehicle number plates on cars may remain visible)",
         "params": {
           "aspect_ratio": "4:3",
           "resolution": "1K",
           "seed": 4201989
         },
         "path": "evidence/C-1003-evidence.jpg",
-        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Germany: a car with rear-end collision damage \u2014 crumpled rear bumper and dented boot. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks."
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Germany: a car with rear-end collision damage \u2014 crumpled rear bumper and dented boot. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; storefronts, shopfronts, signs, and premises carry no legible business names, shop signage, brand logos, or readable lettering (blank, blurred, or illegible signage only); no text overlays or stock-photo watermarks. (synthetic vehicle number plates on cars may remain visible)."
       },
       "provenance": [
         {
@@ -680,7 +680,7 @@
         }
       ],
       "rendered": true,
-      "sha256": "3ba1b2c59f9311ddba5353f2fa165a477db4f3ebc234c50f8a355237c9478566",
+      "sha256": "b2b97fd03e6a61905340226f86c00eb30b6afa48869718cd3cdf9d160e2ce809",
       "synthetic": true
     },
     {
@@ -877,14 +877,14 @@
         "kind": "commercial_damage",
         "line": "bop",
         "model": "gemini-3.1-flash-image",
-        "negative_prompt": "no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks",
+        "negative_prompt": "no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; storefronts, shopfronts, signs, and premises carry no legible business names, shop signage, brand logos, or readable lettering (blank, blurred, or illegible signage only); no text overlays or stock-photo watermarks. (synthetic vehicle number plates on cars may remain visible)",
         "params": {
           "aspect_ratio": "4:3",
           "resolution": "1K",
           "seed": 4201990
         },
         "path": "evidence/C-1004-evidence.jpg",
-        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Germany: a closed small business with shutters down and a temporary-closure notice. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; no text overlays or stock-photo watermarks."
+        "prompt": "A candid amateur smartphone photo submitted as insurance claim evidence in Germany: a closed small business with shutters down and a temporary-closure notice. Natural daylight, slightly imperfect amateur phone-camera framing, realistic and true-to-life. no real, identifiable public figures or celebrities; any business or premises depicted is generic and fictional, not a real named chain or brand; storefronts, shopfronts, signs, and premises carry no legible business names, shop signage, brand logos, or readable lettering (blank, blurred, or illegible signage only); no text overlays or stock-photo watermarks. (synthetic vehicle number plates on cars may remain visible)."
       },
       "provenance": [
         {
@@ -894,7 +894,7 @@
         }
       ],
       "rendered": true,
-      "sha256": "7702e15ae2374008c0ef1aa56a5d33564f1f63f4b0be32c9254a70ee16f51938",
+      "sha256": "1ac20dd8c7773e4e2a5cd7142d53658805325ff861812c96bfc5135183b05c6d",
       "synthetic": true
     },
     {
