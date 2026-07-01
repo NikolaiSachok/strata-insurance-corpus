@@ -56,8 +56,9 @@ against `schema/model.schema.json`.
 
 ## `roster.tsv` — the join target
 
-A flat, **id-keyed master-data index** — the table the RAG engine joins to for "who/what owns
-this" questions (mirrors Strata-RAG's roster / `register_family` pattern). One header row plus
+A flat, **id-keyed master-data index** — the table a consuming RAG engine joins to for "who/what owns
+this" questions (a master-data join target of the shape engines like Strata-RAG resolve rosters against).
+One header row plus
 one row per entity, tab-separated, UTF-8, fixed column order, grouped by type then id:
 
 | Column | Meaning |

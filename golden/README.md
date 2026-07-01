@@ -63,10 +63,11 @@ asserted by each of its cited documents, or validation fails.
 
 ## Eval harness
 
-A small, dependency-free reference scorer so the corpus is usable **standalone with any RAG stack** (the
-full engine is [Strata-RAG](https://github.com/NikolaiSachok/Strata-RAG); the M5 adapter mounts this corpus
-into it). Feed it your system's predictions and it reports retrieval + answer metrics, broken down by query
-class.
+A small, dependency-free reference scorer so the corpus is usable **standalone with any RAG stack** — it
+scores *predictions* against the labels so every consumer scores identically; it does not do retrieval, and
+this repo ships no engine adapter (ingestion is the consuming system's job — see
+[docs/data-card.md](../docs/data-card.md)). Feed it your system's predictions and it reports retrieval +
+answer metrics, broken down by query class.
 
 **Predictions file** — JSONL, one object per answered question (see
 [`../sample/predictions.example.jsonl`](../sample/predictions.example.jsonl)):

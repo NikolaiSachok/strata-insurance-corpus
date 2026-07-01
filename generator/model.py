@@ -399,8 +399,8 @@ ROSTER_COLUMNS = ("id", "type", "name", "line", "parent_id", "status", "detail")
 
 
 def roster_rows(model: Model) -> list[tuple]:
-    """A flat, id-keyed master-data index — the join target for "who/what owns
-    this" questions (mirrors Strata-RAG's roster / register_family pattern)."""
+    """A flat, id-keyed master-data index — the join target a consuming engine uses for
+    "who/what owns this" questions (master-data of the shape RAG rosters resolve against)."""
     holder_name = {h.id: h.name for h in model.policyholders}
     rows: list[tuple] = []
     for h in model.policyholders:

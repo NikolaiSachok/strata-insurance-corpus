@@ -11,8 +11,11 @@ document families (policy / claim / tabular / knowledge), **scanned (OCR-target)
 forms/letters, **AI evidence photos + identity cards (ID scans) with synthetic portraits**, a
 **redaction ground-truth index** (every PII span catalogued), the manifest + provenance, the
 golden-eval set (semantic + aggregation + multi-hop), and a **reference eval harness**
-(Recall@K / nDCG / EM / F1) run end-to-end today. The Strata-RAG adapter + HuggingFace release are
-scheduled (M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and the **[issues](../../issues)**.
+(Recall@K / nDCG / EM / F1) run end-to-end today. **This is a data vendor** — it ships the data + ground
+truth and is engine-agnostic (see [docs/data-card.md](docs/data-card.md), the ingestion contract);
+consuming RAG systems own ingestion. A multimodal golden extension (OCR / vision / multimodal retrieval)
+and a HuggingFace release are scheduled (M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and the
+**[issues](../../issues)**.
 
 ### What runs today
 
@@ -100,8 +103,10 @@ Motor · Household · Small-commercial lines, with policyholders across six Euro
   as synthetic. Any resemblance to real entities is coincidental.
 - **Multi-format on purpose.** Each format is included because it poses a *distinct* RAG problem
   (scanned → OCR, spreadsheets → aggregation, photos → vision), not for variety's sake.
-- **Standalone or plug-in.** Works with any RAG system; ships a [Strata-RAG](https://github.com/NikolaiSachok/Strata-RAG)
-  adapter so the engine can mount it via `RAGEVAL_PLUGINS_DIR`.
+- **Engine-agnostic data vendor.** Works with any RAG system; the corpus ships data + ground truth and
+  prescribes no processing. Ingestion (parsing, OCR, chunking, retrieval, vision) is the consuming system's
+  job — see [docs/data-card.md](docs/data-card.md). It composes with
+  [Strata-RAG](https://github.com/NikolaiSachok/Strata-RAG), whose own agent writes the adapter on its side.
 
 ## Repo layout
 
@@ -109,8 +114,7 @@ Motor · Household · Small-commercial lines, with policyholders across six Euro
 generator/   the seeded synthetic-data pipeline (model → content → render + provenance)   [M1 ✅]
 sample/      a small, committed slice of the corpus (so the repo is usable without a full run) [M1 ✅]
 golden/      the golden evaluation set (semantic + aggregation + multi-hop) + reference eval harness   [M4 ✅]
-adapter/     the Strata-RAG source adapter (register_adapter / register_family)             [M5 ⏳]
-docs/        the data model, the format matrix, related work                                 [M1 ✅]
+docs/        the data card (ingestion contract), data model, format matrix, related work     [M1 ✅]
 Makefile     generate / sample / validate / test targets                                     [M1 ✅]
 ```
 
@@ -119,8 +123,10 @@ The **full corpus** (hundreds of documents + images) is reproducible locally and
 
 ## Using it
 
-- **Standalone:** `make generate` → point your RAG pipeline at `corpus/`.
-- **With Strata-RAG:** install this repo, set `RAGEVAL_PLUGINS_DIR` to `adapter/` (see [BRIEF.md](BRIEF.md)).
+- **Any RAG engine:** `make generate` → point your pipeline at `corpus/`; the
+  [data card](docs/data-card.md) is the ingestion contract (files, ground-truth structure, scoring).
+- **With Strata-RAG:** hand it the corpus; its own agent writes the adapter on its side (this repo ships
+  no engine glue).
 - **Just the data:** download the published HuggingFace dataset (planned).
 
 ## Related work (why a new corpus, not a reuse)
