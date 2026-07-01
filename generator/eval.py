@@ -2,8 +2,9 @@
 
 A small, self-contained scorer so the corpus is usable **standalone with any RAG stack**: feed it a
 predictions file and it reports retrieval and answer metrics against ``golden.jsonl``, broken down by
-query class. (The full RAG engine is [Strata-RAG](https://github.com/NikolaiSachok/Strata-RAG); the M5
-adapter lets it mount this corpus and use its own metrics. This harness is the dependency-free reference.)
+query class. It scores *labels* — it is not ingestion glue and this repo ships no engine adapter; a
+consuming engine (e.g. [Strata-RAG](https://github.com/NikolaiSachok/Strata-RAG)) owns ingestion and may
+use its own metrics too. This harness is the dependency-free reference so everyone scores identically.
 
 Predictions file — JSONL, one object per answered question::
 

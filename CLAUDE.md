@@ -13,7 +13,8 @@ document-RAG. Usable standalone with any RAG stack, or as a plug-in corpus for
 - **BRIEF.md** — company spec, entity/data model, doc-type × format matrix, generation pipeline,
   golden-eval design, repo layout, M1–M5 roadmap, citations. *Read it before coding.*
 - **README.md** — public face. **docs/related-work.md** — prior art.
-- **generator/ · sample/ · golden/ · adapter/** — each has a README; see BRIEF "Repo layout".
+- **generator/ · sample/ · golden/** — each has a README; see BRIEF "Repo layout".
+- **docs/data-card.md** — the ingestion contract (what a consuming RAG system codes against).
 - **Issues / milestones (M1–M5)** — the implementation plan. Pick an issue and build it.
 
 ## How to work here
@@ -48,8 +49,10 @@ document-RAG. Usable standalone with any RAG stack, or as a plug-in corpus for
   note AI assistance, do it in prose (see Strata-RAG's "How this was built").
 
 ## Relationship to Strata-RAG
-The RAG **engine** is the public [Strata-RAG](https://github.com/NikolaiSachok/Strata-RAG). **Do not reimplement
-retrieval/eval here** — this repo is **data + a thin adapter**. M5 adds the adapter (a self-registering plugin via
-`RAGEVAL_PLUGINS_DIR`, absolute imports per Strata-RAG's documented convention) plus an `examples/insurance` in
-the Strata-RAG repo that consumes this corpus. This is the *public* demonstration of Strata-RAG's open-core
-plugin design.
+The RAG **engine** is the public [Strata-RAG](https://github.com/NikolaiSachok/Strata-RAG). **This repo is a
+data vendor: data + ground truth only — no engine glue.** Do not reimplement retrieval/eval here, and do not
+add an adapter here either: a data product must not couple to one engine's ingestion API. The consuming system
+owns ingestion (parsing, OCR, chunking, retrieval, vision); the corpus's contract with it is
+[docs/data-card.md](docs/data-card.md) + the golden set. The Strata-RAG **adapter** and its `examples/insurance`
+live in the **Strata-RAG repo** (its own agent writes them against this corpus). The `generator/eval.py`
+reference scorer is fine — it scores *labels*, it is not ingestion glue.
