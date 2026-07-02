@@ -30,6 +30,14 @@ document-RAG. Usable standalone with any RAG stack, or as a plug-in corpus for
 - **Before landing a PR/branch, run `/review-board`** — an independent multi-agent panel (determinism,
   leak-hygiene, honest-claims, correctness, synthetic-integrity, repo-hygiene) gated on the hard rules below.
   It reports a PASS/BLOCK verdict; it does not fix or push. See `.claude/commands/review-board.md`.
+- **Issue & PR hygiene.** Never cite an issue number from memory — confirm number↔title on the live board
+  (`gh issue view <n>`) before writing `#N` into a PR body, a `Closes #N`, or a roadmap. At the merge gate,
+  set `Closes #N` from what the **diff** actually implements (not the PR title), and **verify each issue
+  closed after merge** (`gh issue view <n> --json state`): GitHub's keyword parser ignores tense/negation
+  (a "won't close #N" still closes it) and a bundled `Closes #A, #B` may close only one. For partial work
+  write "Part of #N" with no closing keyword near the number. Concurrent branch-builds → spawn build agents
+  with `isolation: "worktree"`; read-only reviewers get a static `git diff main...HEAD` snapshot, not the
+  live working tree.
 
 ## Hard rules (non-negotiable)
 - **Synthetic only, clearly labeled.** No real persons/companies/policies *as fabricated entities or
