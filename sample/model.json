@@ -33,72 +33,72 @@
   ],
   "claims": [
     {
-      "adjuster_id": "AD-001",
-      "cause": "burglary",
-      "date_of_loss": "2024-01-11",
+      "adjuster_id": "AD-002",
+      "cause": "business_interruption",
+      "date_of_loss": "2024-07-13",
       "holder_id": "PH-00006",
       "id": "C-1000",
       "line": "bop",
-      "narrative_seed": "burglary affecting bop policy COM-0000003 on 2024-01-11",
-      "paid": 23700.0,
-      "policy_id": "COM-0000003",
-      "reported_date": "2024-01-17",
+      "narrative_seed": "business interruption affecting bop policy COM-0000001 on 2024-07-13",
+      "paid": 10650.0,
+      "policy_id": "COM-0000001",
+      "reported_date": "2024-07-21",
       "reserve": 0.0,
       "status": "closed"
     },
     {
       "adjuster_id": "AD-002",
-      "cause": "theft",
-      "date_of_loss": "2024-06-21",
+      "cause": "vandalism",
+      "date_of_loss": "2024-02-17",
       "holder_id": "PH-00002",
       "id": "C-1001",
-      "line": "homeowners",
-      "narrative_seed": "theft affecting homeowners policy HH-0000001 on 2024-06-21",
-      "paid": 4474.47,
-      "policy_id": "HH-0000001",
-      "reported_date": "2024-06-23",
-      "reserve": 12850.0,
+      "line": "personal_auto",
+      "narrative_seed": "vandalism affecting personal_auto policy MOT-0000002 on 2024-02-17",
+      "paid": 491.13,
+      "policy_id": "MOT-0000002",
+      "reported_date": "2024-02-25",
+      "reserve": 2050.0,
       "status": "open"
     },
     {
       "adjuster_id": "AD-001",
-      "cause": "burglary",
-      "date_of_loss": "2023-10-31",
+      "cause": "theft",
+      "date_of_loss": "2025-01-31",
       "holder_id": "PH-00006",
       "id": "C-1002",
-      "line": "bop",
-      "narrative_seed": "burglary affecting bop policy COM-0000003 on 2023-10-31",
+      "line": "personal_auto",
+      "narrative_seed": "theft affecting personal_auto policy MOT-0000004 on 2025-01-31",
       "paid": 0.0,
-      "policy_id": "COM-0000003",
-      "reported_date": "2023-11-05",
+      "policy_id": "MOT-0000004",
+      "reported_date": "2025-02-05",
       "reserve": 0.0,
       "status": "denied"
     },
     {
       "adjuster_id": "AD-001",
       "cause": "rear_end_collision",
-      "date_of_loss": "2025-10-07",
-      "holder_id": "PH-00006",
+      "date_of_loss": "2024-03-29",
+      "holder_id": "PH-00002",
       "id": "C-1003",
       "line": "personal_auto",
-      "narrative_seed": "rear end collision affecting personal_auto policy MOT-0000005 on 2025-10-07",
-      "paid": 48050.0,
-      "policy_id": "MOT-0000005",
-      "reported_date": "2025-10-12",
+      "narrative_seed": "rear end collision affecting personal_auto policy MOT-0000002 on 2024-03-29",
+      "paid": 0.0,
+      "policy_id": "MOT-0000002",
+      "reported_date": "2024-04-07",
       "reserve": 0.0,
-      "status": "closed"
+      "status": "denied"
     },
     {
-      "adjuster_id": "AD-002",
-      "cause": "business_interruption",
-      "date_of_loss": "2023-12-14",
+      "adjuster_id": "AD-001",
+      "cause": "hail",
+      "date_of_loss": "2025-09-03",
       "holder_id": "PH-00006",
       "id": "C-1004",
-      "line": "bop",
-      "narrative_seed": "business interruption affecting bop policy COM-0000003 on 2023-12-14",
+      "line": "personal_auto",
+      "narrative_seed": "hail affecting personal_auto policy MOT-0000004 on 2025-09-03",
       "paid": 48950.0,
-      "policy_id": "COM-0000003",
-      "reported_date": "2023-12-14",
+      "policy_id": "MOT-0000004",
+      "reported_date": "2025-09-05",
       "reserve": 0.0,
       "status": "closed"
     }
@@ -124,67 +124,48 @@
   "policies": [
     {
       "agent_id": "AG-003",
-      "annual_premium": 2455.0,
-      "deductible": 5000.0,
-      "effective_date": "2023-10-08",
-      "endorsements": [],
-      "expiry_date": "2024-10-07",
-      "holder_id": "PH-00002",
-      "id": "HH-0000001",
+      "annual_premium": 5815.0,
+      "deductible": 2500.0,
+      "effective_date": "2023-08-20",
+      "endorsements": [
+        "HIRED_NONOWNED_AUTO",
+        "SPOILAGE"
+      ],
+      "expiry_date": "2024-08-19",
+      "holder_id": "PH-00006",
+      "id": "COM-0000001",
       "limits": {
-        "dwelling": 350000,
-        "personal_liability": 500000,
-        "personal_property": 175000
+        "building": 250000,
+        "business_personal_property": 200000,
+        "general_liability": 500000
       },
-      "line": "homeowners",
+      "line": "bop",
       "vehicle": null
     },
     {
-      "agent_id": "AG-002",
-      "annual_premium": 1360.0,
-      "deductible": 500.0,
-      "effective_date": "2024-01-31",
+      "agent_id": "AG-003",
+      "annual_premium": 2075.0,
+      "deductible": 1000.0,
+      "effective_date": "2023-11-26",
       "endorsements": [
-        "RENTAL_REIMB",
-        "ROADSIDE"
+        "NEW_CAR_REPL"
       ],
-      "expiry_date": "2025-01-30",
+      "expiry_date": "2024-11-25",
       "holder_id": "PH-00002",
       "id": "MOT-0000002",
       "limits": {
-        "bodily_injury_per_accident": 500000,
-        "bodily_injury_per_person": 250000,
+        "bodily_injury_per_accident": 300000,
+        "bodily_injury_per_person": 100000,
         "property_damage": 100000
       },
       "line": "personal_auto",
       "vehicle": {
-        "colour": "green",
-        "make": "Volvo",
-        "model": "V40",
-        "registration": "KM-5386-CG",
-        "year": 2009
+        "colour": "black",
+        "make": "Peugeot",
+        "model": "208",
+        "registration": "HX-9830-IX",
+        "year": 2016
       }
-    },
-    {
-      "agent_id": "AG-002",
-      "annual_premium": 3525.0,
-      "deductible": 1000.0,
-      "effective_date": "2023-08-13",
-      "endorsements": [
-        "CYBER",
-        "HIRED_NONOWNED_AUTO",
-        "SPOILAGE"
-      ],
-      "expiry_date": "2024-08-12",
-      "holder_id": "PH-00006",
-      "id": "COM-0000003",
-      "limits": {
-        "building": 2000000,
-        "business_personal_property": 150000,
-        "general_liability": 1000000
-      },
-      "line": "bop",
-      "vehicle": null
     },
     {
       "agent_id": "AG-003",
@@ -197,7 +178,7 @@
       ],
       "expiry_date": "2025-02-19",
       "holder_id": "PH-00004",
-      "id": "COM-0000004",
+      "id": "COM-0000003",
       "limits": {
         "building": 750000,
         "business_personal_property": 450000,
@@ -218,7 +199,7 @@
       ],
       "expiry_date": "2025-12-04",
       "holder_id": "PH-00006",
-      "id": "MOT-0000005",
+      "id": "MOT-0000004",
       "limits": {
         "bodily_injury_per_accident": 300000,
         "bodily_injury_per_person": 100000,
@@ -232,80 +213,107 @@
         "registration": "XD-9797-YI",
         "year": 2008
       }
+    },
+    {
+      "agent_id": "AG-001",
+      "annual_premium": 2305.0,
+      "deductible": 5000.0,
+      "effective_date": "2023-11-04",
+      "endorsements": [
+        "CYBER",
+        "EPLI",
+        "HIRED_NONOWNED_AUTO"
+      ],
+      "expiry_date": "2024-11-03",
+      "holder_id": "PH-00003",
+      "id": "COM-0000005",
+      "limits": {
+        "building": 2000000,
+        "business_personal_property": 50000,
+        "general_liability": 2000000
+      },
+      "line": "bop",
+      "vehicle": null
     }
   ],
   "policyholders": [
     {
       "city": "Sint Joost",
       "country": "NL",
-      "dob": "1974-01-01",
+      "dob": "1999-01-03",
       "email": "kianjansdr@example.net",
+      "gender": "female",
       "id": "PH-00001",
       "name": "Ali Schellekens",
-      "national_id": "133890832",
+      "national_id": "338908380",
       "phone": "+3181 9600133",
       "postcode": "6026 RJ",
       "street": "Juliaweg 863"
     },
     {
-      "city": "Dermot Ville",
-      "country": "IE",
-      "dob": "1960-12-18",
-      "email": "brutondarren@example.org",
-      "id": "PH-00002",
-      "name": "Mr. Stewart Montague",
-      "national_id": "7038374GA",
-      "phone": "989.608.3863",
-      "postcode": "K154PC8",
-      "street": "65 Fenning Street"
-    },
-    {
-      "city": "Rocher",
-      "country": "FR",
+      "city": "Tresilico",
+      "country": "IT",
       "dob": "1973-10-09",
-      "email": "mauryaudrey@example.org",
-      "id": "PH-00003",
-      "name": "Yves Traore",
-      "national_id": "002654235116155",
-      "phone": "+33 (0)2 35 33 89 08",
-      "postcode": "54448",
-      "street": "863, chemin de Robert"
+      "email": "gianfrancocilea@example.net",
+      "gender": "male",
+      "id": "PH-00002",
+      "name": "Dott. Alfio Leone",
+      "national_id": "ZAYZFW65Z42G511M",
+      "phone": "+39 338819600",
+      "postcode": "07049",
+      "street": "Stretto Gaetano, 53"
     },
     {
-      "city": "Lippenhuizen",
-      "country": "NL",
-      "dob": "1985-01-24",
-      "email": "de-gruijterdylan@example.com",
-      "id": "PH-00004",
-      "name": "Wouter Verwoert-Goyaerts van Waderle",
-      "national_id": "781618497",
-      "phone": "+3194-0781618",
-      "postcode": "5316DO",
-      "street": "Elinehof 103"
+      "city": "Hünfeld",
+      "country": "DE",
+      "dob": "1947-06-20",
+      "email": "steyjohanne@example.net",
+      "gender": "female",
+      "id": "PH-00003",
+      "name": "Dorit Etzold",
+      "national_id": "04078161849",
+      "phone": "+49(0)9600 133890",
+      "postcode": "23511",
+      "street": "Hartmannstraße 1/3"
     },
     {
       "city": "Valladolid",
       "country": "ES",
-      "dob": "1965-04-23",
+      "dob": "1956-02-02",
       "email": "emiliocalatayud@example.net",
-      "id": "PH-00005",
+      "gender": "male",
+      "id": "PH-00004",
       "name": "Albano Llopis Hierro",
-      "national_id": "09335534-L",
+      "national_id": "88753260-X",
       "phone": "+34823 96 00 13",
       "postcode": "11463",
       "street": "Paseo Heliodoro Rivas 57"
     },
     {
-      "city": "Hünfeld",
-      "country": "DE",
-      "dob": "1959-04-25",
-      "email": "schaefersigfried@example.org",
+      "city": "Leblanc-la-Forêt",
+      "country": "FR",
+      "dob": "1996-04-28",
+      "email": "bdavid@example.org",
+      "gender": "female",
+      "id": "PH-00005",
+      "name": "Aurore Maury",
+      "national_id": "016475255341928",
+      "phone": "+33 3 73 89 08 38",
+      "postcode": "20320",
+      "street": "57, rue Rocher"
+    },
+    {
+      "city": "Dermot Ville",
+      "country": "IE",
+      "dob": "1991-08-13",
+      "email": "brutondarren@example.org",
+      "gender": "male",
       "id": "PH-00006",
-      "name": "Dr. Christof Walter B.Sc.",
-      "national_id": "04131647525",
-      "phone": "+49(0)1338908386",
-      "postcode": "23511",
-      "street": "Schachtring 2"
+      "name": "Mr. Stewart Montague",
+      "national_id": "4528972TA",
+      "phone": "989.608.3863",
+      "postcode": "K154PC8",
+      "street": "65 Fenning Street"
     }
   ]
 }

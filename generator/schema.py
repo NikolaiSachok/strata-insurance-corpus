@@ -51,6 +51,7 @@ MODEL_SCHEMA = {
                 {
                     "id": {"type": "string", "pattern": "^PH-[0-9]{5}$"},
                     "name": _STR,
+                    "gender": {"enum": ["male", "female"]},
                     "dob": {"type": "string", "format": "date"},
                     "email": _STR,
                     "phone": _STR,
@@ -60,7 +61,7 @@ MODEL_SCHEMA = {
                     "country": {"enum": ["DE", "FR", "ES", "IT", "NL", "IE"]},
                     "national_id": _STR,  # synthetic, format-shaped but deliberately invalid (see identity.py)
                 },
-                ["id", "name", "dob", "country", "national_id"],
+                ["id", "name", "gender", "dob", "country", "national_id"],
             ),
         },
         "agents": {

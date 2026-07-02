@@ -10,7 +10,8 @@
 
 **Status: ✅ M1–M5 complete.** The seeded generator and entity model, all born-digital
 document families (policy / claim / tabular / knowledge), **scanned (OCR-target) variants** of the claim
-forms/letters, **AI evidence photos + identity cards (ID scans) with synthetic portraits**, a
+forms/letters, **AI evidence photos + identity cards (ID scans) with demographically-diverse synthetic
+portraits** (modelled gender; even ethnic spread — so face/redaction bias is measurable), a
 **redaction ground-truth index** (every PII span catalogued), the manifest + provenance, the
 golden-eval set (semantic + aggregation + multi-hop **+ multimodal: OCR / vision / multimodal-retrieval /
 cross-modal**), and a **reference eval harness** (Recall@K / nDCG / EM / F1) run end-to-end today. **This
@@ -23,20 +24,20 @@ is a data vendor** — it ships the data + ground truth and is engine-agnostic (
 
 ```bash
 make sample     # -> committed sample/ slice + golden/golden.jsonl  (deterministic)
-make generate   # -> full corpus/ : 305 entities, 1297 documents (1137 born-digital+scanned + 160 AI images as committed prompt-specs), 671 golden Qs, 6469 PII spans  (gitignored)
+make generate   # -> full corpus/ : 305 entities, 1311 documents (1151 born-digital+scanned + 160 AI images as committed prompt-specs), 671 golden Qs, 6543 PII spans  (gitignored)
 make validate   # integrity + golden-support checks
 make stats      # corpus composition (documents by format/type, golden by class)
 make eval       # score predictions vs golden (Recall@K/nDCG/EM/F1); no PRED -> oracle self-check
 make test       # determinism + referential-integrity suite
 ```
 
-Full-corpus composition (`make stats OUT=corpus`): 750 PDF · 121 Word · 3 xlsx · 1 csv · 2 Markdown ·
-260 scanned JPG · 160 AI images — 80 evidence photos + 80 ID portraits (committed as seeded
+Full-corpus composition (`make stats OUT=corpus`): 753 PDF · 121 Word · 3 xlsx · 1 csv · 2 Markdown ·
+271 scanned JPG · 160 AI images — 80 evidence photos + 80 ID portraits (committed as seeded
 **prompt-specs** in `image-prompts.jsonl`; pixels rendered for the `sample/` slice, on-demand for the HF
-release). The 260 scans include 19 **scan-only** police reports (no born-digital twin — genuine OCR
-targets). Golden = **671 questions**: 447 text (364 semantic + 3 aggregation + 80 multi-hop) + 224
-**multimodal** (19 OCR + 80 vision + 80 multimodal-retrieval + 45 cross-modal — cross-modal is emitted only
-for single-claim policies, so its policy-keyed question stays unambiguous); **6,469 PII spans**
+release). The 271 scans include 27 **scan-only** police reports (no born-digital twin — genuine OCR
+targets). Golden = **671 questions**: 444 text (361 semantic + 3 aggregation + 80 multi-hop) + 227
+**multimodal** (27 OCR + 80 vision + 80 multimodal-retrieval + 40 cross-modal — cross-modal is emitted only
+for single-claim policies, so its policy-keyed question stays unambiguous); **6,543 PII spans**
 catalogued in `pii-index.jsonl`. The committed `sample/` slice contains at least one of every built doc
 type and every golden modality (enforced by tests), so the repo is fully exercisable without a full run.
 

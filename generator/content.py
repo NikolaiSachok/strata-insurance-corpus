@@ -642,7 +642,9 @@ def id_card_document(model_meta: dict, holder: Policyholder, face_uri: str | Non
     given = " ".join(parts[:-1]) if len(parts) > 1 else (parts[0] if parts else holder.name)
     surname = parts[-1] if len(parts) > 1 else ""
 
-    # ICAO 9303 TD1 machine-readable zone (3 lines × 30). Sex unspecified ('<').
+    # ICAO 9303 TD1 machine-readable zone (3 lines × 30). Sex from the modelled gender (#34); the
+    # composite check digit does not cover the sex field, so it is unaffected.
+    sex = "M" if holder.gender == "male" else "F"
     doc_no9 = _mrz_field(card_no, 9)
     line1 = f"I<{nat3}{doc_no9}{_mrz_check(doc_no9)}" + "<" * 15
     line1 = (line1[:30]).ljust(30, "<")
@@ -650,7 +652,7 @@ def id_card_document(model_meta: dict, holder: Policyholder, face_uri: str | Non
     exp6 = _yymmdd(expiry.isoformat())
     optional = "<" * 11
     composite = _mrz_check(doc_no9 + _mrz_check(doc_no9) + dob6 + _mrz_check(dob6) + exp6 + _mrz_check(exp6) + optional)
-    line2 = f"{dob6}{_mrz_check(dob6)}<{exp6}{_mrz_check(exp6)}{nat3}{optional}{composite}"
+    line2 = f"{dob6}{_mrz_check(dob6)}{sex}{exp6}{_mrz_check(exp6)}{nat3}{optional}{composite}"
     line2 = (line2[:30]).ljust(30, "<")
     line3 = _mrz_name(surname, given)
 

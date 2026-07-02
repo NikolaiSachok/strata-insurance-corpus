@@ -80,6 +80,7 @@ PROFILES = {
 class Policyholder:
     id: str
     name: str
+    gender: str  # "male" | "female" — drives the gendered name, the ID portrait, and the MRZ sex field (#34)
     dob: str
     email: str
     phone: str
@@ -266,10 +267,13 @@ def build_model(seed: int, profile: str = "full") -> Model:
     for i in range(counts["holders"]):
         country = rng.choice(COUNTRIES)
         fk = fakers[country.locale]
+        gender = rng.choice(("male", "female"))  # first-class attribute: name + portrait + MRZ agree by construction
+        name = fk.name_male() if gender == "male" else fk.name_female()
         holders.append(
             Policyholder(
                 id=f"PH-{i + 1:05d}",
-                name=fk.name(),
+                name=name,
+                gender=gender,
                 dob=_dob(rng),
                 email=fk.ascii_safe_email(),
                 phone=fk.phone_number(),
