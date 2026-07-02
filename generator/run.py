@@ -65,10 +65,17 @@ def _clean_generated(out: Path) -> None:
             target.unlink()
 
 
-def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
+def generate(seed: int, out: Path, profile: str, render: bool = True, resume: bool = False) -> dict:
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
-    _clean_generated(out)
+    # Resume (#33): keep already-rendered artifacts and skip re-rendering them, so a crash-retry
+    # of the full corpus continues instead of redoing minutes of work. A fresh run (default) cleans
+    # and re-renders everything, preserving strict byte-stability.
+    from .render import set_resume
+
+    set_resume(resume)
+    if not resume:
+        _clean_generated(out)
 
     # 1. model + schema
     model = build_model(seed, profile)
@@ -122,13 +129,16 @@ def generate(seed: int, out: Path, profile: str, render: bool = True) -> dict:
             record ONLY the scan — the born-digital PDF is deleted, so its report-reference number
             (the OCR golden answer) exists on no born-digital page. It carries no ``source_doc_id``:
             there is no in-corpus twin, by design."""
+            from .render import skip_existing
+
             vm = police_report_document(model.meta, claim, policy, holder)
             doc_id = f"DOC-{claim.id}-POLICE"
-            tmp_pdf = out / f"docs/claim/{claim.id}-police-report.pdf"  # render intermediate, not a corpus doc
-            write_pdf("police_report.html.j2", vm, tmp_pdf, ANCHOR_EPOCH)
             rel = f"docs/claim/{claim.id}-police-report-scanned.jpg"
-            scan_pdf(tmp_pdf, out / rel, doc_seed(doc_id, seed))
-            tmp_pdf.unlink()
+            if not skip_existing(out / rel):  # resume: the scan (the only kept artifact) is already on disk
+                tmp_pdf = out / f"docs/claim/{claim.id}-police-report.pdf"  # render intermediate, not a corpus doc
+                write_pdf("police_report.html.j2", vm, tmp_pdf, ANCHOR_EPOCH)
+                scan_pdf(tmp_pdf, out / rel, doc_seed(doc_id, seed))
+                tmp_pdf.unlink()
             records.append(
                 DocRecord(
                     doc_id=doc_id,
@@ -453,9 +463,11 @@ def main(argv=None) -> int:
     ap.add_argument("--out", type=Path, default=Path("corpus"))
     ap.add_argument("--profile", choices=["full", "sample", "slice"], default="full")
     ap.add_argument("--no-render", action="store_true", help="model + schema only (skip PDFs)")
+    ap.add_argument("--resume", action="store_true",
+                    help="keep already-rendered files and render only what's missing (cheap crash-retry, #33)")
     args = ap.parse_args(argv)
 
-    summary = generate(args.seed, args.out, args.profile, render=not args.no_render)
+    summary = generate(args.seed, args.out, args.profile, render=not args.no_render, resume=args.resume)
     print(
         f"[generate] seed={args.seed} profile={args.profile} -> {summary['out']}\n"
         f"           model={summary['model']}\n"

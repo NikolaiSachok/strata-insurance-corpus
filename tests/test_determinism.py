@@ -367,6 +367,52 @@ def test_police_report_is_scan_only(tmp_path):
     assert not list(out.glob("**/*-police-report.pdf")), "born-digital police-report PDF leaked into corpus"
 
 
+def test_resume_rerenders_only_missing_and_stays_byte_identical(tmp_path):
+    """Resume (#33): after a simulated crash (some rendered files deleted), `resume=True` re-renders
+    exactly the missing files — byte-identically to a fresh run — leaves surviving files untouched, and
+    the result still validates. This is what makes a full-corpus crash-retry cheap and correct."""
+    import hashlib
+
+    from generator.render import set_resume
+    from generator.run import generate
+    from generator.validate import validate
+
+    out = tmp_path / "c"
+    try:
+        generate(42, out, "sample")  # fresh, full render
+
+        def sha(rel):
+            return hashlib.sha256((out / rel).read_bytes()).hexdigest()
+
+        # one of each renderer's output (pdf / docx / xlsx / scanned jpg)
+        picks = []
+        for pattern in ("docs/**/*.pdf", "docs/**/*.docx", "docs/**/*.xlsx", "docs/**/*-scanned.jpg"):
+            hit = next(out.glob(pattern), None)
+            if hit:
+                picks.append(hit.relative_to(out).as_posix())
+        assert len(picks) >= 3, f"expected several rendered types in the sample, got {picks}"
+
+        before = {rel: sha(rel) for rel in picks}
+
+        # simulate a crash: delete all but the last rendered output (the survivor must stay untouched)
+        deleted, survivor = picks[:-1], picks[-1]
+        survivor_before = before[survivor]
+        for rel in deleted:
+            (out / rel).unlink()
+
+        generate(42, out, "sample", resume=True)  # crash-retry
+
+        for rel in deleted:
+            assert (out / rel).exists(), f"resume did not re-render {rel}"
+            assert sha(rel) == before[rel], f"resume re-render of {rel} is not byte-identical"
+        assert sha(survivor) == survivor_before, "resume must not touch surviving files"
+
+        ok, errors = validate(out)
+        assert ok, errors
+    finally:
+        set_resume(False)  # never leak resume state into other tests
+
+
 def test_generated_corpus_validates(tmp_path):
     """A freshly generated sample passes full validation — including golden answer-grounding (#13)."""
     from generator.run import generate

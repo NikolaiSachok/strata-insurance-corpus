@@ -67,14 +67,9 @@ jobs:
           fi
 
       # Full end-to-end integrity: generate the whole corpus and validate it (all doc types, provenance,
-      # golden grounding, question-uniqueness). Retry wraps the known intermittent WeasyPrint native
-      # crash (#33) so it doesn't flake the build.
+      # golden grounding, question-uniqueness). `make generate` internally retries with --resume to
+      # recover from the intermittent WeasyPrint native crash (#33), so no outer retry is needed here.
       - name: Full corpus generate + validate
         run: |
-          ok=0
-          for i in 1 2 3 4 5; do
-            if make generate SEED=42; then ok=1; break; fi
-            echo "generate attempt $i failed, retrying"
-          done
-          [ "$ok" = 1 ] || { echo "::error::generate failed after 5 attempts"; exit 1; }
+          make generate SEED=42
           make validate OUT=corpus

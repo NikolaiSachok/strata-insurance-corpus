@@ -11,6 +11,10 @@
 .cache/
 .llm-cache/
 
+# Atomic-write temp files (write_pdf writes out.part then os.replace); a crash mid-write could
+# otherwise leave a stray *.part under the committed sample/ dir.
+*.part
+
 # Python
 __pycache__/
 *.py[cod]

@@ -33,6 +33,11 @@ def _pin_modified(name: str, data: bytes) -> bytes:
 
 def write_xlsx(tables: list[dict], out_path: Path) -> Path:
     """Render one or more tables (one sheet each) to a reproducible .xlsx."""
+    from . import skip_existing
+
+    out_path = Path(out_path)
+    if skip_existing(out_path):  # resume: byte-identical .xlsx already on disk
+        return out_path
     from openpyxl import Workbook
     from openpyxl.styles import Font
 
@@ -71,7 +76,11 @@ def write_xlsx(tables: list[dict], out_path: Path) -> Path:
 
 def write_csv(table: dict, out_path: Path) -> Path:
     """Render a single table to UTF-8 CSV (marker row, then headers, then rows)."""
+    from . import skip_existing
+
     out_path = Path(out_path)
+    if skip_existing(out_path):  # resume: byte-identical .csv already on disk
+        return out_path
     out_path.parent.mkdir(parents=True, exist_ok=True)
     buf = io.StringIO()
     writer = _csv.writer(buf, lineterminator="\n")

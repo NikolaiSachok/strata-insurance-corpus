@@ -30,6 +30,11 @@ def scan_pdf(
     max_width: int = 1000,
     jpeg_quality: int = 58,
 ) -> Path:
+    from . import skip_existing
+
+    out_path = Path(out_path)
+    if skip_existing(out_path):  # resume: byte-identical scan already on disk
+        return out_path
     import pypdfium2 as pdfium
 
     pdf = pdfium.PdfDocument(str(pdf_path))

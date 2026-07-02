@@ -57,8 +57,17 @@ def html_to_pdf_bytes(html: str, source_date_epoch: int) -> bytes:
 
 
 def write_pdf(template: str, context: dict, out_path: Path, source_date_epoch: int) -> Path:
+    from . import skip_existing
+
     out_path = Path(out_path)
+    if skip_existing(out_path):  # resume: a byte-identical PDF is already on disk
+        return out_path
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    html = render_html(template, context)
-    out_path.write_bytes(html_to_pdf_bytes(html, source_date_epoch))
+    data = html_to_pdf_bytes(render_html(template, context), source_date_epoch)
+    # Atomic write: the WeasyPrint render can segfault natively at scale (#33); writing to a temp
+    # path and renaming means out_path exists only when fully written — never a truncated partial
+    # that a later resume would wrongly trust.
+    tmp = out_path.with_name(out_path.name + ".part")
+    tmp.write_bytes(data)
+    os.replace(tmp, out_path)
     return out_path

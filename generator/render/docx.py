@@ -37,7 +37,11 @@ def write_contract_docx(ctx: dict, out_path: Path) -> Path:
     """Render the full policy contract to a reproducible .docx."""
     from docx.shared import Pt
 
+    from . import skip_existing
+
     out_path = Path(out_path)
+    if skip_existing(out_path):  # resume: byte-identical .docx already on disk
+        return out_path
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     doc = _new_document()
@@ -90,6 +94,11 @@ def write_sections_docx(kbdoc: dict, out_path: Path) -> Path:
 
     Used by the knowledge base; sections are ``{heading, paragraphs[], bullets[]?}``.
     """
+    from . import skip_existing
+
+    out_path = Path(out_path)
+    if skip_existing(out_path):  # resume: byte-identical .docx already on disk
+        return out_path
     doc = _new_document()
     doc.add_heading(kbdoc["title"], level=0)
     subtitle = doc.add_paragraph()
