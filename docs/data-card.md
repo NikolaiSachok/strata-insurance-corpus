@@ -44,9 +44,9 @@ solved text dump.
 One JSON object per line, aligned with general enterprise-RAG benchmark formats:
 
 ```json
-{"id": "Q-C-1000-cause", "question": "What cause of loss was recorded for claim C-1000?",
- "answer": "burglary", "relevant_doc_ids": ["DOC-C-1000-ADJ", "DOC-C-1000-FNOL"],
- "query_class": "semantic", "modality": "text", "provenance": {"entity_id": "C-1000", "field": "cause"}}
+{"id": "Q-KB-lines", "question": "Which lines of business does Meridian Mutual underwrite?",
+ "answer": "Motor, Household, Commercial", "relevant_doc_ids": ["DOC-KB-UW"],
+ "query_class": "semantic", "modality": "text", "provenance": {"entity_id": "CORPUS", "field": "lines_of_business"}}
 ```
 
 | Field | Meaning |
@@ -86,7 +86,7 @@ python -m generator.eval --golden golden/golden.jsonl --predictions preds.jsonl 
 ```
 
 Predictions are JSONL, one row per answered question:
-`{"id": "Q-C-1000-cause", "retrieved_doc_ids": ["DOC-…", …], "answer": "burglary"}`. See
+`{"id": "Q-KB-lines", "retrieved_doc_ids": ["DOC-KB-UW", …], "answer": "Motor, Household, Commercial"}`. See
 [golden/README.md](../golden/README.md) for the metric definitions and `sample/predictions.example.jsonl`.
 
 ## Guarantees
