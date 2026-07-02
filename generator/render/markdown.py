@@ -27,7 +27,11 @@ def render_markdown(doc: dict) -> str:
 
 
 def write_markdown(doc: dict, out_path: Path) -> Path:
+    from . import skip_existing
+
     out_path = Path(out_path)
+    if skip_existing(out_path):  # resume: byte-identical .md already on disk
+        return out_path
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_bytes(render_markdown(doc).encode("utf-8"))
     return out_path

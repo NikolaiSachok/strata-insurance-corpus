@@ -23,8 +23,15 @@ help:
 	@echo "  test               - run the generator test suite (determinism, etc.)"
 	@echo "  clean              - remove generated corpus/ + caches"
 
+# Full corpus. Rendering ~750 PDFs through WeasyPrint's native libraries can segfault at scale (#33):
+# the first attempt runs clean; retries use --resume to keep already-rendered files and re-render only
+# what's missing, so a native crash recovers cheaply and `make generate` reliably completes end-to-end.
 generate:
-	$(RUN) python -m generator.run --seed $(SEED) --out corpus --profile full
+	@for i in 1 2 3 4 5; do \
+	  if [ $$i -eq 1 ]; then flag=; else flag=--resume; echo "[generate] retry $$i (resume — keeping rendered files)"; fi; \
+	  if $(RUN) python -m generator.run --seed $(SEED) --out corpus --profile full $$flag; then exit 0; fi; \
+	done; \
+	echo "[generate] failed after 5 attempts"; exit 1
 
 # Committed, self-contained mini-corpus (small slice, all M1 formats). The golden
 # eval is mirrored to golden/golden.jsonl as the canonical committed eval set.
