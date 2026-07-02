@@ -8,7 +8,7 @@
 > exercise and benchmark document-RAG systems on *enterprise-shaped* data. Usable standalone with any
 > RAG stack, or as a drop-in corpus for [Strata-RAG](https://github.com/NikolaiSachok/Strata-RAG).
 
-**Status: 🚧 M1–M4 complete; M5 in progress.** The seeded generator and entity model, all born-digital
+**Status: ✅ M1–M5 complete.** The seeded generator and entity model, all born-digital
 document families (policy / claim / tabular / knowledge), **scanned (OCR-target) variants** of the claim
 forms/letters, **AI evidence photos + identity cards (ID scans) with synthetic portraits**, a
 **redaction ground-truth index** (every PII span catalogued), the manifest + provenance, the
@@ -17,7 +17,7 @@ cross-modal**), and a **reference eval harness** (Recall@K / nDCG / EM / F1) run
 is a data vendor** — it ships the data + ground truth and is engine-agnostic (see
 [docs/data-card.md](docs/data-card.md), the ingestion contract); consuming RAG systems own ingestion.
 **CI** (reproducibility + a committed-sample drift-check + full validate) runs on every PR and on pushes to
-`main`; a HuggingFace release remains (M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and the **[issues](../../issues)**.
+`main`; the full corpus is **published as a [HuggingFace dataset](https://huggingface.co/datasets/NikolaiSachok/strata-insurance-corpus)** (M5). Design and roadmap: **[BRIEF.md](BRIEF.md)** and the **[issues](../../issues)**.
 
 ### What runs today
 
@@ -130,8 +130,9 @@ Makefile     generate / sample / validate / test targets                        
 .github/     CI: test suite + committed-sample drift-check + full generate/validate           [M5 ✅]
 ```
 
-The **full corpus** (hundreds of documents + images) is reproducible locally and will be published as a
-**HuggingFace Dataset** release; only the small `sample/` is committed to git.
+The **full corpus** (hundreds of documents + images) is reproducible locally and is published as a
+**[HuggingFace Dataset](https://huggingface.co/datasets/NikolaiSachok/strata-insurance-corpus)**; only the
+small `sample/` is committed to git.
 
 ## Using it
 
@@ -139,7 +140,7 @@ The **full corpus** (hundreds of documents + images) is reproducible locally and
   [data card](docs/data-card.md) is the ingestion contract (files, ground-truth structure, scoring).
 - **With Strata-RAG:** hand it the corpus; its own agent writes the adapter on its side (this repo ships
   no engine glue).
-- **Just the data:** download the published HuggingFace dataset (planned).
+- **Just the data:** download the published [HuggingFace dataset](https://huggingface.co/datasets/NikolaiSachok/strata-insurance-corpus) (~70 MB, CC-BY-4.0).
 
 ## Related work (why a new corpus, not a reuse)
 
