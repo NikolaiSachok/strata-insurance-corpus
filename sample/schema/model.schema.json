@@ -247,6 +247,12 @@
           "email": {
             "type": "string"
           },
+          "gender": {
+            "enum": [
+              "male",
+              "female"
+            ]
+          },
           "id": {
             "pattern": "^PH-[0-9]{5}$",
             "type": "string"
@@ -270,6 +276,7 @@
         "required": [
           "id",
           "name",
+          "gender",
           "dob",
           "country",
           "national_id"

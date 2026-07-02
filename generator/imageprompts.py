@@ -14,8 +14,6 @@ where the output isn't bit-exact.
 from __future__ import annotations
 
 import hashlib
-import importlib
-from functools import lru_cache
 
 from .identity import COUNTRY_BY_CODE
 from .model import LINE_LABEL, Claim, Policyholder, Policy
@@ -96,54 +94,28 @@ _FACE_NEGATIVE = (
 
 
 # Deterministic appearance descriptors so each policyholder's synthetic portrait is a distinct
-# person (the recipe stays reproducible — derived from the holder id, not wall-clock/RNG). Gender
-# is NOT a modelled attribute (see backlog #34), but the portrait's apparent gender is inferred
-# best-effort from the given name (_infer_gender) so the photo tracks the name where unambiguous.
+# person (the recipe stays reproducible — bucketed from the holder id via hashlib, not wall-clock/RNG).
+# Gender is now a modelled attribute (#34), so the portrait uses `holder.gender` directly.
 _FACE_AGES = ("a young {who}", "a {who} in their thirties", "a middle-aged {who}", "an older {who}")
 _FACE_HAIR = ("with short hair", "with glasses", "with shoulder-length hair", "with greying hair",
-              "with curly hair", "with straight dark hair", "with light hair", "with a shaved head")
+              "with curly hair", "with straight dark hair", "with light hair", "with a shaved head",
+              "with red hair", "with closely-cropped afro-textured hair")
 
-
-@lru_cache(maxsize=None)
-def _first_name_sets(locale: str) -> tuple[frozenset, frozenset]:
-    """(male, female) first-name sets from Faker's provider data for a locale (membership only)."""
-    try:
-        provider = importlib.import_module(f"faker.providers.person.{locale}").Provider
-    except Exception:  # pragma: no cover - locale always present for our 6 countries
-        return frozenset(), frozenset()
-
-    def names(attr: str) -> frozenset:
-        v = getattr(provider, attr, None)
-        if v is None:
-            return frozenset()
-        return frozenset(v.keys() if isinstance(v, dict) else v)
-
-    return names("first_names_male"), names("first_names_female")
-
-
-def _infer_gender(country_code: str, full_name: str) -> str | None:
-    """Best-effort 'man'/'woman' from the given name via Faker's locale name lists, else None.
-
-    Lets a synthetic portrait track the (Faker-generated) name's apparent gender WITHOUT making
-    gender a modelled attribute — a pure, deterministic membership lookup, no RNG, no model change.
-    """
-    from .content import _strip_name
-    from .identity import COUNTRY_BY_CODE as _CBC
-
-    country = _CBC.get(country_code)
-    if not country:
-        return None
-    parts = _strip_name(full_name).split()
-    if not parts:
-        return None
-    given = parts[0]
-    male, female = _first_name_sets(country.locale)
-    in_m, in_f = given in male, given in female
-    if in_m and not in_f:
-        return "man"
-    if in_f and not in_m:
-        return "woman"
-    return None  # unknown or ambiguous -> leave gender unspecified
+# Even spread of ethnic appearance (#46), bucketed independently of gender/age/hair — realistic for a
+# pan-European insurer AND enough samples per group (~8 of 80) to test vision/face-redaction bias.
+# Written neutrally (skin tone + descent); the faces are fully synthetic, never a real individual.
+_FACE_ETHNICITY = (
+    "of Northern European descent with fair skin",
+    "of Mediterranean European descent with olive skin",
+    "of Eastern European / Slavic descent",
+    "of Celtic descent with fair, freckled skin",
+    "of North African / Maghrebi descent with light-brown skin",
+    "of Sub-Saharan African descent with dark brown skin",
+    "of Turkish or Middle-Eastern descent with olive skin",
+    "of South Asian descent with brown skin",
+    "of East Asian descent",
+    "of mixed heritage",
+)
 
 
 def face_spec(holder: Policyholder, corpus_seed: int) -> dict:
@@ -159,11 +131,11 @@ def face_spec(holder: Policyholder, corpus_seed: int) -> dict:
     # Stable, well-distributed bucket (hashlib is independent of PYTHONHASHSEED; adjacent ids
     # that differ by one digit must not collide on the small age/hair moduli).
     h = int.from_bytes(hashlib.md5(holder.id.encode()).digest()[:4], "big")
-    gender = _infer_gender(holder.country, holder.name)
-    who = gender or "person"  # ID portrait should track the name's apparent gender where known
+    who = "man" if holder.gender == "male" else "woman"  # gender is modelled (#34) — no inference
     age = _FACE_AGES[h % len(_FACE_AGES)].format(who=who)
     hair = _FACE_HAIR[(h // len(_FACE_AGES)) % len(_FACE_HAIR)]
-    person = f"{age} {hair}"
+    ethnicity = _FACE_ETHNICITY[(h // (len(_FACE_AGES) * len(_FACE_HAIR))) % len(_FACE_ETHNICITY)]
+    person = f"{age} {ethnicity}, {hair}"
     prompt = (
         f"A neutral passport-style identity portrait of a fictional {country_name} resident "
         f"({person}): head and shoulders, facing the camera, plain light-grey background, even studio "
