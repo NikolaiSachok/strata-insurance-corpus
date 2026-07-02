@@ -9,9 +9,9 @@ The canonical committed eval, mirrored from the `sample/` slice by `make sample`
 line, aligned with general enterprise-RAG benchmark formats:
 
 ```json
-{"id": "Q-C-1000-cause", "question": "What cause of loss was recorded for claim C-1000?",
- "answer": "burglary", "relevant_doc_ids": ["DOC-C-1000-ADJ", "DOC-C-1000-FNOL"],
- "query_class": "semantic", "modality": "text", "provenance": {"entity_id": "C-1000", "field": "cause"}}
+{"id": "Q-KB-lines", "question": "Which lines of business does Meridian Mutual underwrite?",
+ "answer": "Motor, Household, Commercial", "relevant_doc_ids": ["DOC-KB-UW"],
+ "query_class": "semantic", "modality": "text", "provenance": {"entity_id": "CORPUS", "field": "lines_of_business"}}
 ```
 
 | Field | Meaning |
@@ -95,7 +95,7 @@ scored on its own).
 [`../sample/predictions.example.jsonl`](../sample/predictions.example.jsonl)):
 
 ```json
-{"id": "Q-C-1000-cause", "retrieved_doc_ids": ["DOC-C-1000-FNOL", "DOC-C-1000-ADJ"], "answer": "burglary"}
+{"id": "Q-KB-lines", "retrieved_doc_ids": ["DOC-KB-UW", "DOC-KB-FAQ"], "answer": "Motor, Household, Commercial"}
 ```
 
 `retrieved_doc_ids` is your ranked retrieval (best first); `answer` is your generated answer. A golden
